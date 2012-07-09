@@ -1,0 +1,2 @@
+#playr
+I'm not going to lie this is basically a rip off of play but writen in .net and using the Microsoft stack. It was a side project to learn new stuff when we, the Azure Portal Team, moved to a team room. [https://github.com/play](https://github.com/play)
