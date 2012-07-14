@@ -59,6 +59,11 @@ namespace Playr.Api.Controller
             HttpResponseMessage response = new HttpResponseMessage();
             var track = itunes.GetTrackById(id);
 
+            if (track == null)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no song with that ID."));
+            }
+
             if (track.Artwork.Count > 0)
             {
                 var fileName = track.TrackDatabaseID + ".jpeg";
