@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Net.Http;
 using Playr.Api.Models;
-using System.Net;
 using Raven.Client.Embedded;
 
 namespace Playr.Api.Controller
@@ -19,21 +19,18 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must Pass in Email and Name."));
             }
 
-            using (var documentStore = new EmbeddableDocumentStore().Initialize())
+            using (var session = Helpers.DocumentStore.OpenSession())
             {
-                using (var session = documentStore.OpenSession())
+                try
                 {
-                    try
-                    {
-                        session.Advanced.UseOptimisticConcurrency = true;
-                        session.Store(new User { Email = u.Email, Name = u.Name, Token = Guid.NewGuid().ToString() }, "Users/" + u.Email);
-                        session.SaveChanges();
-                        return session.Load<User>("Users/" + u.Email);
-                    }
-                    catch
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "There is already a user with that email."));
-                    }
+                    session.Advanced.UseOptimisticConcurrency = true;
+                    session.Store(new User { Email = u.Email, Name = u.Name, Token = Guid.NewGuid().ToString() }, "Users/" + u.Email);
+                    session.SaveChanges();
+                    return session.Load<User>("Users/" + u.Email);
+                }
+                catch
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "There is already a user with that email."));
                 }
             }
         }
@@ -46,17 +43,14 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide an email."));
             }
 
-            using (var documentStore = new EmbeddableDocumentStore().Initialize())
+            using (var session = Helpers.DocumentStore.OpenSession())
             {
-                using (var session = documentStore.OpenSession())
+                var user = session.Load<User>("Users/" + email);
+                if (user == null)
                 {
-                    var user = session.Load<User>("Users/" + email);
-                    if (user == null)
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
-                    }
-                    return user;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
                 }
+                return user;
             }
         }
 
@@ -67,23 +61,20 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must Pass in Email and Toekn."));
             }
 
-            using (var documentStore = new EmbeddableDocumentStore().Initialize())
+            using (var session = Helpers.DocumentStore.OpenSession())
             {
-                using (var session = documentStore.OpenSession())
+                var user = session.Load<User>("Users/" + u.Email);
+                if (user == null)
                 {
-                    var user = session.Load<User>("Users/" + u.Email);
-                    if (user == null)
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
-                    }
-                    if (u.Token != user.Token)
-                    {
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No can do"));
-                    }
-                    user.Token = Guid.NewGuid().ToString();
-                    session.SaveChanges();
-                    return user;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
                 }
+                if (u.Token != user.Token)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No can do"));
+                }
+                user.Token = Guid.NewGuid().ToString();
+                session.SaveChanges();
+                return user;
             }
         }
     }
