@@ -33,6 +33,19 @@ namespace Playr.Api
             return null;
         }
 
+        public static List<IITFileOrCDTrack> GetAlbumTracks(this iTunesAppClass itunes, string album)
+        {
+            var tracks = new List<IITFileOrCDTrack>();
+            foreach (IITTrack t in itunes.LibraryPlaylist.Tracks)
+            {
+                if (t.Album != null && t.Album.Equals(album, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    tracks.Add((IITFileOrCDTrack)t);
+                }
+            }
+            return tracks;
+        }
+
         public static Song toSong(this IITTrack t)
         {
             return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name };

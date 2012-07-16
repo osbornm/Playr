@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Ionic.Zip;
 using iTunesLib;
 using Playr.Api.Models;
 using Raven.Client.Embedded;
@@ -96,6 +97,63 @@ namespace Playr.Api.Controller
             return response;
         }
 
+
+        [HttpGet]
+        public HttpResponseMessage DownloadSong(int id)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var track = itunes.GetTrackById(id);
+
+            if (track == null)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no song with that ID."));
+            }
+
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AddFile(((IITFileOrCDTrack)track).Location,String.Empty);
+                var stream = new MemoryStream();
+                zip.Name = track.Name;
+                zip.Save(stream);
+                stream.Position = 0;
+                response.Content = new StreamContent(stream);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                response.Headers.CacheControl = new CacheControlHeaderValue();
+                response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
+                response.Headers.CacheControl.MustRevalidate = true;
+                return response;
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DownloadAlbum(string album)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var tracks = itunes.GetAlbumTracks(album);
+
+            if (!tracks.Any())
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no album by that name."));
+            }
+
+            using (ZipFile zip = new ZipFile())
+            {
+                foreach (var t in tracks)
+                {
+                    zip.AddFile(t.Location, String.Empty);
+                }
+                zip.Name = album;
+                var stream = new MemoryStream();
+                zip.Save(stream);
+                stream.Position = 0;
+                response.Content = new StreamContent(stream);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                response.Headers.CacheControl = new CacheControlHeaderValue();
+                response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
+                response.Headers.CacheControl.MustRevalidate = true;
+                return response;
+            }
+        }
 
         [RequireToken]
         public void FavoriteTrack(Song s)
