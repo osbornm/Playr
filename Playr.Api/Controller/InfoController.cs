@@ -109,20 +109,14 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no song with that ID."));
             }
 
-            using (ZipFile zip = new ZipFile())
-            {
-                zip.AddFile(((IITFileOrCDTrack)track).Location,String.Empty);
-                var stream = new MemoryStream();
-                zip.Name = track.Name;
-                zip.Save(stream);
-                stream.Position = 0;
-                response.Content = new StreamContent(stream);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
-                response.Headers.CacheControl = new CacheControlHeaderValue();
-                response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
-                response.Headers.CacheControl.MustRevalidate = true;
-                return response;
-            }
+            var file = new FileStream(((IITFileOrCDTrack)track).Location, FileMode.Open);
+            response.Content = new StreamContent(file);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = Path.GetFileName(((IITFileOrCDTrack)track).Location) };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+            response.Headers.CacheControl = new CacheControlHeaderValue();
+            response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
+            response.Headers.CacheControl.MustRevalidate = true;
+            return response;
         }
 
         [HttpGet]
@@ -151,6 +145,7 @@ namespace Playr.Api.Controller
                 response.Headers.CacheControl = new CacheControlHeaderValue();
                 response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
                 response.Headers.CacheControl.MustRevalidate = true;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = String.Format("{0}.zip", album) };
                 return response;
             }
         }
