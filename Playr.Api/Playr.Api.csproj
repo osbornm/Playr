@@ -128,6 +128,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Controller\InfoController.cs" />
     <Compile Include="Models\Queue.cs" />
     <Compile Include="Helpers.cs" />

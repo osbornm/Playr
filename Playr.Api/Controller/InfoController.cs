@@ -36,23 +36,22 @@ namespace Playr.Api.Controller
         {
             var tracks = itunes.CurrentPlaylist.Tracks;
 
-            var bar = new Queue();
+            var queue = new Queue();
 
             for (int i = 1; i < 6; i++)
             {
-                bar.PreviouslyPlayed.Add(tracks[i].toSong(Url));
+                queue.PreviouslyPlayed.Add(tracks[i].toSong(Url));
             }
 
-            bar.CurrentTrack = tracks[6].toSong(Url);
+            queue.CurrentTrack = tracks[6].toSong(Url);
 
             for (int i = 7; i <= tracks.Count; i++)
             {
-                bar.UpNext.Add(tracks[i].toSong(Url));
+                queue.UpNext.Add(tracks[i].toSong(Url));
             }
 
-            return bar;
+            return queue;
         }
-
 
         [HttpGet]
         public HttpResponseMessage Artwork(int id)
@@ -68,18 +67,12 @@ namespace Playr.Api.Controller
             if (track.Artwork.Count > 0)
             {
                 var fileName = track.TrackDatabaseID + ".jpeg";
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "artwork\\");
-                var fullPath = Path.Combine(path, fileName);
-                if (!File.Exists(fullPath))
+                var path = Path.Combine(ApplicationSettings.ArtworkFolder, fileName);
+                if (!File.Exists(path))
                 {
-                    // TODO: Put this is start up? 
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-                    track.Artwork[1].SaveArtworkToFile(fullPath.ToString());
+                    track.Artwork[1].SaveArtworkToFile(path.ToString());
                 }
-                var file = new FileStream(fullPath.ToString(), FileMode.Open);
+                var file = new FileStream(path, FileMode.Open);
                 response.Content = new StreamContent(file);
             }
             else
@@ -96,7 +89,6 @@ namespace Playr.Api.Controller
             response.Headers.CacheControl.MustRevalidate = true;
             return response;
         }
-
 
         [HttpGet]
         public HttpResponseMessage DownloadSong(int id)
@@ -153,6 +145,7 @@ namespace Playr.Api.Controller
         [RequireToken]
         public void FavoriteTrack(Song s)
         {
+            // TODO: Don't allow a user favorite a song more than once
             using (var session = Helpers.DocumentStore.OpenSession())
             {
                 var token = Request.GetToken();
@@ -167,6 +160,57 @@ namespace Playr.Api.Controller
                 user.Favorites.Add(s);
                 session.SaveChanges();
             }
+        }
+
+        [HttpPost]
+        public void UploadTracks()
+        {
+            HttpRequestMessage request = this.Request;
+            var mediaType = request.Content.Headers.ContentType.MediaType;
+
+            // Did they upload a zip file? 
+            if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
+            {
+                request.Content.LoadIntoBufferAsync();
+                using (var task = request.Content.ReadAsStreamAsync())
+                {
+                    task.Wait();
+                    using (var zip = ZipFile.Read(task.Result))
+                    {
+                        zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.aac or name = *.wav", String.Empty, ApplicationSettings.iTunesAddFolder);
+                    }
+                }
+            }
+            // Did they upload just a single file?
+            else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/mpeg", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
+            {
+                request.Content.LoadIntoBufferAsync();
+                using (var task = request.Content.ReadAsStreamAsync())
+                {
+                    task.Wait();
+
+                    // TOOO: itunes it stupid and requires and extension for the file to be picked up. For now assume MIME type is audio/{extension} 
+                    // TODO: We could come up with a better name but if we let iTunes manage lib then it renames it for us.
+                    var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, (Guid.NewGuid() + "." + mediaType.Substring(6)));
+                    using (var fileStream = File.Create(localFile))
+                    {
+                        task.Result.CopyTo(fileStream);
+                        fileStream.Close();
+                    }
+                }
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
+            }
+
+
+            
+
         }
     }
 }
