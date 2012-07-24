@@ -163,54 +163,48 @@ namespace Playr.Api.Controller
         }
 
         [HttpPost]
-        public void UploadTracks()
+        public void Upload()
         {
             HttpRequestMessage request = this.Request;
             var mediaType = request.Content.Headers.ContentType.MediaType;
 
-            // Did they upload a zip file? 
-            if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
+            // Replace the network stream with a memory stream.
+            // TODO: We should porbably read this to a file, I anticipate these uploads being pretty large...
+            request.Content.LoadIntoBufferAsync();
+            using (var task = request.Content.ReadAsStreamAsync())
             {
-                request.Content.LoadIntoBufferAsync();
-                using (var task = request.Content.ReadAsStreamAsync())
+                task.Wait();
+
+                // Did they upload a zip file? 
+                if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    task.Wait();
                     using (var zip = ZipFile.Read(task.Result))
                     {
+                        // Extract all the audio files into the iTunes Add folder.
                         zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.aac or name = *.wav", String.Empty, ApplicationSettings.iTunesAddFolder);
                     }
                 }
-            }
-            // Did they upload just a single file?
-            else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/mpeg", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
-            {
-                request.Content.LoadIntoBufferAsync();
-                using (var task = request.Content.ReadAsStreamAsync())
+                // Did they upload just a single file?
+                else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
+                         mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
+                         mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
+                         mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    task.Wait();
-
                     // TOOO: itunes it stupid and requires and extension for the file to be picked up. For now assume MIME type is audio/{extension} 
-                    // TODO: We could come up with a better name but if we let iTunes manage lib then it renames it for us.
-                    var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, (Guid.NewGuid() + "." + mediaType.Substring(6)));
+                    var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, String.Format("{0}.{1}", Guid.NewGuid(), mediaType.Substring(6)));
                     using (var fileStream = File.Create(localFile))
                     {
                         task.Result.CopyTo(fileStream);
                         fileStream.Close();
                     }
                 }
+                // Well they uploaded something we don't support!
+                else
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
+                }
+
             }
-            else
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
-            }
-
-
-            
-
         }
     }
 }
