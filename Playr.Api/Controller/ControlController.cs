@@ -38,6 +38,16 @@ namespace Playr.Api.Controller
             itunes.NextTrack();
         }
 
-        //TODO: Volume up and down?
+        [RequireToken]
+        public void VolumeUp()
+        {
+            itunes.SoundVolume += 5;
+        }
+
+        [RequireToken]
+        public void VolumeDown()
+        {
+            itunes.SoundVolume -= 5;
+        }
     }
 }

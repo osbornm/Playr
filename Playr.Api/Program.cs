@@ -65,6 +65,8 @@ namespace Playr.Api
         {
             itunes.Stop();
             itunes.Quit();
+
+            Directory.Delete(ApplicationSettings.TempPath, true);
         }
 
         public static void SetUp(iTunesAppClass itunes)
@@ -77,13 +79,13 @@ namespace Playr.Api
             }
             ApplicationSettings.ArtworkFolder = artwork;
 
-            // Check for upload folder
-            var upload = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Upload\\");
-            if (!Directory.Exists(upload))
+            // Check for temp folder
+            var temp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp\\");
+            if (!Directory.Exists(temp))
             {
-                Directory.CreateDirectory(upload);
+                Directory.CreateDirectory(temp);
             }
-            ApplicationSettings.UploadPath = upload;
+            ApplicationSettings.TempPath = temp;
 
             // Automatically Add to Itunes folder
             // TODO: Is this Okay to do? Do i want to assume this is set up? Add to readme?

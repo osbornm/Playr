@@ -9,7 +9,7 @@ namespace Playr.Api
     public static class ApplicationSettings
     {
         public static string ArtworkFolder;
-        public static string UploadPath;
+        public static string TempPath;
         public static string iTunesAddFolder;
     }
 }

@@ -16,7 +16,7 @@ using Raven.Client.Embedded;
 
 namespace Playr.Api.Controller
 {
-    public class InfoController: ApiController
+    public class InfoController : ApiController
     {
         iTunesAppClass itunes;
 
@@ -143,67 +143,77 @@ namespace Playr.Api.Controller
         }
 
         [RequireToken]
-        public void FavoriteTrack(Song s)
+        public void FavoriteTrack(Song favoriteSong)
         {
-            // TODO: Don't allow a user favorite a song more than once
             using (var session = Helpers.DocumentStore.OpenSession())
             {
                 var token = Request.GetToken();
                 var user = session.Query<User>().Where(u => u.Token == token).First();
 
-                var song = itunes.GetTrackById(s.Id);
+                var song = itunes.GetTrackById(favoriteSong.Id);
                 if (song == null)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such song"));
                 }
-                song.Rating += 5;
-                user.Favorites.Add(s);
-                session.SaveChanges();
+
+                if (!user.Favorites.Where(fav => fav.Id==favoriteSong.Id).Any())
+                {
+                    song.Rating += 5;
+                    user.Favorites.Add(favoriteSong);
+                    session.SaveChanges();
+                }
             }
         }
 
         [HttpPost]
         public void Upload()
         {
-            HttpRequestMessage request = this.Request;
-            var mediaType = request.Content.Headers.ContentType.MediaType;
+            var mediaType = Request.Content.Headers.ContentType.MediaType;
+            var task = Request.Content.ReadAsStreamAsync();
+            task.Wait();
 
-            // Replace the network stream with a memory stream.
-            // TODO: We should porbably read this to a file, I anticipate these uploads being pretty large...
-            request.Content.LoadIntoBufferAsync();
-            using (var task = request.Content.ReadAsStreamAsync())
+            // Did they upload a zip file? 
+            if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
             {
-                task.Wait();
-
-                // Did they upload a zip file? 
-                if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
+                // We assume this is going to be a large file lets copy it to disc
+                var tempFile = Path.Combine(ApplicationSettings.TempPath, string.Format("{0}.zip", Guid.NewGuid()));
+                using (var fileStream = File.Create(tempFile))
                 {
-                    using (var zip = ZipFile.Read(task.Result))
-                    {
-                        // Extract all the audio files into the iTunes Add folder.
-                        zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.aac or name = *.wav", String.Empty, ApplicationSettings.iTunesAddFolder);
-                    }
-                }
-                // Did they upload just a single file?
-                else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
-                         mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
-                         mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
-                         mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // TOOO: itunes it stupid and requires and extension for the file to be picked up. For now assume MIME type is audio/{extension} 
-                    var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, String.Format("{0}.{1}", Guid.NewGuid(), mediaType.Substring(6)));
-                    using (var fileStream = File.Create(localFile))
-                    {
-                        task.Result.CopyTo(fileStream);
-                        fileStream.Close();
-                    }
-                }
-                // Well they uploaded something we don't support!
-                else
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
+                    task.Result.CopyTo(fileStream);
+                    fileStream.Close();
+                    task.Result.Close();
                 }
 
+                // Extract all the audio files for the temp file and copy them to iTunes Add Folder.
+                using (var zip = ZipFile.Read(tempFile))
+                {
+                    zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.aac or name = *.wav", String.Empty, ApplicationSettings.iTunesAddFolder);
+                }
+
+                // Delete the temp zip file we created
+                File.Delete(tempFile);
+            }
+
+            // Did they upload just a single file?
+            else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
+                     mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // TOOO: itunes it stupid and requires and extension for the file to be picked up. For now assume MIME type is audio/{extension} 
+                var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, String.Format("{0}.{1}", Guid.NewGuid(), mediaType.Substring(6)));
+                using (var fileStream = File.Create(localFile))
+                {
+                    task.Result.CopyTo(fileStream);
+                    fileStream.Close();
+                    task.Result.Close();
+                }
+            }
+
+            // Well they uploaded something we don't support!
+            else
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
             }
         }
     }
