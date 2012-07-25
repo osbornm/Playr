@@ -142,7 +142,7 @@ namespace Playr.Api.Controller
             }
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void FavoriteTrack(Song favoriteSong)
         {
             using (var session = Helpers.DocumentStore.OpenSession())
@@ -160,6 +160,29 @@ namespace Playr.Api.Controller
                 {
                     song.Rating += 5;
                     user.Favorites.Add(favoriteSong);
+                    session.SaveChanges();
+                }
+            }
+        }
+
+        [RequireToken, HttpDelete]
+        public void UnfavoriteTrack(Song favoriteSong)
+        {
+            using (var session = Helpers.DocumentStore.OpenSession())
+            {
+                var token = Request.GetToken();
+                var user = session.Query<User>().Where(u => u.Token == token).First();
+
+                var song = itunes.GetTrackById(favoriteSong.Id);
+                if (song == null)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such song"));
+                }
+
+                if (user.Favorites.Where(fav => fav.Id == favoriteSong.Id).Any())
+                {
+                    song.Rating -= 5;
+                    user.Favorites.RemoveAll(s => s.Id == favoriteSong.Id);
                     session.SaveChanges();
                 }
             }

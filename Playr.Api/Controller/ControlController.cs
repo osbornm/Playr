@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using iTunesLib;
+using Newtonsoft.Json.Linq;
 using Playr.Api.Models;
 
 namespace Playr.Api.Controller
@@ -33,9 +34,15 @@ namespace Playr.Api.Controller
         }
 
         [RequireToken]
-        public void Skip()
+        public void Next()
         {
             itunes.NextTrack();
+        }
+
+        [RequireToken]
+        public void Previous()
+        {
+            itunes.PreviousTrack();
         }
 
         [RequireToken]
@@ -48,6 +55,12 @@ namespace Playr.Api.Controller
         public void VolumeDown()
         {
             itunes.SoundVolume -= 5;
+        }
+
+        [RequireToken]
+        public void Speak(JObject json)
+        {
+            itunes.Speak(json["message"].ToString());      
         }
     }
 }

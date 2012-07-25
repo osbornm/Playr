@@ -9,6 +9,7 @@ using iTunesLib;
 using Playr.Api.Models;
 using Raven.Client;
 using Raven.Client.Embedded;
+using SpeechLib;
 
 namespace Playr.Api
 {
@@ -72,6 +73,21 @@ namespace Playr.Api
         {
             docStore = new EmbeddableDocumentStore();
             docStore.Initialize();
+        }
+
+        public static void Speak(this iTunesApp itunes, string message)
+        {
+            var pasueMusic = itunes.PlayerState == ITPlayerState.ITPlayerStatePlaying;
+            if (pasueMusic)
+            {
+                itunes.Pause();
+            }
+            var voice = new SpVoice();
+            voice.Speak(message, SpeechVoiceSpeakFlags.SVSFDefault);
+            if (pasueMusic)
+            {
+                itunes.Play();
+            }
         }
     }
 
