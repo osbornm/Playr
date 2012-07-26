@@ -35,6 +35,8 @@ namespace Playr.Api.Controller
             }
         }
 
+        // TODO: Find/get User that doesn't give a token back. 
+
         [HttpGet]
         public User Find(string email)
         {

@@ -34,23 +34,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public Queue Queue()
         {
-            var tracks = itunes.CurrentPlaylist.Tracks;
-
-            var queue = new Queue();
-
-            for (int i = 1; i < 6; i++)
-            {
-                queue.PreviouslyPlayed.Add(tracks[i].toSong(Url));
-            }
-
-            queue.CurrentTrack = tracks[6].toSong(Url);
-
-            for (int i = 7; i <= tracks.Count; i++)
-            {
-                queue.UpNext.Add(tracks[i].toSong(Url));
-            }
-
-            return queue;
+            return GetQueue();
         }
 
         [HttpGet]
@@ -142,47 +126,47 @@ namespace Playr.Api.Controller
             }
         }
 
-        [RequireToken, HttpPost]
-        public void FavoriteTrack(Song favoriteSong)
+        [RequireToken, HttpPost, ActionName("favorite")]
+        public void FavoriteSong(int id)
         {
             using (var session = Helpers.DocumentStore.OpenSession())
             {
                 var token = Request.GetToken();
                 var user = session.Query<User>().Where(u => u.Token == token).First();
 
-                var song = itunes.GetTrackById(favoriteSong.Id);
-                if (song == null)
+                var track = itunes.GetTrackById(id);
+                if (track == null)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such song"));
                 }
 
-                if (!user.Favorites.Where(fav => fav.Id==favoriteSong.Id).Any())
+                if (!user.Favorites.Where(fav => fav.Id==id).Any())
                 {
-                    song.Rating += 5;
-                    user.Favorites.Add(favoriteSong);
+                    track.Rating += 5;
+                    user.Favorites.Add(track.toSong());
                     session.SaveChanges();
                 }
             }
         }
 
-        [RequireToken, HttpDelete]
-        public void UnfavoriteTrack(Song favoriteSong)
+        [RequireToken, HttpDelete, ActionName("favorite")]
+        public void UnfavoriteSong(int id)
         {
             using (var session = Helpers.DocumentStore.OpenSession())
             {
                 var token = Request.GetToken();
                 var user = session.Query<User>().Where(u => u.Token == token).First();
 
-                var song = itunes.GetTrackById(favoriteSong.Id);
-                if (song == null)
+                var track = itunes.GetTrackById(id);
+                if (track == null)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such song"));
                 }
 
-                if (user.Favorites.Where(fav => fav.Id == favoriteSong.Id).Any())
+                if (user.Favorites.Where(fav => fav.Id == id).Any())
                 {
-                    song.Rating -= 5;
-                    user.Favorites.RemoveAll(s => s.Id == favoriteSong.Id);
+                    track.Rating -= 5;
+                    user.Favorites.RemoveAll(s => s.Id == id);
                     session.SaveChanges();
                 }
             }
@@ -239,5 +223,36 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
             }
         }
+
+        [HttpPut]
+        public Queue QueueSong(int id)
+        {
+            var track = itunes.GetTrackById(id);
+            dynamic playlist = itunes.CurrentPlaylist;
+            playlist.AddTrack(track);
+            return GetQueue();
+        }
+
+        [NonAction]
+        public Queue GetQueue()
+        {
+            var tracks = itunes.CurrentPlaylist.Tracks;
+
+            var queue = new Queue();
+
+            for (int i = 1; i < 6; i++)
+            {
+                queue.PreviouslyPlayed.Add(tracks[i].toSong(Url));
+            }
+
+            queue.CurrentTrack = tracks[6].toSong(Url);
+
+            for (int i = 7; i <= tracks.Count; i++)
+            {
+                queue.UpNext.Add(tracks[i].toSong(Url));
+            }
+            return queue;
+        }
+
     }
 }

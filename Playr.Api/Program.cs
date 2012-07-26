@@ -17,17 +17,7 @@ namespace Playr.Api
         {
             var config = new HttpSelfHostConfiguration("http://localhost:5555");
             config.MaxReceivedMessageSize = 1024 * 1024 * 1024;
-
-            config.Routes.MapHttpRoute(
-                name: "artwork",
-                routeTemplate: "songs/Artwork/{id}",
-                defaults: new { controller = "info", action = "artwork" }
-            );
-
-
-            config.Routes.MapHttpRoute("default", "{controller}/{action}");
-
-
+            Routes.RegisterRoutes(config.Routes);
 
             var server = new HttpSelfHostServer(config);
             server.OpenAsync().Wait();
