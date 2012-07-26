@@ -12,6 +12,7 @@ namespace Playr.Api.Controller
 {
     public class UsersController : ApiController
     {
+        [HttpPost]
         public User Register(User u)
         {
             if (u == null || String.IsNullOrEmpty(u.Email) || String.IsNullOrEmpty(u.Name))
@@ -35,10 +36,8 @@ namespace Playr.Api.Controller
             }
         }
 
-        // TODO: Find/get User that doesn't give a token back. 
-
         [HttpGet]
-        public User Find(string email)
+        public User Debug(string email)
         {
             if (String.IsNullOrEmpty(email))
             {
@@ -56,21 +55,43 @@ namespace Playr.Api.Controller
             }
         }
 
-        public User ResetToken(User u)
+        [HttpGet]
+        public User Find(string email)
         {
-            if (u == null || String.IsNullOrEmpty(u.Email) || String.IsNullOrEmpty(u.Token))
+            if (String.IsNullOrEmpty(email))
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide an email."));
+            }
+
+            using (var session = Helpers.DocumentStore.OpenSession())
+            {
+                var user = session.Load<User>("Users/" + email);
+                if (user == null)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
+                }
+                // Clear out the secrete...
+                user.Token = String.Empty;
+                return user;
+            }
+        }
+
+        [RequireToken, HttpPut]
+        public User ResetToken(string email)
+        {
+            if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(Request.GetToken()))
             {
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must Pass in Email and Toekn."));
             }
 
             using (var session = Helpers.DocumentStore.OpenSession())
             {
-                var user = session.Load<User>("Users/" + u.Email);
+                var user = session.Load<User>("Users/" + email);
                 if (user == null)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
                 }
-                if (u.Token != user.Token)
+                if (Request.GetToken() != user.Token)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No can do"));
                 }

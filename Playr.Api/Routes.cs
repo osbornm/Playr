@@ -84,8 +84,8 @@ namespace Playr.Api
             );
 
             routes.MapHttpRoute(
-                name: "playr/albums/id/download",
-                routeTemplate: "albums/{id}/download",
+                name: "playr/albums/name/download",
+                routeTemplate: "albums/{name}/download",
                 defaults: new { controller = "info", action = "DownloadAlbum" }
             );
 
@@ -108,14 +108,14 @@ namespace Playr.Api
             );
 
             routes.MapHttpRoute(
-                name: "playr/users/find",
-                routeTemplate: "users/find",
+                name: "playr/users/email",
+                routeTemplate: "users/{email}",
                 defaults: new { controller = "users", action = "find" }
             );
 
             routes.MapHttpRoute(
-                name: "playr/users/token",
-                routeTemplate: "users/token",
+                name: "playr/users/email/reset",
+                routeTemplate: "users/{email}/reset",
                 defaults: new { controller = "users", action = "resetToken" }
             );
 

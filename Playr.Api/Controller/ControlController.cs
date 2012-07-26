@@ -21,43 +21,43 @@ namespace Playr.Api.Controller
             itunes = new iTunesAppClass();
         }
 
-        [RequireToken]
+        [RequireToken, HttpPut]
         public void Pause()
         {
             itunes.Pause();
         }
 
-        [RequireToken]
+        [RequireToken, HttpPut]
         public void Play()
         {
             itunes.Play();
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void Next()
         {
             itunes.NextTrack();
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void Previous()
         {
             itunes.PreviousTrack();
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void VolumeUp()
         {
             itunes.SoundVolume += 5;
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void VolumeDown()
         {
             itunes.SoundVolume -= 5;
         }
 
-        [RequireToken]
+        [RequireToken, HttpPost]
         public void Speak(JObject json)
         {
             itunes.Speak(json["message"].ToString());      

@@ -37,6 +37,15 @@ namespace Playr.Api.Controller
             return GetQueue();
         }
 
+        [RequireToken, HttpPut]
+        public Queue QueueSong(int id)
+        {
+            var track = itunes.GetTrackById(id);
+            dynamic playlist = itunes.CurrentPlaylist;
+            playlist.AddTrack(track);
+            return GetQueue();
+        }
+
         [HttpGet]
         public HttpResponseMessage Artwork(int id)
         {
@@ -74,7 +83,7 @@ namespace Playr.Api.Controller
             return response;
         }
 
-        [HttpGet]
+        [RequireToken, HttpGet]
         public HttpResponseMessage DownloadSong(int id)
         {
             HttpResponseMessage response = new HttpResponseMessage();
@@ -95,11 +104,11 @@ namespace Playr.Api.Controller
             return response;
         }
 
-        [HttpGet]
-        public HttpResponseMessage DownloadAlbum(string album)
+        [RequireToken, HttpGet]
+        public HttpResponseMessage DownloadAlbum(string name)
         {
             HttpResponseMessage response = new HttpResponseMessage();
-            var tracks = itunes.GetAlbumTracks(album);
+            var tracks = itunes.GetAlbumTracks(name);
 
             if (!tracks.Any())
             {
@@ -112,7 +121,7 @@ namespace Playr.Api.Controller
                 {
                     zip.AddFile(t.Location, String.Empty);
                 }
-                zip.Name = album;
+                zip.Name = name;
                 var stream = new MemoryStream();
                 zip.Save(stream);
                 stream.Position = 0;
@@ -121,12 +130,12 @@ namespace Playr.Api.Controller
                 response.Headers.CacheControl = new CacheControlHeaderValue();
                 response.Headers.CacheControl.MaxAge = TimeSpan.FromHours(24);
                 response.Headers.CacheControl.MustRevalidate = true;
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = String.Format("{0}.zip", album) };
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = String.Format("{0}.zip", name) };
                 return response;
             }
         }
 
-        [RequireToken, HttpPost, ActionName("favorite")]
+        [RequireToken, HttpPut, ActionName("favorite")]
         public void FavoriteSong(int id)
         {
             using (var session = Helpers.DocumentStore.OpenSession())
@@ -172,7 +181,7 @@ namespace Playr.Api.Controller
             }
         }
 
-        [HttpPost]
+        [RequireToken, HttpPost]
         public void Upload()
         {
             var mediaType = Request.Content.Headers.ContentType.MediaType;
@@ -223,16 +232,7 @@ namespace Playr.Api.Controller
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported."));
             }
         }
-
-        [HttpPut]
-        public Queue QueueSong(int id)
-        {
-            var track = itunes.GetTrackById(id);
-            dynamic playlist = itunes.CurrentPlaylist;
-            playlist.AddTrack(track);
-            return GetQueue();
-        }
-
+        
         [NonAction]
         public Queue GetQueue()
         {
