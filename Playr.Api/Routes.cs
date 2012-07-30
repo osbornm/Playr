@@ -119,7 +119,7 @@ namespace Playr.Api
                 defaults: new { controller = "users", action = "resetToken" }
             );
 
-            routes.MapHttpRoute("default", "{controller}/{action}");
+            //routes.MapHttpRoute("default", "{controller}/{action}");
         }
     }
 }

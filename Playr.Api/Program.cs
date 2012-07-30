@@ -8,6 +8,10 @@ using System.Net.Http;
 using iTunesLib;
 using System.Runtime.InteropServices;
 using System.IO;
+using Playr.Api.Handelrs;
+using SignalR.Hosting.Self;
+using SignalR;
+using System.Web.Http.Routing;
 
 namespace Playr.Api
 {
@@ -15,12 +19,18 @@ namespace Playr.Api
     {
         static void Main(string[] args)
         {
-            var config = new HttpSelfHostConfiguration("http://localhost:5555");
+            var config = new HttpSelfHostConfiguration(ApplicationSettings.apiBaseUrl);
             config.MaxReceivedMessageSize = 1024 * 1024 * 1024;
+            config.MessageHandlers.Add(new CorsHandler());
             Routes.RegisterRoutes(config.Routes);
 
-            var server = new HttpSelfHostServer(config);
-            server.OpenAsync().Wait();
+
+            var apiServer = new HttpSelfHostServer(config);
+            apiServer.OpenAsync().Wait();
+            var signalrServer = new Server(ApplicationSettings.signalrBaseUrl);
+            signalrServer.MapHubs("/signalr");
+            signalrServer.Start();
+
             Helpers.InitializeDocumentStore();
             var itunes = new iTunesAppClass();
             Start(itunes);
@@ -29,7 +39,8 @@ namespace Playr.Api
             Console.ReadLine();
 
             // Stop Everything
-            server.CloseAsync().Wait();
+            apiServer.CloseAsync().Wait();
+            signalrServer.Stop();
             Stop(itunes);
             Marshal.ReleaseComObject(itunes);
         }
@@ -81,6 +92,15 @@ namespace Playr.Api
             // TODO: Is this Okay to do? Do i want to assume this is set up? Add to readme?
             ApplicationSettings.iTunesAddFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "iTunes\\iTunes Media\\Automatically Add to iTunes");
 
+            // Set up track change
+            itunes.OnPlayerPlayEvent += itunes_OnPlayerPlayEvent;
+
+        }
+
+        static void itunes_OnPlayerPlayEvent(object iTrack)
+        {
+            var hub = GlobalHost.ConnectionManager.GetHubContext<Playr.Api.Hubs.PlayrHub>();
+            hub.Clients.CurrentTrackChanged(((IITTrack)iTrack).toSong());
         }
 
     }

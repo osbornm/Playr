@@ -15,6 +15,8 @@ namespace Playr.Api
 {
     public static class Helpers
     {
+        public static string _artworkUrlFormatString = ApplicationSettings.apiBaseUrl + "/songs/{0}/artwork";
+        
         public static string GetToken(this HttpRequestMessage request)
         {
             
@@ -49,12 +51,7 @@ namespace Playr.Api
 
         public static Song toSong(this IITTrack t)
         {
-            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name };
-        }
-
-        public static Song toSong(this IITTrack t, UrlHelper url)
-        {
-            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = url.Link("artwork", new { id = t.TrackDatabaseID }) };
+            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID) };
         }
 
         private static IDocumentStore docStore;

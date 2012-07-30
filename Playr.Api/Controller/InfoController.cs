@@ -28,7 +28,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public Song CurrentTrack()
         {
-            return itunes.CurrentTrack.toSong(Url);
+            return itunes.CurrentTrack.toSong();
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace Playr.Api.Controller
             return response;
         }
 
-        [RequireToken, HttpGet]
+        [HttpGet]
         public HttpResponseMessage DownloadSong(int id)
         {
             HttpResponseMessage response = new HttpResponseMessage();
@@ -104,7 +104,7 @@ namespace Playr.Api.Controller
             return response;
         }
 
-        [RequireToken, HttpGet]
+        [HttpGet]
         public HttpResponseMessage DownloadAlbum(string name)
         {
             HttpResponseMessage response = new HttpResponseMessage();
@@ -242,14 +242,14 @@ namespace Playr.Api.Controller
 
             for (int i = 1; i < 6; i++)
             {
-                queue.PreviouslyPlayed.Add(tracks[i].toSong(Url));
+                queue.PreviouslyPlayed.Add(tracks[i].toSong());
             }
 
-            queue.CurrentTrack = tracks[6].toSong(Url);
+            queue.CurrentTrack = tracks[6].toSong();
 
             for (int i = 7; i <= tracks.Count; i++)
             {
-                queue.UpNext.Add(tracks[i].toSong(Url));
+                queue.UpNext.Add(tracks[i].toSong());
             }
             return queue;
         }

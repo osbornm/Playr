@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts {
+
+<script src="@Href("~/scripts/jquery.signalr-0.5.2.js")"></script>
+<script src="http://localhost:5554/signalr/hubs"></script>
+
+<script>
+    $(function () {
+        hub = $.connection.playr;
+        hub.CurrentTrackChanged = function (song) {
+            ko.applyBindings(new Song(song));
+        };
+
+        $.connection.hub.url = "http://localhost:5554/signalr"
+        $.connection.hub.start();
+
+        $.getJSON("http://localhost:5555/current", function (data) {
+            ko.applyBindings(new Song(data));
+        });
+
+        function Song(data) {
+            this.Id = ko.observable(data.Id);
+            this.Artist = ko.observable(data.Artist);
+            this.Album = ko.observable(data.Album);
+            this.Title = ko.observable(data.Title);
+            this.Rating = ko.observable(data.Rating);
+            this.ArtworkUrl = ko.observable(data.ArtworkUrl);
+            this.songDownloadUrl = ko.computed(function () {
+                return "http://localhost:5555/songs/" + this.Id() + "/download";
+            }, this);
+            this.albumDownloadUrl = ko.computed(function () {
+                return "http://localhost:5555/albums/" + this.Album() + "/download";
+            }, this);
+        }
+    });
+</script>
+
+}
+
+
+<section class="current-song">
+    <img class="album-artwork" data-bind="attr: { src: ArtworkUrl, title: Album }"/>
+    <hgroup>
+        <h1><a data-bind="text: Title, attr: { href: songDownloadUrl }" title="download song"></a></h1>
+        <h2><a data-bind="text: Album, attr: { href: albumDownloadUrl }" title="download album"></a></h2>
+    </hgroup>
+</section>

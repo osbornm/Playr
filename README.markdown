@@ -7,7 +7,7 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 * Make sure iTunes DJ is [enabled & configured](http://support.apple.com/kb/PH1741?viewlocale=en_US)
 * In order to help keep your media organized it is highly recommended that you enable the ["keep iTunes Media Folder organized"](http://km.support.apple.com/library/APPLE/APPLECARE_ALLGEOS/HT1364/HT1364_02----003.png) setting. If you choose not to do this uploaded file names with be random GUIDs.
 * Build and run Playr.Api Console Application (Needs to be run as an admin)
-* Be default Server is running at [http://localhost:5555](http://localhost:5555)
+* Be default Server is running at [http://localhost:5555](http://localhost:5555) and the signalr notification service is running on [http://localhost:5554](http://localhost:5554)
 
 ##Usage
 * /pause                  [PUT]
@@ -29,3 +29,6 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 * /users/register         [POST]
 * /users/{email}          [GET]
 * /users/{email}/token    [PUT]
+
+###Speacial Thanks
+to [Black Raven](http://blackravenbrewing.com), where most of this app was coded, to my lovely wife to be for understanding my desire to work on side projects, and to all the folks, too numerous to list, who have helped get bits and pieces working. 
