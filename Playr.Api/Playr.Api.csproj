@@ -140,7 +140,7 @@
     <Compile Include="Controller\InfoController.cs" />
     <Compile Include="Handlers\CorsHandler.cs" />
     <Compile Include="Hubs\PlayrHub.cs" />
-    <Compile Include="Models\Queue.cs" />
+    <Compile Include="Models\DjInfo.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="RequireTokenAttribute.cs" />
     <Compile Include="Controller\ControlController.cs" />

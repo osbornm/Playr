@@ -13,6 +13,7 @@ using System.Net.Http;
 
 namespace Playr.Api
 {
+    // TODO: should probably also consider supporting a querystring param... 
     public class RequireTokenAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(HttpActionContext context)

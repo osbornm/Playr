@@ -1,0 +1,58 @@
+﻿@model Playr.Web.Models.ProfileModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>This is your profile.</h2>
+</hgroup>
+
+<p class="message-info">
+    This is the token that will be used to Identify you to the playr API. Don't worry about this
+    if you are only going to use Playr.Web.
+</p>
+
+<fieldset>
+    <legend>API Token</legend>
+    <ol>
+        <li>
+            @Html.LabelFor(m => m.Token)
+            @Html.TextBoxFor(m => m.Token)                
+        </li>
+    </ol>
+    @* Regenerate Token button here *@
+</fieldset>
+
+
+<p class="message-info">
+    Passwords must be at least @Membership.MinRequiredPasswordLength characters long.
+</p>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Change Password Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.OldPassword)
+                @Html.PasswordFor(m => m.OldPassword)                
+            </li>
+            <li>
+                @Html.LabelFor(m => m.NewPassword)
+                @Html.PasswordFor(m => m.NewPassword)                
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword)                
+            </li>
+        </ol>
+        <input type="submit" value="Change password" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

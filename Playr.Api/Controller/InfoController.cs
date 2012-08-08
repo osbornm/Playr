@@ -32,13 +32,13 @@ namespace Playr.Api.Controller
         }
 
         [HttpGet]
-        public Queue Queue()
+        public DjInfo Queue()
         {
             return GetQueue();
         }
 
         [RequireToken, HttpPut]
-        public Queue QueueSong(int id)
+        public DjInfo QueueSong(int id)
         {
             var track = itunes.GetTrackById(id);
             dynamic playlist = itunes.CurrentPlaylist;
@@ -234,22 +234,22 @@ namespace Playr.Api.Controller
         }
         
         [NonAction]
-        public Queue GetQueue()
+        public DjInfo GetQueue()
         {
             var tracks = itunes.CurrentPlaylist.Tracks;
 
-            var queue = new Queue();
+            var queue = new DjInfo();
 
             for (int i = 1; i < 6; i++)
             {
-                queue.PreviouslyPlayed.Add(tracks[i].toSong());
+                queue.History.Add(tracks[i].toSong());
             }
 
             queue.CurrentTrack = tracks[6].toSong();
 
             for (int i = 7; i <= tracks.Count; i++)
             {
-                queue.UpNext.Add(tracks[i].toSong());
+                queue.Queue.Add(tracks[i].toSong());
             }
             return queue;
         }

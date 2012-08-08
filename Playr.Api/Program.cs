@@ -12,6 +12,7 @@ using Playr.Api.Handelrs;
 using SignalR.Hosting.Self;
 using SignalR;
 using System.Web.Http.Routing;
+using Playr.Api.Models;
 
 namespace Playr.Api
 {
@@ -100,7 +101,7 @@ namespace Playr.Api
         static void itunes_OnPlayerPlayEvent(object iTrack)
         {
             var hub = GlobalHost.ConnectionManager.GetHubContext<Playr.Api.Hubs.PlayrHub>();
-            hub.Clients.CurrentTrackChanged(((IITTrack)iTrack).toSong());
+            hub.Clients.DjInfoUpdated();
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -31,6 +32,23 @@ namespace Playr.Api.Controller
         public void Play()
         {
             itunes.Play();
+        }
+
+        [RequireToken, HttpPut]
+        public object PlayPause()
+        {
+            var pasueMusic = itunes.PlayerState == ITPlayerState.ITPlayerStatePlaying;
+            if (pasueMusic)
+            {
+                itunes.Pause();
+                return new { Status = "Paused" };
+            }
+            else
+            {
+                itunes.Play();
+                return new { Status = "Playing" };
+            }
+
         }
 
         [RequireToken, HttpPost]

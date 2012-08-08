@@ -24,6 +24,12 @@ namespace Playr.Api
             );
 
             routes.MapHttpRoute(
+               name: "playr/playpause",
+               routeTemplate: "playpause",
+               defaults: new { controller = "control", action = "playpause" }
+           );
+
+            routes.MapHttpRoute(
                 name: "playr/next",
                 routeTemplate: "next",
                 defaults: new { controller = "control", action = "next" }
@@ -98,7 +104,7 @@ namespace Playr.Api
             routes.MapHttpRoute(
                 name: "playr/say",
                 routeTemplate: "say",
-                defaults: new { controller = "info", action = "speak" }
+                defaults: new { controller = "control", action = "speak" }
             );
 
             routes.MapHttpRoute(
