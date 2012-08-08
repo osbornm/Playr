@@ -1,6 +1,7 @@
 _ReSharper*
 bin
 Bin
+_bin_deployableAssemblies
 obj
 *.user
 *.patch
