@@ -19,9 +19,12 @@ namespace Playr.Api
         
         public static string GetToken(this HttpRequestMessage request)
         {
-            
             var header = request.Headers.SingleOrDefault(x => x.Key == "x-playr-token");
-            return header.Value.First();
+            if (header.Value == null)
+            {
+                return String.Empty;
+            }
+            return header.Value.FirstOrDefault();
         }
 
         public static IITTrack GetTrackById(this iTunesAppClass itunes, int id)
@@ -52,6 +55,13 @@ namespace Playr.Api
         public static Song toSong(this IITTrack t)
         {
             return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID) };
+        }
+
+        public static Song toSong(this IITTrack t, User u)
+        {
+            // TODO: Make this shit faster yo....
+            var isFavorite = u != null && u.Favorites.Where(s => s.Id == t.TrackDatabaseID).Any();
+            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID), IsFavorite = isFavorite };
         }
 
         private static IDocumentStore docStore;

@@ -14,19 +14,19 @@
                 <a href="@Url.Action("index","home")" title="Playr Home" class="logo">▶ Playr</a>
             </div>
         </header>
-        <section id="commandBar">
-            <a href="#">Queue</a>    
-        </section>
+        @Html.Partial("_CommandBar")    
         <div id="body" class="content-wrapper">
             @RenderBody()
         </div>
         <footer>
             <div class="content-wrapper">
-                <p>playr on <a href="http://github.com/osbornm/playr">github</a></p>
+                <p>Created by <a href="http://osbornm.com">Matthew M. Osborn</a>.</p>
+                <p>Check out playr on <a href="http://github.com/osbornm/playr">github</a>.</p>
             </div>
         </footer>
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/ko")
+        <script src="@Href("~/scripts/playr.js")"></script>
         @RenderSection("scripts", required: false)
     </body>
 </html>

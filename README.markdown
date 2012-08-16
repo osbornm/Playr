@@ -12,6 +12,7 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 ##Usage
 * /pause                  [PUT]
 * /play                   [PUT]
+* /playpause              [PUT]
 * /next                   [POST]
 * /previous               [POST]
 * /volume/up              [POST]

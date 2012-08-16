@@ -55,7 +55,6 @@ mark {
 
 h1, h2, h3,
 h4, h5, h6 {
-    color: #000;
     margin-bottom: 0;
     padding-bottom: 0;
 }
@@ -99,10 +98,8 @@ footer {
     background-color: #F2E9E1;
     font-size: .8em;
     height: 100px;
+    padding-top: 10px;
 }
-
-
-
 
 
 /* forms */
@@ -135,33 +132,44 @@ fieldset {
         display: inline;
     }
 
+    fieldset input[type="checkbox"] {
+        background-color:#fff;
+        border: 1px solid #1C140D;
+        color: #1C140D;
+    }
+    
     fieldset input[type="text"],
     fieldset input[type="password"] {
-        border: 1px solid #e2e2e2;
-        color: #333;
+        border: 1px solid #1C140D;
+        color: #1C140D;
         font-size: 1.2em;
         margin: 5px 0 6px 0;
         padding: 5px;
-        width: 300px;
+        width: 310px;
     }
 
         fieldset input[type="text"]:focus,
         fieldset input[type="password"]:focus {
-            border: 1px solid #7ac0da;
+            border: 1px solid #CBE86B;
         }
 
     fieldset input[type="submit"] {
-        background-color: #d3dce0;
-        border: 1px solid #787878;
+        background-color: #CBE86B;
+        border: none;
+        color: #fff;
         cursor: pointer;
-        font-size: 1.2em;
-        font-weight: 600;
+        font-size: 1.5em;
+        font-weight: 800;
         padding: 7px;
     }
 
 
 
 /* styles for validation helpers */
+.validation-summary-errors ul {
+    padding-left: 0;
+}
+
 .field-validation-error {
     color: #e80c4d;
     font-weight: bold;
@@ -186,32 +194,6 @@ input[type="password"].input-validation-error {
     display: none;
 }
 
-ul#social li {
-    display: inline;
-    list-style: none;
-}
-
-    ul#social li a {
-        color: #999;
-        text-decoration: none;
-    }
-
-    a.facebook, a.twitter {
-        display: block;
-        float: left;
-        height: 24px;
-        padding-left: 17px;
-        text-indent: -9999px;
-        width: 16px;
-    }
-
-    a.facebook {
-        background: url("../Images/facebook.png") no-repeat;
-    }
-
-    a.twitter {
-        background: url("../Images/twitter.png") no-repeat;
-    }
 
 /* tables
 ----------------------------------------------------------*/
@@ -276,6 +258,28 @@ tr.pager td {
 }
 
 
+/* info and errors */
+.message-info {
+    border: 1px solid;
+    clear: both;
+    padding: 10px 20px;
+}
+
+.message-error {
+    clear: both;
+    color: #e80c4d;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+}
+
+.message-success {
+    color: #CBE86B;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+}
+
 /*---------------------------------------*/
 .logo {
     background-image: url(/images/logo.png);
@@ -288,24 +292,29 @@ tr.pager td {
     width: 210px;
 }
 
-
 #commandBar {
+    color: #fff;
     background-color: #CBE86B;
     position: absolute;
     top: 0;
     right: 20px;
-    height: 20px;
     width: 150px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    padding: 5px;
-    color: #fff;
+    padding: 10px 10px;
+    font-weight: bold;
+    font-size: 1.25em;
 }
 
     #commandBar a {
         color: #fff;
     }
+
+    #commandBar .expanded {
+        display: none;
+    }
+
 
 
 /* Playing */
@@ -331,6 +340,7 @@ tr.pager td {
 
     #controls .play,
     #controls .previous,
+    #controls .favorite,
     #controls .next {
         margin: 10px;
         display: inline-block;
@@ -349,10 +359,38 @@ tr.pager td {
     #controls .next {
         background-image: url(/images/forward.png);
     }
-
+    #controls .favorite {
+        background-image: url(/images/emptyFavorite.png);
+    }
+        #controls .favorite.favorited {
+            background-image: url(/images/fullFavorite.png);
+        }
+        
 ol.history {
+    float: left;
+    padding: 0;
+    margin: 0 5px 0 0;
+}
+
+    .history li {
+        list-style: none;
+        padding: 0 0 5px 0;
+        margin: 0;
+    }
+
+    ol.history img {
+        height: 31px;
+        width: 31px;
+        display: block;
+    }
+
+
+ol.history .history-details {
     display: none;
 }
+
+
+    
 
 /* Song List */
 
@@ -364,7 +402,7 @@ ol.history {
     .songs li.song {
         clear: both;
         height: 50px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
         .songs li.song .album-artwork {
@@ -376,6 +414,7 @@ ol.history {
 
         .songs li.song h2 {
             font-size: 1.5em;
+            padding-top:0;
         }
     
         .songs li.song h3 {

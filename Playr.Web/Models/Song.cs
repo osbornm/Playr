@@ -13,5 +13,6 @@ namespace Playr.Web.Models
         public string Title { get; set; }
         public int Rating { get; set; }
         public string ArtworkUrl { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

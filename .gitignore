@@ -19,3 +19,4 @@ TestResults
 DebugConstants.cs
 *.log
 packages/*
+Playr.Web/App_Data/*

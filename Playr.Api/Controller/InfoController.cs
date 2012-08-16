@@ -49,7 +49,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public HttpResponseMessage Artwork(int id)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
+            HttpResponseMessage response = Request.CreateResponse();
             var track = itunes.GetTrackById(id);
 
             if (track == null)
@@ -86,7 +86,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public HttpResponseMessage DownloadSong(int id)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
+            HttpResponseMessage response = Request.CreateResponse();
             var track = itunes.GetTrackById(id);
 
             if (track == null)
@@ -107,7 +107,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public HttpResponseMessage DownloadAlbum(string name)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
+            HttpResponseMessage response = Request.CreateResponse();
             var tracks = itunes.GetAlbumTracks(name);
 
             if (!tracks.Any())
@@ -216,7 +216,7 @@ namespace Playr.Api.Controller
                      mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
                      mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
             {
-                // TOOO: itunes it stupid and requires and extension for the file to be picked up. For now assume MIME type is audio/{extension} 
+                // TOOO: itunes is stupid and requires the extension for the file to be picked up. For now assume MIME type is audio/{extension} 
                 var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, String.Format("{0}.{1}", Guid.NewGuid(), mediaType.Substring(6)));
                 using (var fileStream = File.Create(localFile))
                 {
@@ -236,20 +236,34 @@ namespace Playr.Api.Controller
         [NonAction]
         public DjInfo GetQueue()
         {
+            var token = Request.GetToken();
+            User user = null;
+            using (var session = Helpers.DocumentStore.OpenSession())
+            {
+                user = session.Query<User>().Where(u => u.Token == token).FirstOrDefault();
+            }
+
             var tracks = itunes.CurrentPlaylist.Tracks;
 
             var queue = new DjInfo();
 
-            for (int i = 1; i < 6; i++)
-            {
-                queue.History.Add(tracks[i].toSong());
-            }
+            var currentTrackReached = false;
 
-            queue.CurrentTrack = tracks[6].toSong();
-
-            for (int i = 7; i <= tracks.Count; i++)
+            foreach (IITTrack track in tracks)
             {
-                queue.Queue.Add(tracks[i].toSong());
+                if (!currentTrackReached && track.TrackDatabaseID == itunes.CurrentTrack.TrackDatabaseID)
+                {
+                    currentTrackReached = true;
+                    queue.CurrentTrack = track.toSong(user);
+                }
+                else if (currentTrackReached)
+                {
+                    queue.Queue.Add(track.toSong(user));
+                } 
+                else 
+                {
+                    queue.History.Add(track.toSong(user));
+                }
             }
             return queue;
         }

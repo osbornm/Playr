@@ -16,22 +16,7 @@ namespace Playr.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5555/Queue");
-                
-            // If logged in send the Token
-            if (Request.IsAuthenticated)
-            {
-                using (var db = new PlayrContext())
-                {
-                    var email = Membership.GetUser().Email;
-                    var userToken = db.UserTokens.FirstOrDefault(u => u.Email == email);
-                    if (userToken != null)
-                    {
-                        request.Headers.Add("x-playr-token", userToken.Token);
-                    }
-                }
-            }
-
+            var request = CreateRequest(HttpMethod.Get, "http://localhost:5555/Queue", Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return View(await response.Content.ReadAsAsync<JToken>());
@@ -107,6 +92,44 @@ namespace Playr.Web.Controllers
                 }
             }
             return null;
+        }
+
+        public async Task<JToken> GetQueue()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Get, "http://localhost:5555/Queue", Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        public async Task<JToken> favorite(int id)
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(foo[Request.HttpMethod], "http://localhost:5555/songs/" + id + "/favorite", Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        private Dictionary<string, HttpMethod> foo = new Dictionary<string, HttpMethod> { { "GET", HttpMethod.Get }, { "POST", HttpMethod.Post }, { "PUT", HttpMethod.Put }, { "DELETE", HttpMethod.Delete } };
+        
+        public static HttpRequestMessage CreateRequest(HttpMethod method, string Url, bool includeUserToken)
+        {
+            var request = new HttpRequestMessage(method, Url);
+            if (includeUserToken)
+            {
+                using (var db = new PlayrContext())
+                {
+                    var email = Membership.GetUser().Email;
+                    var userToken = db.UserTokens.FirstOrDefault(u => u.Email == email);
+                    if (userToken != null)
+                    {
+                        request.Headers.Add("x-playr-token", userToken.Token);
+                    }
+                }
+            }
+            return request;
         }
     }
 }

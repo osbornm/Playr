@@ -90,7 +90,6 @@ namespace Playr.Api
             ApplicationSettings.TempPath = temp;
 
             // Automatically Add to Itunes folder
-            // TODO: Is this Okay to do? Do i want to assume this is set up? Add to readme?
             ApplicationSettings.iTunesAddFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "iTunes\\iTunes Media\\Automatically Add to iTunes");
 
             // Set up track change

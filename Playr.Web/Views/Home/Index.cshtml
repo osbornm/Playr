@@ -1,14 +1,14 @@
 ﻿@model Newtonsoft.Json.Linq.JToken
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Currently Playing";
 }
 
 @section scripts {
 
 <script src="@Href("~/scripts/jquery.signalr-0.5.2.js")"></script>
 <script src="http://localhost:5554/signalr/hubs"></script>
-<script src="@Href("~/scripts/playr.js")"></script>
+<script src="@Href("~/scripts/jquery.balloon.min.js")"></script>
 
 
 <script>
@@ -16,28 +16,22 @@
         playr.initMainPage(@Html.Raw(Model));
 
 
-        $("#controls .play").click(function () {
-            $.getJSON('@Url.Action("PlayPause", "home")');
-            return false;
+        $("#controls .play").click(function (event) {
+            event.preventDefault();
+            $.ajax({url: '@Url.Action("PlayPause", "home")'});
         });
 
-        $("#controls .previous").click(function () {
-            $.getJSON('@Url.Action("Previous", "home")');
-            return false;
+        $("#controls .previous").click(function (event) {
+            event.preventDefault();
+            $.ajax({url: '@Url.Action("Previous", "home")'});
         });
 
-        $("#controls .next").click(function () {
+        $("#controls .next").click(function (event) {
+            event.preventDefault();
             $.ajax({url: '@Url.Action("Next", "home")'});
-            return false;
         });
 
-
-
-        $("#history h2").click(function(){
-            $("#history ol").toggle("slow");
-        });
-
-
+        
 
     });
 </script>
@@ -45,78 +39,43 @@
 }
 
 
-<section id="history">
-    <h2>History</h2>
-    <ol class="songs history" data-bind="foreach: History">
-        <li class="song">
-            <a data-bind="attr: { href: $data.albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }"></a>
-            <h2 data-bind="text: $data.Title"></h2>
-            <h3 data-bind="text: $data.Artist"></h3>
-        </li>
-    </ol>
-</section>
-
-
-<section id="playing" data-bind="with: CurrentTrack">
+<section id="playing">
     <div class="left">
-        <a data-bind="attr: { href: albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: ArtworkUrl }"></a>
+        <ol class="history" data-bind="foreach: History">
+            <li>
+                <img data-bind="attr: { src: $data.ArtworkUrl, title: $data.Title }"/>
+                <div class="history-details">
+                    <a data-bind="attr: { href: $data.albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }" /></a>
+                    <h2 data-bind="text: $data.Title"></h2>
+                    <h3 data-bind="text: $data.Artist"></h3>
+                </div>
+            </li>
+        </ol>
+        <a data-bind="attr: { href: CurrentTrack().albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: CurrentTrack().ArtworkUrl }"></a>
     </div>
     <div class="right clear-fix">
-        <h1><a data-bind="text: Title, attr: { href: songDownloadUrl }" title="download song"></a></h1>
-        <h2 data-bind="text: Album"></h2>
-        <h3 data-bind="text: Artist"></h3>
-       
+        <h1><a data-bind="text: CurrentTrack().Title, attr: { href: CurrentTrack().songDownloadUrl }" title="download song"></a></h1>
+        <h2 data-bind="text: CurrentTrack().Album"></h2>
+        <h3 data-bind="text: CurrentTrack().Artist"></h3>
+        @if (Request.IsAuthenticated) {
+        <div id="controls">
+            <a class="favorite" data-bind="click: CurrentTrack().Favorite, css: { favorited: CurrentTrack().IsFavorite }">Favorite</a>
+            <a class="previous">Previous</a>
+            <a class="play">Play/Pause</a>
+            <a class="next">Next</a>
+        </div>
+        }
     </div>
 </section>
 
- @if (Request.IsAuthenticated) {
-        <div id="controls">
-            <a class="previous" href="#">Previous</a>
-            <a class="play" href="#">Play/Pause</a>
-            <a class="next" href="#">Next</a>
-        </div>
-        }
 
 
-<section id="queue">
+<section id="songs">
     <ol class="songs" data-bind="foreach: Queue">
         <li class="song">
-            <a data-bind="attr: { href: $data.albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }"></a>
+            <a data-bind="attr: { href: $data.albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }" /></a>
             <h2 data-bind="text: $data.Title"></h2>
             <h3 data-bind="text: $data.Artist"></h3>
         </li>
     </ol>
 </section>
-
-
-
-
-
-@*
-
- <li class="song">
-            <a title="Download this album" href="http://localhost:5555/albums/Bangarang EP [Explicit]/download"><img class="album-artwork" src="http://localhost:5555/songs/79/artwork"></a>
-            <h2><a title="download song" href="http://localhost:5555/songs/79/download">Skrillex Orchestral Suite By Varien (Bonus Track)</a></h2>
-            <h3>Skrillex</h3>
-        </li>
-        <li class="song">
-            <a title="Download this album" href="http://localhost:5555/albums/Bangarang EP [Explicit]/download"><img class="album-artwork" src="http://localhost:5555/songs/79/artwork"></a>
-            <h2><a title="download song" href="http://localhost:5555/songs/79/download">Skrillex Orchestral Suite By Varien (Bonus Track)</a></h2>
-            <h3>Skrillex</h3>
-        </li>
-        <li class="song">
-            <a title="Download this album" href="http://localhost:5555/albums/Bangarang EP [Explicit]/download"><img class="album-artwork" src="http://localhost:5555/songs/79/artwork"></a>
-            <h2><a title="download song" href="http://localhost:5555/songs/79/download">Skrillex Orchestral Suite By Varien (Bonus Track)</a></h2>
-            <h3>Skrillex</h3>
-        </li>
-        <li class="song">
-            <a title="Download this album" href="http://localhost:5555/albums/Bangarang EP [Explicit]/download"><img class="album-artwork" src="http://localhost:5555/songs/79/artwork"></a>
-            <h2><a title="download song" href="http://localhost:5555/songs/79/download">Skrillex Orchestral Suite By Varien (Bonus Track)</a></h2>
-            <h3>Skrillex</h3>
-        </li>
-        <li class="song">
-            <a title="Download this album" href="http://localhost:5555/albums/Bangarang EP [Explicit]/download"><img class="album-artwork" src="http://localhost:5555/songs/79/artwork"></a>
-            <h2><a title="download song" href="http://localhost:5555/songs/79/download">Skrillex Orchestral Suite By Varien (Bonus Track)</a></h2>
-            <h3>Skrillex</h3>
-        </li>
-*@

@@ -14,14 +14,14 @@ namespace Playr.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+            routes.MapRoute(
+                name: "Default",
+                url: "songs/{id}/favorite",
+                defaults: new { controller = "Home", action = "favorite" }
             );
 
             routes.MapRoute(
-                name: "Default",
+                name: "foo",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );

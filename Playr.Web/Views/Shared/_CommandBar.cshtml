@@ -1,0 +1,24 @@
+﻿<section id="commandBar">
+    <div class="header">
+        @if (Request.IsAuthenticated) {
+            @Html.ActionLink(User.Identity.Name, "Profile", "Account")
+        } else { 
+            
+            @Html.ActionLink("Sign in", "Login", "Account")
+        }
+    </div>
+    <div class="expanded">
+        <hav>
+             @if (Request.IsAuthenticated)
+             {
+                 @Html.ActionLink("Sign Out", "LogOff", "Account")
+             } else {
+                @Html.ActionLink("Register", "Register", "Account")                
+             }
+        </hav>
+    </div>
+</section>
+
+
+
+

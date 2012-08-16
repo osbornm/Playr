@@ -1,13 +1,10 @@
 ﻿@model Playr.Web.Models.RegisterModel
 
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Create Account";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
-</hgroup>
+<h1>@ViewBag.Title</h1>
 
 <p class="message-info">
     Passwords must be at least @Membership.MinRequiredPasswordLength characters long.
@@ -36,7 +33,7 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
         </ol>
-        <input type="submit" value="Register" />
+        <input type="submit" value="Create Account" />
     </fieldset>
 }
 

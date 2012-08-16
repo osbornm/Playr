@@ -1,19 +1,16 @@
 ﻿@model Playr.Web.Models.LoginModel
 
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = "Sign In";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Use this form to enter your user name and password.</h2>
-</hgroup>
+<h1>@ViewBag.Title</h1>
 
 @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
     @Html.ValidationSummary(true, "Log in was unsuccessful. Please correct the errors and try again.")
 
     <fieldset>
-        <legend>Log in Form</legend>
+        <legend>Sign In Form</legend>
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
@@ -28,13 +25,9 @@
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
             </li>
         </ol>
-        <input type="submit" value="Log in" />
+        <input type="submit" value="Sign In" />
     </fieldset>
-    <p>
-        @Html.ActionLink("Register", "Register") if you don't have an account.
-    </p>
 }
-
 
 
 @section Scripts {

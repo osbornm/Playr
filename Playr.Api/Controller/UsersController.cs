@@ -37,25 +37,6 @@ namespace Playr.Api.Controller
         }
 
         [HttpGet]
-        public User Debug(string email)
-        {
-            if (String.IsNullOrEmpty(email))
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide an email."));
-            }
-
-            using (var session = Helpers.DocumentStore.OpenSession())
-            {
-                var user = session.Load<User>("Users/" + email);
-                if (user == null)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "No such user"));
-                }
-                return user;
-            }
-        }
-
-        [HttpGet]
         public User Find(string email)
         {
             if (String.IsNullOrEmpty(email))

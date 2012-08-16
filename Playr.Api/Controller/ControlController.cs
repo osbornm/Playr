@@ -59,7 +59,7 @@ namespace Playr.Api.Controller
 
         [RequireToken, HttpPost]
         public void Previous()
-        {
+        {  
             itunes.PreviousTrack();
         }
 
