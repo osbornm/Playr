@@ -11,7 +11,7 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 * Be default Server is running at [http://localhost:5555](http://localhost:5555) and the signalr notification service is running on [http://localhost:5554](http://localhost:5554)
 * Navigate to whatever port Playr.Web is running on and start enjoying
 
-##Usage
+##API Endpoints
 * /pause                  [*PUT*]
 * /play                   [*PUT*]
 * /playpause              [*PUT*]
