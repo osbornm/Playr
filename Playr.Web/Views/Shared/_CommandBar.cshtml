@@ -8,14 +8,17 @@
         }
     </div>
     <div class="expanded">
-        <hav>
+        <nav>
+            <ul>
              @if (Request.IsAuthenticated)
              {
-                 @Html.ActionLink("Sign Out", "LogOff", "Account")
+                 <li>@Html.ActionLink("Upload", "Upload", "Home")</li>                
+                 <li>@Html.ActionLink("Sign Out", "LogOff", "Account")</li>
              } else {
-                @Html.ActionLink("Register", "Register", "Account")                
+                <li>@Html.ActionLink("Register", "Register", "Account")</li>
              }
-        </hav>
+             </ul>
+        </nav>
     </div>
 </section>
 

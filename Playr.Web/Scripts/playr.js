@@ -78,4 +78,8 @@ $(function () {
     }, function () {
         $(this).find(".expanded").slideUp();
     });
+
+
+
+
 });

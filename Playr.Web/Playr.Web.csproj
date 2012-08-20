@@ -208,6 +208,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\logo.png" />
     <Content Include="Scripts\jquery.balloon.min.js" />
+    <Content Include="Scripts\jquery.filedrop.js" />
     <Content Include="Scripts\playr.js" />
     <Content Include="Views\Account\Profile.cshtml" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js">
@@ -251,8 +252,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_CommandBar.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -261,6 +260,7 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Home\Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

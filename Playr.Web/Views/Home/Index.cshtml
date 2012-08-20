@@ -31,8 +31,25 @@
             $.ajax({url: '@Url.Action("Next", "home")'});
         });
 
-        
+    });
 
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('html').filedrop({
+            url: '@Url.Action("UploadFiles")',
+            paramname: 'files',
+            maxFiles: 5,
+            maxfilesize: 512,
+            uploadFinished: function (i, file, response, time) {
+                alert(response);
+            }
+        });
     });
 </script>
 

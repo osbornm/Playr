@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -20,20 +22,6 @@ namespace Playr.Web.Controllers
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return View(await response.Content.ReadAsAsync<JToken>());
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your app description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
         }
 
         public async Task<JToken> PlayPause()
@@ -106,14 +94,51 @@ namespace Playr.Web.Controllers
         public async Task<JToken> favorite(int id)
         {
             var client = new HttpClient();
-            var request = CreateRequest(foo[Request.HttpMethod], "http://localhost:5555/songs/" + id + "/favorite", Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethodTypes[Request.HttpMethod], "http://localhost:5555/songs/" + id + "/favorite", Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
         }
 
-        private Dictionary<string, HttpMethod> foo = new Dictionary<string, HttpMethod> { { "GET", HttpMethod.Get }, { "POST", HttpMethod.Post }, { "PUT", HttpMethod.Put }, { "DELETE", HttpMethod.Delete } };
-        
+        [HttpPost]
+        public async Task<ActionResult> UploadFiles(IEnumerable<HttpPostedFileBase> files)
+        {
+            foreach (var file in files)
+            {
+                await UploadFile(file);
+            }
+            return Json("All Files Uploaded");
+        }
+
+        public ActionResult Upload()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Upload(IEnumerable<HttpPostedFileBase> files)
+        {
+            foreach (var file in files)
+            {
+                try
+                {
+                    await UploadFile(file);
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            return RedirectToAction("index");
+        }
+
+        private Dictionary<string, HttpMethod> HttpMethodTypes = new Dictionary<string, HttpMethod> { { "GET", HttpMethod.Get }, { "POST", HttpMethod.Post }, { "PUT", HttpMethod.Put }, { "DELETE", HttpMethod.Delete } };
+
+        [NonAction]
         public static HttpRequestMessage CreateRequest(HttpMethod method, string Url, bool includeUserToken)
         {
             var request = new HttpRequestMessage(method, Url);
@@ -130,6 +155,19 @@ namespace Playr.Web.Controllers
                 }
             }
             return request;
+        }
+
+        [NonAction]
+        private async Task<JToken> UploadFile(HttpPostedFileBase file)
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Post, "http://localhost:5555/upload", true);
+            var content = new StreamContent(file.InputStream);
+            content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            request.Content = content;
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
         }
     }
 }

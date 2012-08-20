@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Upload music to Playr";
+}
+
+<p class="message-info">
+    You can upload single files (.mp4, .m4a, .mp3, or .wav) or a .zip file.
+</p>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Upload music to Playr</legend>
+        <ol>
+            <li>
+                <label for="files">
+                    Pick your music
+                    <input type="file" name="files" id="files" required="required" multiple="multiple" />
+                </label>         
+            </li>
+        </ol>
+        <input type="submit" value="Upload Music" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
