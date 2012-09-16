@@ -2,6 +2,9 @@
 
 I'm not going to lie this is basically a rip off of [play](https://github.com/play) but writen in .net and using the Microsoft stack. It was a side project to learn new stuff when we, the Azure Portal Team, moved to a team room.
 
+[![Playr Presentation](https://github.com/osbornm/Playr/blob/master/Media/SlidePreview.png?raw=true)
+](http://speakerdeck.com/u/osbornm/p/playr)
+
 ##Setup
 
 * Install [iTunes](http://itunes.apple.com)
@@ -12,26 +15,31 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 * Navigate to whatever port Playr.Web is running on and start enjoying
 
 ##API Endpoints
-* /pause                  [*PUT*]
-* /play                   [*PUT*]
-* /playpause              [*PUT*]
-* /next                   [*POST*]
-* /previous               [*POST*]
-* /volume/up              [*POST*]
-* /volume/down            [*POST*]
-* /current                [*GET*]
-* /queue                  [*GET*]
-* /queue/{id}             [*POST*]
-* /songs/{id}/download    [*GET*]
-* /songs/{id}/artwork     [*GET*]
-* /songs/{id}/favorite    [*PUT*]
-* /songs/{id}/favorite    [*DELETE*]
-* /albums/{name}/download [*GET*]
-* /upload                 [*POST*]
-* /say                    [*POST*]
-* /users/register         [*POST*]
-* /users/{email}          [*GET*]
-* /users/{email}/token    [*PUT*]
 
-###Speacial Thanks
+<table>
+	<tr><td>/pause                  </td><td><em>PUT    </em></td></tr>
+	<tr><td>/play                   </td><td><em>PUT    </em></td></tr>
+	<tr><td>/playpause              </td><td><em>PUT    </em></td></tr>
+	<tr><td>/next                   </td><td><em>POST   </em></td></tr>
+	<tr><td>/previous               </td><td><em>POST   </em></td></tr>
+	<tr><td>/volume/up              </td><td><em>POST   </em></td></tr>
+	<tr><td>/volume/down            </td><td><em>POST   </em></td></tr>
+	<tr><td>/current                </td><td><em>GET    </em></td></tr>
+	<tr><td>/queue                  </td><td><em>GET    </em></td></tr>
+	<tr><td>/queue/{id}             </td><td><em>POST   </em></td></tr>
+	<tr><td>/songs/{id}/download    </td><td><em>GET    </em></td></tr>
+    <tr><td>/songs/{id}/artwork     </td><td><em>GET    </em></td></tr>
+    <tr><td>/songs/{id}/favorite    </td><td><em>PUT    </em></td></tr>
+    <tr><td>/songs/{id}/favorite    </td><td><em>DELETE </em></td></tr>
+    <tr><td>/albums/{name}/download </td><td><em>GET    </em></td></tr>
+    <tr><td>/upload                 </td><td><em>POST   </em></td></tr>
+    <tr><td>/say                    </td><td><em>POST   </em></td></tr>
+    <tr><td>/users/register         </td><td><em>POST   </em></td></tr>
+    <tr><td>/users/{email}          </td><td><em>GET    </em></td></tr>
+    <tr><td>/users/{email}/token    </td><td><em>PUT    </em></td></tr>
+</table>
+
+
+###Special Thanks
+
 to [Black Raven](http://blackravenbrewing.com), where most of this app was coded, to my lovely wife to be for understanding my desire to work on side projects, and to all the folks, too numerous to list, who have helped get bits and pieces working. 

@@ -20,3 +20,4 @@ DebugConstants.cs
 *.log
 packages/*
 Playr.Web/App_Data/*
+playr.web/properties/PublishProfiles/*

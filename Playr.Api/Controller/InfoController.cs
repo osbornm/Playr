@@ -28,7 +28,22 @@ namespace Playr.Api.Controller
         [HttpGet]
         public Song CurrentTrack()
         {
-            return itunes.CurrentTrack.toSong();
+            var song = itunes.CurrentTrack.toSong();
+            var token = Request.GetToken();
+            if (!String.IsNullOrEmpty(token))
+            {
+                User user = null;
+                using (var session = Helpers.DocumentStore.OpenSession())
+                {
+                    user = session.Query<User>().Where(u => u.Token == token).FirstOrDefault();
+                }
+                if (user != null)
+                {
+                    song.IsFavorite = user.Favorites.Where(s => s.Id == song.Id).Any();
+                }
+            }
+
+            return song;
         }
 
         [HttpGet]

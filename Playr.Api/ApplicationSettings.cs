@@ -12,6 +12,6 @@ namespace Playr.Api
         public static string TempPath;
         public static string iTunesAddFolder;
         public static string apiBaseUrl = "http://localhost:5555";
-        public static string signalrBaseUrl = "http://localhost:5554/";
+        public static string signalrBaseUrl = "http://*:5554/";
     }
 }

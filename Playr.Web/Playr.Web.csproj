@@ -211,6 +211,7 @@
     <Content Include="Scripts\jquery.filedrop.js" />
     <Content Include="Scripts\playr.js" />
     <Content Include="Views\Account\Profile.cshtml" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js">
       <DependentUpon>jquery-1.7.2.js</DependentUpon>
     </None>

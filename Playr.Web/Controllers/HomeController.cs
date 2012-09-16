@@ -13,6 +13,8 @@ using Playr.Web.Models;
 
 namespace Playr.Web.Controllers
 {
+    //TODO: clean up controllers! Access controls, validation, the wroks!
+
     public class HomeController : Controller
     {
         public async Task<ActionResult> Index()
