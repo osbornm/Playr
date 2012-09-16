@@ -9,14 +9,9 @@
         self.Rating = ko.observable(data.Rating);
         self.ArtworkUrl = ko.observable(data.ArtworkUrl);
         self.IsFavorite = ko.observable(data.IsFavorite);
+        self.songDownloadUrl = ko.observable(data.DownloadUrl);
+        self.albumDownloadUrl = ko.observable(data.AlbumDownloadUrl);
 
-        self.songDownloadUrl = ko.computed(function () {
-            return "http://localhost:5555/songs/" + self.Id() + "/download";
-        });
-
-        self.albumDownloadUrl = ko.computed(function () {
-            return "http://localhost:5555/albums/" + self.Album() + "/download";
-        });
 
         self.Favorite = function () {
             var url = "/songs/" + self.Id() + "/favorite";
@@ -30,7 +25,7 @@
         };
     },
 
-    initMainPage: function(data) {
+    initMainPage: function(data, hubUrl) {
         function PageViewModel(djInfo) {
             var self = this;
             self.CurrentTrack = ko.observable(new playr.Song(djInfo.CurrentTrack));
@@ -66,7 +61,7 @@
             });
         };
 
-        $.connection.hub.url = "http://localhost:5554/signalr"
+        $.connection.hub.url = hubUrl;
         $.connection.hub.start();
     }
 };

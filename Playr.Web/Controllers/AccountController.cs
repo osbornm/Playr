@@ -75,7 +75,7 @@ namespace Playr.Web.Controllers
                 var client = new HttpClient();
                 var content = new StringContent(@"{ ""Email"": """ + model.Email + @""", ""Name"": """ + model.UserName + @"""}");
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var response = await client.PostAsync("http://localhost:5555/users/register", content);
+                var response = await client.PostAsync(Helpers.BuildApiUrl("/users/register"), content);
                 var user = await response.Content.ReadAsAsync<ApiUser>();
                 
                 // Could not create an API user for some reason

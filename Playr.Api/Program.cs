@@ -24,8 +24,6 @@ namespace Playr.Api
             config.MaxReceivedMessageSize = 1024 * 1024 * 1024;
             config.MessageHandlers.Add(new CorsHandler());
             Routes.RegisterRoutes(config.Routes);
-
-
             var apiServer = new HttpSelfHostServer(config);
             apiServer.OpenAsync().Wait();
             var signalrServer = new Server(ApplicationSettings.signalrBaseUrl);
@@ -36,6 +34,10 @@ namespace Playr.Api
             var itunes = new iTunesAppClass();
             Start(itunes);
 
+            Console.WriteLine("API is avalible at " + ApplicationSettings.apiBaseUrl);
+            Console.WriteLine("Singlar Nortifications avalible at " + ApplicationSettings.signalrBaseUrl);
+            Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");
+            Console.WriteLine();
             Console.WriteLine("Press any key to stop server...");
             Console.ReadLine();
 

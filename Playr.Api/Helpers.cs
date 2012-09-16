@@ -16,6 +16,8 @@ namespace Playr.Api
     public static class Helpers
     {
         public static string _artworkUrlFormatString = ApplicationSettings.apiBaseUrl + "/songs/{0}/artwork";
+        public static string _downloadUrlFormatString = ApplicationSettings.apiBaseUrl + "/songs/{0}/download";
+        public static string _albumDownloadUrlFormatString = ApplicationSettings.apiBaseUrl + "/album/{0}/download";
         
         public static string GetToken(this HttpRequestMessage request)
         {
@@ -54,14 +56,35 @@ namespace Playr.Api
 
         public static Song toSong(this IITTrack t)
         {
-            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID) };
+            return new Song
+            {
+                Id = t.TrackDatabaseID,
+                Album = t.Album,
+                Artist = t.Artist,
+                Rating = t.Rating,
+                Title = t.Name,
+                ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID),
+                DownloadUrl = String.Format(_downloadUrlFormatString, t.TrackDatabaseID),
+                AlbumDownloadUrl = String.Format(_albumDownloadUrlFormatString, t.TrackDatabaseID)
+            };
         }
 
         public static Song toSong(this IITTrack t, User u)
         {
             // TODO: Make this shit faster yo....
             var isFavorite = u != null && u.Favorites.Where(s => s.Id == t.TrackDatabaseID).Any();
-            return new Song { Id = t.TrackDatabaseID, Album = t.Album, Artist = t.Artist, Rating = t.Rating, Title = t.Name, ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID), IsFavorite = isFavorite };
+            return new Song
+            {
+                Id = t.TrackDatabaseID,
+                Album = t.Album,
+                Artist = t.Artist,
+                Rating = t.Rating,
+                Title = t.Name,
+                ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID),
+                IsFavorite = isFavorite,
+                DownloadUrl = String.Format(_downloadUrlFormatString, t.TrackDatabaseID),
+                AlbumDownloadUrl = String.Format(_albumDownloadUrlFormatString, t.TrackDatabaseID)
+            };
         }
 
         private static IDocumentStore docStore;

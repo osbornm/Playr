@@ -17,10 +17,11 @@ namespace Playr.Web.Controllers
 
     public class HomeController : Controller
     {
+
         public async Task<ActionResult> Index()
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethod.Get, "http://localhost:5555/Queue", Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethod.Get, Helpers.BuildApiUrl("/Queue"), Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return View(await response.Content.ReadAsAsync<JToken>());
@@ -35,7 +36,7 @@ namespace Playr.Web.Controllers
                 if (userToken != null)
                 {
                     var client = new HttpClient();
-                    var request = new HttpRequestMessage(HttpMethod.Put, "http://localhost:5555/PlayPause");
+                    var request = new HttpRequestMessage(HttpMethod.Put,Helpers.BuildApiUrl("/PlayPause"));
                     request.Headers.Add("x-playr-token", userToken.Token);
                     var response = await client.SendAsync(request);
                     response.EnsureSuccessStatusCode();
@@ -54,7 +55,7 @@ namespace Playr.Web.Controllers
                 if (userToken != null)
                 {
                     var client = new HttpClient();
-                    var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5555/next");
+                    var request = new HttpRequestMessage(HttpMethod.Post, Helpers.BuildApiUrl("/next"));
                     request.Headers.Add("x-playr-token", userToken.Token);
                     var response = await client.SendAsync(request);
                     response.EnsureSuccessStatusCode();
@@ -74,7 +75,7 @@ namespace Playr.Web.Controllers
                 if (userToken != null)
                 {
                     var client = new HttpClient();
-                    var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5555/previous");
+                    var request = new HttpRequestMessage(HttpMethod.Post, Helpers.BuildApiUrl("/previous"));
                     request.Headers.Add("x-playr-token", userToken.Token);
                     var response = await client.SendAsync(request);
                     response.EnsureSuccessStatusCode();
@@ -87,7 +88,7 @@ namespace Playr.Web.Controllers
         public async Task<JToken> GetQueue()
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethod.Get, "http://localhost:5555/Queue", Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethod.Get,Helpers.BuildApiUrl("/Queue"), Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
@@ -96,7 +97,7 @@ namespace Playr.Web.Controllers
         public async Task<JToken> favorite(int id)
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethodTypes[Request.HttpMethod], "http://localhost:5555/songs/" + id + "/favorite", Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethodTypes[Request.HttpMethod], Helpers.BuildApiUrl("/songs/" + id + "/favorite"), Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
@@ -163,7 +164,7 @@ namespace Playr.Web.Controllers
         private async Task<JToken> UploadFile(HttpPostedFileBase file)
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethod.Post, "http://localhost:5555/upload", true);
+            var request = CreateRequest(HttpMethod.Post, Helpers.BuildApiUrl("/upload"), true);
             var content = new StreamContent(file.InputStream);
             content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
             request.Content = content;

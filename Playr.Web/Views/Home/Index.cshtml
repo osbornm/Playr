@@ -7,13 +7,12 @@
 @section scripts {
 
 <script src="@Href("~/scripts/jquery.signalr-0.5.2.js")"></script>
-<script src="http://localhost:5554/signalr/hubs"></script>
+<script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
 <script src="@Href("~/scripts/jquery.balloon.min.js")"></script>
-
-
+    
 <script>
     $(function () {
-        playr.initMainPage(@Html.Raw(Model));
+        playr.initMainPage(@Html.Raw(Model), "@Playr.Web.Helpers.BuildNotificationUrl()");
 
 
         $("#controls .play").click(function (event) {
@@ -32,14 +31,9 @@
         });
 
     });
-
-
-
-
-
 </script>
 
-<script type="text/javascript">
+<script>
     $(function () {
         $('html').filedrop({
             url: '@Url.Action("UploadFiles")',
@@ -84,8 +78,6 @@
         }
     </div>
 </section>
-
-
 
 <section id="songs">
     <ol class="songs" data-bind="foreach: Queue">
