@@ -39,6 +39,8 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
     <tr><td>/users/{email}/token    </td><td><em>PUT    </em></td></tr>
 </table>
 
+## Screenshots
+![Main Page](https://github.com/osbornm/Playr/blob/master/Media/Screenshot1.png?raw=true)
 
 ###Special Thanks
 

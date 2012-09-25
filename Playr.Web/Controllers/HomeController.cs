@@ -27,6 +27,7 @@ namespace Playr.Web.Controllers
             return View(await response.Content.ReadAsAsync<JToken>());
         }
 
+        [Authorize]
         public async Task<JToken> PlayPause()
         {
             using (var db = new PlayrContext())
@@ -46,6 +47,7 @@ namespace Playr.Web.Controllers
             return null;
         }
 
+        [Authorize]
         public async Task<JToken> Next()
         {
             using (var db = new PlayrContext())
@@ -66,6 +68,7 @@ namespace Playr.Web.Controllers
             return null;
         }
 
+        [Authorize]
         public async Task<JToken> Previous()
         {
             using (var db = new PlayrContext())
@@ -94,6 +97,7 @@ namespace Playr.Web.Controllers
             return await response.Content.ReadAsAsync<JToken>();
         }
 
+        [Authorize]
         public async Task<JToken> favorite(int id)
         {
             var client = new HttpClient();
@@ -137,6 +141,12 @@ namespace Playr.Web.Controllers
                 return View();
             }
             return RedirectToAction("index");
+        }
+
+        [Authorize]
+        public ActionResult Admin()
+        {
+            return View();
         }
 
         private Dictionary<string, HttpMethod> HttpMethodTypes = new Dictionary<string, HttpMethod> { { "GET", HttpMethod.Get }, { "POST", HttpMethod.Post }, { "PUT", HttpMethod.Put }, { "DELETE", HttpMethod.Delete } };
