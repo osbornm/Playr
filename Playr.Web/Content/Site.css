@@ -85,6 +85,7 @@ h5, h6 {
 .content-wrapper {
     margin: 0 auto;
     max-width: 960px;
+    min-width: 960px;
 }
 
 #body {
@@ -327,72 +328,76 @@ tr.pager td {
     margin-bottom: 30px;
 }
 
-#playing .left {
-    float: left;
-}
-
-#playing h1,
-#playing h2,
-#playing h3 {
-    margin: 0;
-}
-
-#playing .album-artwork {
-    height: 175px;
-    margin-right: 10px;
-    width: 175px;
-}
-
-    #controls .play,
-    #controls .previous,
-    #controls .favorite,
-    #controls .next {
-        margin: 10px;
-        display: inline-block;
-        height: 32px;
-        text-indent: -9999px;
-        width: 32px;
-        margin-top: 30px;
+    #playing .left {
+        float: left;
     }
 
-    #controls .play {
-        background-image: url(/images/playPause.png);
-    }
-    #controls .previous {
-        background-image: url(/images/back.png);
-    }
-    #controls .next {
-        background-image: url(/images/forward.png);
-    }
-    #controls .favorite {
-        background-image: url(/images/emptyFavorite.png);
-    }
-        #controls .favorite.favorited {
-            background-image: url(/images/fullFavorite.png);
-        }
-        
-ol.history {
-    float: left;
-    padding: 0;
-    margin: 0 5px 0 0;
-}
-
-    .history li {
-        list-style: none;
-        padding: 0 0 5px 0;
+    #playing h1,
+    #playing h2,
+    #playing h3 {
         margin: 0;
     }
 
-    ol.history img {
-        height: 31px;
-        width: 31px;
-        display: block;
+    #playing time {
+        font-size: 2em;
     }
 
+    #playing .album-artwork {
+        height: 175px;
+        margin-right: 10px;
+        width: 175px;
+    }
 
-ol.history .history-details {
-    display: none;
-}
+        #controls .play,
+        #controls .previous,
+        #controls .favorite,
+        #controls .next {
+            margin: 10px;
+            display: inline-block;
+            height: 32px;
+            text-indent: -9999px;
+            width: 32px;
+            margin-top: 17px;
+        }
+
+        #controls .play {
+            background-image: url(/images/playPause.png);
+        }
+        #controls .previous {
+            background-image: url(/images/back.png);
+        }
+        #controls .next {
+            background-image: url(/images/forward.png);
+        }
+        #controls .favorite {
+            background-image: url(/images/emptyFavorite.png);
+        }
+            #controls .favorite.favorited {
+                background-image: url(/images/fullFavorite.png);
+            }
+        
+    ol.history {
+        float: left;
+        padding: 0;
+        margin: 0 5px 0 0;
+    }
+
+        .history li {
+            list-style: none;
+            padding: 0 0 5px 0;
+            margin: 0;
+        }
+
+        ol.history img {
+            height: 31px;
+            width: 31px;
+            display: block;
+        }
+
+
+    ol.history .history-details {
+        display: none;
+    }
 
 
     

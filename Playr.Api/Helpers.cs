@@ -17,7 +17,7 @@ namespace Playr.Api
     {
         public static string _artworkUrlFormatString = ApplicationSettings.apiBaseUrl + "/songs/{0}/artwork";
         public static string _downloadUrlFormatString = ApplicationSettings.apiBaseUrl + "/songs/{0}/download";
-        public static string _albumDownloadUrlFormatString = ApplicationSettings.apiBaseUrl + "/album/{0}/download";
+        public static string _albumDownloadUrlFormatString = ApplicationSettings.apiBaseUrl + "/albums/{0}/download";
         
         public static string GetToken(this HttpRequestMessage request)
         {
@@ -65,26 +65,31 @@ namespace Playr.Api
                 Title = t.Name,
                 ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID),
                 DownloadUrl = String.Format(_downloadUrlFormatString, t.TrackDatabaseID),
-                AlbumDownloadUrl = String.Format(_albumDownloadUrlFormatString, t.TrackDatabaseID)
+                AlbumDownloadUrl = String.Format(_albumDownloadUrlFormatString, t.TrackDatabaseID),
+                Duration = t.Duration
             };
+        }
+
+        public static Song toSong(this IITTrack t, int position)
+        {
+            var song = Helpers.toSong(t);
+            song.Poisition = position;
+            return song;
         }
 
         public static Song toSong(this IITTrack t, User u)
         {
-            // TODO: Make this shit faster yo....
             var isFavorite = u != null && u.Favorites.Where(s => s.Id == t.TrackDatabaseID).Any();
-            return new Song
-            {
-                Id = t.TrackDatabaseID,
-                Album = t.Album,
-                Artist = t.Artist,
-                Rating = t.Rating,
-                Title = t.Name,
-                ArtworkUrl = String.Format(_artworkUrlFormatString, t.TrackDatabaseID),
-                IsFavorite = isFavorite,
-                DownloadUrl = String.Format(_downloadUrlFormatString, t.TrackDatabaseID),
-                AlbumDownloadUrl = String.Format(_albumDownloadUrlFormatString, t.TrackDatabaseID)
-            };
+            var song = Helpers.toSong(t);
+            song.IsFavorite = isFavorite;
+            return song;
+        }
+
+        public static Song toSong(this IITTrack t, int position, User u)
+        {
+            var song = Helpers.toSong(t, u);
+            song.Poisition = position;
+            return song;
         }
 
         private static IDocumentStore docStore;

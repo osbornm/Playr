@@ -28,7 +28,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public Song CurrentTrack()
         {
-            var song = itunes.CurrentTrack.toSong();
+            var song = itunes.CurrentTrack.toSong(itunes.PlayerPosition);
             var token = Request.GetToken();
             if (!String.IsNullOrEmpty(token))
             {
@@ -269,7 +269,7 @@ namespace Playr.Api.Controller
                 if (!currentTrackReached && track.TrackDatabaseID == itunes.CurrentTrack.TrackDatabaseID)
                 {
                     currentTrackReached = true;
-                    queue.CurrentTrack = track.toSong(user);
+                    queue.CurrentTrack = track.toSong(itunes.PlayerPosition, user);
                 }
                 else if (currentTrackReached)
                 {

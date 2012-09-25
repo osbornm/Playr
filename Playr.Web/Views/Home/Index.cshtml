@@ -17,6 +17,7 @@
 
         $("#controls .play").click(function (event) {
             event.preventDefault();
+            clearTimeout(playr.timer);
             $.ajax({url: '@Url.Action("PlayPause", "home")'});
         });
 
@@ -56,7 +57,7 @@
             <li>
                 <img data-bind="attr: { src: $data.ArtworkUrl, title: $data.Title }"/>
                 <div class="history-details">
-                    <a data-bind="attr: { href: $data.albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }" /></a>
+                    <a data-bind="attr: { href: $data.AlbumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: $data.ArtworkUrl }" /></a>
                     <h2 data-bind="text: $data.Title"></h2>
                     <h3 data-bind="text: $data.Artist"></h3>
                 </div>
@@ -65,9 +66,10 @@
         <a data-bind="attr: { href: CurrentTrack().albumDownloadUrl }" title="Download this album" ><img class="album-artwork" data-bind="attr: { src: CurrentTrack().ArtworkUrl }"></a>
     </div>
     <div class="right clear-fix">
-        <h1><a data-bind="text: CurrentTrack().Title, attr: { href: CurrentTrack().songDownloadUrl }" title="download song"></a></h1>
+        <h1><a data-bind="text: CurrentTrack().Title, attr: { href: CurrentTrack().SongDownloadUrl }" title="download song"></a></h1>
         <h2 data-bind="text: CurrentTrack().Album"></h2>
         <h3 data-bind="text: CurrentTrack().Artist"></h3>
+        <time data-bind="text: CurrentTrack().TimeRemaining()"></time>
         @if (Request.IsAuthenticated) {
         <div id="controls">
             <a class="favorite" data-bind="click: CurrentTrack().Favorite, css: { favorited: CurrentTrack().IsFavorite }">Favorite</a>

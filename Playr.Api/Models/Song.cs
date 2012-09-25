@@ -16,5 +16,7 @@ namespace Playr.Api.Models
         public bool IsFavorite { get; set; }
         public string DownloadUrl { get; set; }
         public string AlbumDownloadUrl { get; set; }
+        public int Duration { get; set; }
+        public int Poisition { get; set; }
     }
 }
