@@ -3,3 +3,27 @@
 }
 
 <h1>Admin</h1>
+
+<a href="#" id="up">Volume Up</a>
+<a href="#" id="down">Volume Down</a>
+
+@using(Ajax.BeginForm("Say", new AjaxOptions())){
+    <input type="text" name="message" />
+    <input type="submit" value="Say" />
+                                               }
+
+@section scripts {
+<script>
+    $(function () {
+        $("#up").click(function (event) {
+            event.preventDefault();
+            $.ajax({url: '@Url.Action("VolumeUp", "home")'});
+        });
+
+        $("#down").click(function (event) {
+            event.preventDefault();
+            $.ajax({ url: '@Url.Action("VolumeDown", "home")' });
+        });
+    });
+</script>
+}

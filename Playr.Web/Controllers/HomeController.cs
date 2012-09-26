@@ -87,21 +87,54 @@ namespace Playr.Web.Controllers
             }
             return null;
         }
-
-        public async Task<JToken> GetQueue()
+        
+        [Authorize]
+        public async Task<JToken> favorite(int id)
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethod.Get,Helpers.BuildApiUrl("/Queue"), Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethodTypes[Request.HttpMethod], Helpers.BuildApiUrl("/songs/" + id + "/favorite"), Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
         }
 
         [Authorize]
-        public async Task<JToken> favorite(int id)
+        public async Task<JToken> VolumeUp()
         {
             var client = new HttpClient();
-            var request = CreateRequest(HttpMethodTypes[Request.HttpMethod], Helpers.BuildApiUrl("/songs/" + id + "/favorite"), Request.IsAuthenticated);
+            var request = CreateRequest(HttpMethod.Post, Helpers.BuildApiUrl("/volume/up"), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        [Authorize]
+        public async Task<JToken> VolumeDown()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Post, Helpers.BuildApiUrl("/volume/down"), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        [Authorize]
+        public async Task<JToken> Say(string message)
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Post, Helpers.BuildApiUrl("/say"), Request.IsAuthenticated);
+            var content = new StringContent(@"{ ""message"": """ + message + @"""}");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            request.Content = content;
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        public async Task<JToken> GetQueue()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Get,Helpers.BuildApiUrl("/Queue"), Request.IsAuthenticated);
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
