@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Ionic.Zip;
@@ -226,10 +227,7 @@ namespace Playr.Api.Controller
             }
 
             // Did they upload just a single file?
-            else if (mediaType.Equals("audio/mp4", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/m4a", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/mp3", StringComparison.InvariantCultureIgnoreCase) ||
-                     mediaType.Equals("audio/wav", StringComparison.InvariantCultureIgnoreCase))
+            else if (Regex.IsMatch(mediaType, "audio*",RegexOptions.IgnoreCase))
             {
                 // TOOO: itunes is stupid and requires the extension for the file to be picked up. For now assume MIME type is audio/{extension} 
                 var localFile = Path.Combine(ApplicationSettings.iTunesAddFolder, String.Format("{0}.{1}", Guid.NewGuid(), mediaType.Substring(6)));
