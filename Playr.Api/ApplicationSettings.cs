@@ -9,9 +9,11 @@ namespace Playr.Api
     public static class ApplicationSettings
     {
         public static string ArtworkFolder;
+        public static string FanArtFolder;
         public static string TempPath;
         public static string iTunesAddFolder;
         public static string apiBaseUrl = "http://localhost:5555";
         public static string signalrBaseUrl = "http://*:5554/";
+        public static string fanArtApiKey = "";
     }
 }

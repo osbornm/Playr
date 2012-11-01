@@ -83,6 +83,14 @@ namespace Playr.Api
             }
             ApplicationSettings.ArtworkFolder = artwork;
 
+            // Check for fanart folder
+            var fanart = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fanart\\");
+            if (!Directory.Exists(fanart))
+            {
+                Directory.CreateDirectory(fanart);
+            }
+            ApplicationSettings.FanArtFolder = fanart;
+
             // Check for temp folder
             var temp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp\\");
             if (!Directory.Exists(temp))

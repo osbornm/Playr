@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Playr.Web.Models;
 
@@ -215,5 +216,40 @@ namespace Playr.Web.Controllers
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<JToken>();
         }
+
+
+        //**************************
+        // Experimental Shit
+        //**************************
+
+        [HttpGet]
+        public async Task<ActionResult> Lite()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Get, Helpers.BuildApiUrl("/Current"), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return View(await response.Content.ReadAsAsync<JToken>());
+        }
+
+        public async Task<JToken> GetCurrent()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Get, Helpers.BuildApiUrl("/Current"), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
+        public async Task<JToken> Fanart(string artist)
+        {
+            var client = new HttpClient();
+            var url = String.Format("/artists/{0}/Fanart", HttpUtility.UrlEncode(artist));
+            var request = CreateRequest(HttpMethod.Get, Helpers.BuildApiUrl(url), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<JToken>();
+        }
+
     }
 }

@@ -37,6 +37,8 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
     <tr><td>/users/register         </td><td><em>POST   </em></td></tr>
     <tr><td>/users/{email}          </td><td><em>GET    </em></td></tr>
     <tr><td>/users/{email}/token    </td><td><em>PUT    </em></td></tr>
+    <tr><td>/artists/{name}         </td><td><em>GET    </em></td></tr>
+    <tr><td>/artists/{name}/{file}  </td><td><em>GET    </em></td></tr>
 </table>
 
 ## Screenshots

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using iTunesLib;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Playr.Api.Models;
 using Raven.Client;
 using Raven.Client.Embedded;
@@ -27,6 +30,11 @@ namespace Playr.Api
                 return String.Empty;
             }
             return header.Value.FirstOrDefault();
+        }
+
+        public static bool IsFanArtEnabled()
+        {
+            return !String.IsNullOrEmpty(ApplicationSettings.fanArtApiKey);
         }
 
         public static IITTrack GetTrackById(this iTunesAppClass itunes, int id)
@@ -124,9 +132,38 @@ namespace Playr.Api
                 itunes.Play();
             }
         }
-
-       
     }
 
+    public static class HttpContentExtensions
+    {
+        public static Task ReadAsFileAsync(this HttpContent content, string filename, bool overwrite)
+        {
+            string pathname = Path.GetFullPath(filename);
+            if (!overwrite && File.Exists(filename))
+            {
+                throw new InvalidOperationException(string.Format("File {0} already exists.", pathname));
+            }
+     
+            FileStream fileStream = null;
+            try
+            {
+                fileStream = new FileStream(pathname, FileMode.Create, FileAccess.Write, FileShare.None);
+                return content.CopyToAsync(fileStream).ContinueWith(
+                    (copyTask) =>
+                    {
+                        fileStream.Close();
+                    });
+            }
+            catch
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                }
+     
+                throw;
+            }
+        }
+    }
 
 }

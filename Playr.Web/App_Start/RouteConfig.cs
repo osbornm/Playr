@@ -21,10 +21,18 @@ namespace Playr.Web
             );
 
             routes.MapRoute(
+                name: "lite",
+                url: "lite",
+                defaults: new { controller = "Home", action = "Lite" }
+            );
+
+            routes.MapRoute(
                 name: "foo",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            
         }
     }
 }

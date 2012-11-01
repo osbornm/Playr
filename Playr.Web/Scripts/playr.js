@@ -33,6 +33,7 @@
         self.SongDownloadUrl = ko.observable(data.DownloadUrl);
         self.AlbumDownloadUrl = ko.observable(data.AlbumDownloadUrl);
         self.Duration = ko.observable(data.Duration);
+        self.DurationFormated = ko.observable(playr.ConvetToMinSec(data.Duration));
         self.Poisition = ko.observable(data.Poisition);
 
         self.TimeRemaining = ko.computed(function () {
@@ -100,6 +101,112 @@
 
         $.connection.hub.url = hubUrl;
         $.connection.hub.start();
+    },
+
+    //********************************
+    // Experimental Stuff Be Scared
+    // shity code below!!!
+    // HERE BE DRAGONS!
+    //********************************
+
+    initLitePage: function (data, hubUrl) {
+        function PageViewModel(currentTrack) {
+            var self = this;
+            self.CurrentTrack = ko.observable(new playr.Song(currentTrack));
+            self.FanArt = null;
+            self.FanArtIndex = 0;
+            self.RotateFanartTimer = null;
+            self.ProgressTimer = null;
+        }
+
+        function RotateFanart() {
+            if (viewModel.FanArt && viewModel.FanArt.length > 0) {
+                $(".fanart").fadeOut(4000, function () {
+                    $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
+                    $(".fanart").fadeIn(5000, function () {
+                        if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
+                            viewModel.FanArtIndex = 0;
+                        } else {
+                            viewModel.FanArtIndex++;
+                        }
+                    });
+                });
+                viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
+            }
+        }
+
+        function UpdateProgress() {
+            var position = viewModel.CurrentTrack().Poisition(),
+                length = viewModel.CurrentTrack().Duration();
+            if(position <= length){
+                viewModel.ProgressTimer = setTimeout(UpdateProgress, 1000);
+                $("#currentPosition").text(playr.ConvetToMinSec(position >= 1 ? position : 0));
+
+                viewModel.CurrentTrack().Poisition(position + 1);
+            } else {
+                clearTimeout(viewModel.ProgressTimer);
+            }
+        }
+
+        function SetProgressBar(position, duration) {
+            var timeLeft = (duration - position) * 1000;
+            $("#progressBar #progress").width(((position / duration) * 100) + "%").animate({ width:"100%" }, timeLeft, "linear");
+        }
+
+        var viewModel = new PageViewModel(data),
+           hub = $.connection.playr;
+
+        ko.applyBindings(viewModel);
+
+        hub.DjInfoUpdated = function () {
+            $.getJSON("/home/GetCurrent", function (data) {
+                clearTimeout(viewModel.RotateFanartTimer);
+                clearTimeout(viewModel.ProgressTimer);
+                viewModel.FanArtIndex = 0;
+                viewModel.CurrentTrack(new playr.Song(data));
+                $.getJSON("/home/Fanart?artist=" + viewModel.CurrentTrack().Artist(), function (art) {
+                    viewModel.FanArt = art;
+                    UpdateProgress();
+                    SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
+                    // we need to change the background image right away so it matches the artist
+                    $(".fanart").fadeOut(1000, function () {
+                        if (viewModel.FanArt && viewModel.FanArt.length > 0) {
+                            $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
+                            $(".fanart").fadeIn(1000, function () {
+                                if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
+                                    viewModel.FanArtIndex = 0;
+                                } else {
+                                    viewModel.FanArtIndex++;
+                                }
+                            });
+                        }
+                    });
+                    viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
+                });
+
+            });
+        };
+
+        $.getJSON("/home/Fanart?artist="+ viewModel.CurrentTrack().Artist(), function (art) {
+            viewModel.FanArt = art;
+            UpdateProgress();
+            SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
+            // we need to change the background image right away so it matches the artist
+            if (viewModel.FanArt && viewModel.FanArt.length > 0) {
+                $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
+                $(".fanart").fadeIn(1000, function () {
+                    if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
+                        viewModel.FanArtIndex = 0;
+                    } else {
+                        viewModel.FanArtIndex++;
+                    }
+                });
+            }
+            viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
+        });
+
+        $.connection.hub.url = hubUrl;
+        $.connection.hub.start();
     }
 };
 
@@ -110,8 +217,4 @@ $(function () {
     }, function () {
         $(this).find(".expanded").slideUp();
     });
-
-
-
-
 });

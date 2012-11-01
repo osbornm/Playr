@@ -1,0 +1,154 @@
+﻿@model Newtonsoft.Json.Linq.JToken
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>[Experimental] Currently Playing</title>
+    <style>
+        @@import url(http://fonts.googleapis.com/css?family=Oswald:300);
+        
+        html {
+            background-color: #f2e9e1;
+            font-family: 'Oswald', sans-serif;
+            color: #1c140d;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .fanart {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            background: url("") no-repeat center center fixed;
+            background-size: cover;
+            -moz-background-size: cover;
+            -webkit-background-size: cover;
+            -o-background-size: cover;
+            filter: alpha(opacity=30);
+            -moz-opacity: 0.3;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        #currentTrack img {
+            height: 250px;
+            width: 250px;
+            border: solid 1px #1c140d;
+            -moz-box-shadow: 5px 5px 15px #777;
+            -o-box-shadow: 5px 5px 15px #777;
+            -webkit-box-shadow: 5px 5px 15px #777;
+            box-shadow: 5px 5px 15px #777;
+            
+            float: left;
+            margin-top: 22px;
+        }
+
+
+        #currentTrack .text {
+            padding-left: 280px;
+            text-shadow: 5px 5px 10px #777;
+        }
+
+            #currentTrack .text h1,
+            #currentTrack .text h2 {
+                white-space: nowrap;
+	            overflow: hidden;
+	            text-overflow: ellipsis;
+                margin: 0;
+                font-weight: normal;
+            }
+
+            #currentTrack .text h1 {
+                font-size: 4em;
+            }
+
+            #currentTrack .text h2 {
+                font-size: 4em;
+            }
+
+
+        #timeline {
+            margin-top: 27px;
+        }
+            
+            
+        #trackLength,
+        #currentPosition {
+            font-size: 2em;
+            margin: 0;
+        }
+
+        #currentPosition {
+            float: left;
+        }
+
+        #trackLength {
+            text-align: right;
+        }    
+
+        #progressBar {
+            background-color: #fff;
+            -moz-box-shadow: 5px 5px 15px #777;
+            -o-box-shadow: 5px 5px 15px #777;
+            -webkit-box-shadow: 5px 5px 15px #777;
+            box-shadow: 5px 5px 15px #777;
+        }
+
+            #progressBar #progress {
+                background-color: #cbe86b;
+                height: 10px;
+                width: 0%;
+            }
+
+    </style>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/ko")
+    <script src="@Href("~/scripts/playr.js")"></script>
+    <script src="@Href("~/scripts/jquery.signalr-0.5.3.js")"></script>
+    <script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
+
+    <script>
+        $(function () {
+            playr.initLitePage(@Html.Raw(Model), "@Playr.Web.Helpers.BuildNotificationUrl()");
+        });
+    </script>
+
+
+</head>
+<body>
+    <div class="fanart"></div>
+    <div class ="content">
+        <section id="currentTrack">
+            <img data-bind="attr: { src: CurrentTrack().ArtworkUrl }" />
+            <div class="text">
+                <h1 data-bind="text: CurrentTrack().Title"></h1>
+                <h2 data-bind="text: CurrentTrack().Artist"></h2>
+
+                <div id="timeline">
+                    <div id="timelineText">
+                        <h3 id="currentPosition">0:00</h3>
+                        <h3 id="trackLength" data-bind="text: CurrentTrack().DurationFormated()">00:00</h3>
+                    </div>
+                    <div id="progressBar">
+                        <div id="progress"></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</body>
+</html>

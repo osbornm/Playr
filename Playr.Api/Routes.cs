@@ -125,6 +125,18 @@ namespace Playr.Api
                 defaults: new { controller = "users", action = "resetToken" }
             );
 
+            routes.MapHttpRoute(
+               name: "playr/fanart/artist",
+               routeTemplate: "artists/{artist}/fanart",
+               defaults: new { controller = "fanart", action = "FanartCollection" }
+           );
+
+            routes.MapHttpRoute(
+               name: "playr/fanart/artist/file",
+               routeTemplate: "artists/{artist}/fanart/{fileName}",
+               defaults: new { controller = "fanart", action = "Fanart" }
+           );
+
             //routes.MapHttpRoute("default", "{controller}/{action}");
         }
     }
