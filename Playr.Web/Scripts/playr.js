@@ -150,7 +150,7 @@
 
         function SetProgressBar(position, duration) {
             var timeLeft = (duration - position) * 1000;
-            $("#progressBar #progress").width(((position / duration) * 100) + "%").animate({ width:"100%" }, timeLeft, "linear");
+            $("#progressBar #progress").stop(true, true).width(((position / duration) * 100) + "%").animate({ width: "100%" }, timeLeft, "linear");
         }
 
         var viewModel = new PageViewModel(data),
@@ -179,6 +179,8 @@
                                     viewModel.FanArtIndex++;
                                 }
                             });
+                        } else {
+                            $(".fanart").css("background-image", "url('')");
                         }
                     });
                     viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
