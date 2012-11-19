@@ -113,26 +113,25 @@
         function PageViewModel(currentTrack) {
             var self = this;
             self.CurrentTrack = ko.observable(new playr.Song(currentTrack));
-            self.FanArt = null;
-            self.FanArtIndex = 0;
             self.RotateFanartTimer = null;
             self.ProgressTimer = null;
         }
 
-        function RotateFanart() {
-            if (viewModel.FanArt && viewModel.FanArt.length > 0) {
-                $(".fanart").fadeOut(4000, function () {
-                    $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
-                    $(".fanart").fadeIn(5000, function () {
-                        if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
-                            viewModel.FanArtIndex = 0;
-                        } else {
-                            viewModel.FanArtIndex++;
-                        }
+        function SetupFanart() {
+            $(".fanart").cycle("stop").fadeOut(500, function () {
+                $(this).cycle("destroy").empty().fadeIn(100);
+                $.getJSON("/home/Fanart?artist=" + viewModel.CurrentTrack().Artist(), function (art) {
+                    $.each(art, function (idx, item) {
+                        $(".fanart").append($("<div/>").css("background-image", "url(" + item + ")"));
+                    });
+
+                    $(".fanart").cycle({
+                        fx: 'fade',
+                        speed: 2000,
+                        timeout: 10000
                     });
                 });
-                viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
-            }
+            });
         }
 
         function UpdateProgress() {
@@ -160,52 +159,18 @@
 
         hub.DjInfoUpdated = function () {
             $.getJSON("/home/GetCurrent", function (data) {
-                clearTimeout(viewModel.RotateFanartTimer);
                 clearTimeout(viewModel.ProgressTimer);
-                viewModel.FanArtIndex = 0;
                 viewModel.CurrentTrack(new playr.Song(data));
-                $.getJSON("/home/Fanart?artist=" + viewModel.CurrentTrack().Artist(), function (art) {
-                    viewModel.FanArt = art;
-                    UpdateProgress();
-                    SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
-                    // we need to change the background image right away so it matches the artist
-                    $(".fanart").fadeOut(1000, function () {
-                        if (viewModel.FanArt && viewModel.FanArt.length > 0) {
-                            $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
-                            $(".fanart").fadeIn(1000, function () {
-                                if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
-                                    viewModel.FanArtIndex = 0;
-                                } else {
-                                    viewModel.FanArtIndex++;
-                                }
-                            });
-                        } else {
-                            $(".fanart").css("background-image", "url('')");
-                        }
-                    });
-                    viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
-                });
 
+                UpdateProgress();
+                SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
+                SetupFanart();
             });
         };
 
-        $.getJSON("/home/Fanart?artist="+ viewModel.CurrentTrack().Artist(), function (art) {
-            viewModel.FanArt = art;
-            UpdateProgress();
-            SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
-            // we need to change the background image right away so it matches the artist
-            if (viewModel.FanArt && viewModel.FanArt.length > 0) {
-                $(".fanart").css("background-image", "url(" + viewModel.FanArt[viewModel.FanArtIndex] + ")");
-                $(".fanart").fadeIn(1000, function () {
-                    if (viewModel.FanArtIndex == viewModel.FanArt.length - 1) {
-                        viewModel.FanArtIndex = 0;
-                    } else {
-                        viewModel.FanArtIndex++;
-                    }
-                });
-            }
-            viewModel.RotateFanartTimer = setTimeout(RotateFanart, 15000);
-        });
+        UpdateProgress();
+        SetProgressBar(viewModel.CurrentTrack().Poisition(), viewModel.CurrentTrack().Duration());
+        SetupFanart();
 
         $.connection.hub.url = hubUrl;
         $.connection.hub.start();

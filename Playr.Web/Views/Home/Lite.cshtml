@@ -21,25 +21,34 @@
             margin: 0;
             padding: 0;
         }
-        
+
         .fanart {
             position: fixed;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            background: url("") no-repeat center center fixed;
+            -moz-opacity: .4;
+            opacity: .4;
+        }
+        
+        .fanart div {
+            position: fixed;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             -moz-background-size: cover;
             -webkit-background-size: cover;
             -o-background-size: cover;
-            filter: alpha(opacity=30);
-            -moz-opacity: 0.3;
-            opacity: 0.3;
-            z-index: -1;
         }
 
         .content {
             padding: 20px;
+        }
+
+        #currentTrack {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
         }
 
         #currentTrack img {
@@ -58,7 +67,7 @@
 
         #currentTrack .text {
             padding-left: 280px;
-            text-shadow: 5px 5px 10px #777;
+            text-shadow: 2px 2px 10px #777;
         }
 
             #currentTrack .text h1,
@@ -115,10 +124,12 @@
     </style>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/ko")
     <script src="@Href("~/scripts/playr.js")"></script>
     <script src="@Href("~/scripts/jquery.signalr-0.5.3.js")"></script>
     <script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
+    <script src="@Href("~/scripts/jquery.cycle.lite.js")"></script>
 
     <script>
         $(function () {
