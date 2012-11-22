@@ -121,6 +121,64 @@
                 width: 0%;
             }
 
+
+        /* Album Art Stuff */
+                #albumArtContainer {
+            height: 250px;
+            width: 250px;
+            float: left;
+            -moz-perspective: 1000;
+            -ms-perspective: 1000;
+            -webkit-perspective: 1000;
+            perspective: 1000;
+        }
+
+        #albumArtContainer #albumArt img {
+          width: 250px;
+          height: 250px;
+          border: solid 1px #1c140d;
+          background-color: #000;
+          -moz-box-shadow: 5px 5px 15px #777;
+          -o-box-shadow: 5px 5px 15px #777;
+          -webkit-box-shadow: 5px 5px 15px #777;
+          box-shadow: 5px 5px 15px #777;
+        }
+
+        #albumArtContainer #albumArt {
+            width: 100%;
+            height: 100%;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-transition: all 1.5s linear;
+            transition: all 1.0s linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -moz-backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+            .face.back {
+                display: block;
+                -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                color: white;
+                text-align: center;
+                background-image: -webkit-gradient(radial, 50% 0%, 0, 50% 0%, 317, color-stop(35%, #47382b), color-stop(79%, #1c140d));
+                background-image: -webkit-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -moz-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -ms-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -o-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: radial-gradient(farthest-corner at center top, #47382b 35%, #1c140d 79%);
+            }
+
     </style>
 
     @Scripts.Render("~/bundles/jquery")
@@ -130,6 +188,7 @@
     <script src="@Href("~/scripts/jquery.signalr-0.5.3.js")"></script>
     <script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
     <script src="@Href("~/scripts/jquery.cycle.lite.js")"></script>
+    <script src="@Href("~/scripts/jquery.transit.js")"></script>
 
     <script>
         $(function () {
@@ -143,7 +202,12 @@
     <div class="fanart"></div>
     <div class ="content">
         <section id="currentTrack">
-            <img data-bind="attr: { src: CurrentTrack().ArtworkUrl }" />
+            <div id="albumArtContainer">
+                <div id="albumArt">
+                    <div class="front face"><img data-bind="flipAttr: { src: CurrentTrack().ArtworkUrl }" ></div>
+                    <div class="back face"></div>
+                </div>
+            </div>
             <div class="text">
                 <h1 data-bind="text: CurrentTrack().Title"></h1>
                 <h2 data-bind="text: CurrentTrack().Artist"></h2>
@@ -158,7 +222,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
     </div>
 </body>

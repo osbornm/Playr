@@ -124,12 +124,13 @@
                     $.each(art, function (idx, item) {
                         $(".fanart").append($("<div/>").css("background-image", "url(" + item + ")"));
                     });
-
-                    $(".fanart").cycle({
-                        fx: 'fade',
-                        speed: 2000,
-                        timeout: 10000
-                    });
+                    if (art.length > 1) {
+                        $(".fanart").cycle({
+                            fx: 'fade',
+                            speed: 2000,
+                            timeout: 10000
+                        });
+                    }
                 });
             });
         }
@@ -154,6 +155,42 @@
 
         var viewModel = new PageViewModel(data),
            hub = $.connection.playr;
+
+        ko.bindingHandlers['flipAttr'] = {
+            update: function (element, valueAccessor, allBindingsAccessor) {
+                var value = ko.utils.unwrapObservable(valueAccessor()) || {};
+
+                var updateAttr = function () {
+                    for (var attrName in value) {
+                        if (typeof attrName == "string") {
+                            var attrValue = ko.utils.unwrapObservable(value[attrName]);
+                            var toRemove = (attrValue === false) || (attrValue === null) || (attrValue === undefined);
+                            if (toRemove)
+                                element.removeAttribute(attrName);
+                            if (ko.utils.ieVersion <= 8 && attrName in attrHtmlToJavascriptMap) {
+                                attrName = attrHtmlToJavascriptMap[attrName];
+                                if (toRemove)
+                                    element.removeAttribute(attrName);
+                                else
+                                    element[attrName] = attrValue;
+                            } else if (!toRemove) {
+                                element.setAttribute(attrName, attrValue.toString());
+                            }
+                        }
+                    }
+                };
+                $("#albumArt").transition({
+                    perspective: '1000',
+                    rotateX: '+=180'
+                }, 500, "in", function () {
+                    updateAttr();
+                    $(this).transition({
+                        perspective: '1000',
+                        rotateX: '+=180'
+                    }, 500, "ease");
+                });
+            }
+        };
 
         ko.applyBindings(viewModel);
 
