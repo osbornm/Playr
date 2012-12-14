@@ -212,7 +212,12 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\back.png" />
+    <Content Include="Images\current.png" />
     <Content Include="Images\emptyFavorite.png" />
+    <Content Include="Images\Favorite-hover.png" />
+    <Content Include="Images\Favorite.png" />
+    <Content Include="Images\Favorited-hover.png" />
+    <Content Include="Images\Favorited.png" />
     <Content Include="Images\forward.png" />
     <Content Include="Images\fullFavorite.png" />
     <Content Include="Images\logo.png" />
@@ -220,6 +225,9 @@
     <None Include="Scripts\jquery-1.8.2.intellisense.js">
       <DependentUpon>jquery-1.8.2.js</DependentUpon>
     </None>
+    <Content Include="Scripts\jquery.cycle.js" />
+    <Content Include="Scripts\jquery.cycle.lite.js" />
+    <Content Include="Scripts\new.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js">
       <DependentUpon>jquery-1.8.2.js</DependentUpon>
@@ -244,6 +252,7 @@
     <Content Include="Scripts\playr.js" />
     <Content Include="Views\Account\Profile.cshtml" />
     <Content Include="Views\Home\Lite.cshtml" />
+    <Content Include="Views\Home\New.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

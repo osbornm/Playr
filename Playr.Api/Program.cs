@@ -51,6 +51,8 @@ namespace Playr.Api
         public static void Start(iTunesAppClass itunes)
         {
             SetUp(itunes);
+            itunes.InitializeTrackCache();
+
             if (itunes.CurrentPlaylist == null || itunes.CurrentPlaylist.Name != "iTunes DJ")
             {
                 var playlist = itunes.LibrarySource.Playlists.get_ItemByName("iTunes DJ");

@@ -251,5 +251,14 @@ namespace Playr.Web.Controllers
             return await response.Content.ReadAsAsync<JToken>();
         }
 
+        public async Task<ActionResult> New()
+        {
+            var client = new HttpClient();
+            var request = CreateRequest(HttpMethod.Get, Helpers.BuildApiUrl("/Queue"), Request.IsAuthenticated);
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return View(await response.Content.ReadAsAsync<JToken>());
+        }
+
     }
 }

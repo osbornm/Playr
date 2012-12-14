@@ -1,0 +1,306 @@
+﻿@model Newtonsoft.Json.Linq.JToken
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>[Experimental] Currently Playing</title>
+    <style>
+        @@import url(http://fonts.googleapis.com/css?family=Oswald:300);
+        
+        html {
+            background-color: #f2e9e1;
+            font-family: 'Oswald', sans-serif;
+            color: #1c140d;
+            min-height: 650px;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .fanart {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            -moz-opacity: .4;
+            opacity: .4;
+            z-index: -50;
+        }
+        
+        .fanart div {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            -moz-background-size: cover;
+            -webkit-background-size: cover;
+            -o-background-size: cover;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        #rightSide {
+            z-index: 3;
+            position: absolute;
+            margin-right: 10px;
+            bottom: 0;
+            right: 0;
+        }
+
+
+            #currentTrack h1,
+            #currentTrack h2 {
+                white-space: nowrap;
+	            overflow: hidden;
+	            text-overflow: ellipsis;
+                margin: 0;
+                font-weight: normal;
+            }
+
+            #currentTrack h1 {
+                font-size: 4em;
+            }
+
+            #currentTrack h2 {
+                font-size: 2.5em;
+            }
+
+
+        #timeline {
+            margin-top: 17px;
+            width: 352px;
+        }
+            
+            
+        #trackLength,
+        #currentPosition {
+            font-size: 1.25em;
+            margin: 0;
+        }
+
+        #currentPosition {
+            float: left;
+        }
+
+        #trackLength {
+            text-align: right;
+        }    
+
+        #progressBar {
+            background-color: #fff;
+            -moz-box-shadow: 5px 5px 15px #777;
+            -o-box-shadow: 5px 5px 15px #777;
+            -webkit-box-shadow: 5px 5px 15px #777;
+            box-shadow: 5px 5px 15px #777;
+        }
+
+            #progressBar #progress {
+                background-color: #cbe86b;
+                height: 10px;
+                width: 0%;
+            }
+
+
+        /* Album Art Stuff */
+        #albumArtContainer {
+            height: 350px;
+            width: 350px;
+            -moz-perspective: 1000;
+            -ms-perspective: 1000;
+            -webkit-perspective: 1000;
+            perspective: 1000;
+        }
+
+        #albumArtContainer #albumArt img {
+          width: 350px;
+          height: 350px;
+          border: solid 1px #1c140d;
+          background-color: #000;
+          -moz-box-shadow: 5px 5px 15px #777;
+          -o-box-shadow: 5px 5px 15px #777;
+          -webkit-box-shadow: 5px 5px 15px #777;
+          box-shadow: 5px 5px 15px #777;
+        }
+
+        #albumArtContainer #albumArt {
+            width: 100%;
+            height: 100%;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-transition: all 1.5s linear;
+            transition: all 1.0s linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -moz-backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+            .face.back {
+                display: block;
+                -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                color: white;
+                text-align: center;
+                background-image: -webkit-gradient(radial, 50% 0%, 0, 50% 0%, 317, color-stop(35%, #47382b), color-stop(79%, #1c140d));
+                background-image: -webkit-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -moz-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -ms-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: -o-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+                background-image: radial-gradient(farthest-corner at center top, #47382b 35%, #1c140d 79%);
+            }
+
+        #queue {
+            font-size: 2em;
+            font-weight: bold;
+            width: 400px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            float: left;
+        }
+
+            #queue ol {
+                list-style: none;
+                margin: 0;
+                padding: 0 0 25px 15px;
+            }
+
+                #queue ol li {
+                    margin-bottom: 10px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-text-shadow: 2px 2px 7px #777;
+                    text-shadow: 2px 2px 7px #777;
+                }
+
+            #queue a {
+                color: #1c140d;
+                text-decoration: none;
+            }
+
+            #queue li.current-track {
+                position: relative;
+                font-size: 1.1em;
+            }
+
+        #queue ol li .favorite {
+           visibility: hidden;
+        }
+
+            #queue ol li:hover .favorite {
+                visibility: visible;
+            }
+
+        .favorite {
+            width: 25px;
+            height: 25px;
+            background: url('/images/favorite.png') no-repeat center center;
+            display: inline-block;
+            text-indent: -9999px;
+            cursor: pointer;
+        }
+            .favorite.favorited {
+                background: url('/images/favorited.png') no-repeat center center;            
+            }
+
+                .favorite.favorited:hover {
+                    background: url('/images/favorite-hover.png') no-repeat center center;
+                }
+
+                .favorite:hover {
+                    background: url('/images/favorited-hover.png') no-repeat center center;
+                }
+
+
+        .graphic-current {
+            position: absolute;
+            left: 0;
+            top: 17px;
+        }
+
+        #queue ol li:hover .graphic-current {
+            display: none;
+        }
+    </style>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/ko")
+    <script src="@Href("~/scripts/new.js")"></script>
+    <script src="@Href("~/scripts/jquery.signalr-0.5.3.js")"></script>
+    <script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
+    <script src="@Href("~/scripts/jquery.cycle.lite.js")"></script>
+    <script src="@Href("~/scripts/jquery.transit.js")"></script>
+
+    <script>
+        $(function () {
+            playr.initNewPage(@Html.Raw(Model), "@Playr.Web.Helpers.BuildNotificationUrl()");
+        });
+    </script>
+
+
+</head>
+<body>
+    <div class="fanart"></div>
+    <div class ="content">
+        <section id="queue">
+            <ol>
+                <!-- ko foreach: History -->
+                <li>
+                    <a class="favorite" data-bind="click: $data.Favorite, css: { favorited: $data.IsFavorite }">Fav</a>
+                    <a data-bind="attr: { href: $data.SongDownloadUrl }, text: $data.Title" title="Download this song" ></a>
+                </li>
+                <!-- /ko -->
+                <li class="current-track">
+                    <img class="graphic-current" src="~/images/current.png" title="currently playing" />
+                    <a class="favorite" data-bind="click: CurrentTrack().Favorite, css: { favorited: CurrentTrack().IsFavorite }">Fav</a>
+                    <a data-bind="attr: { href: CurrentTrack().SongDownloadUrl }, text: CurrentTrack().Title" title="Download this song" ></a>
+                </li>
+                <!-- ko foreach: Queue -->
+                <li>
+                    <a class="favorite" data-bind="click: $data.Favorite, css: { favorited: $data.IsFavorite }">Fav</a>
+                    <a data-bind="attr: { href: $data.SongDownloadUrl }, text: $data.Title" title="Download this song" ></a>
+                </li>
+                <!-- /ko -->
+            </ol>
+        </section>
+        <section id="rightSide">
+            <section id="currentTrack">
+                <h2 data-bind="text: CurrentTrack().Artist"></h2>
+                <div id="albumArtContainer">
+                    <div id="albumArt">
+                        <div class="front face"><img data-bind="flipAttr: { src: CurrentTrack().ArtworkUrl }" ></div>
+                        <div class="back face"></div>
+                    </div>
+                </div>
+                <div id="timeline">
+                    <div id="progressBar">
+                        <div id="progress"></div>
+                    </div>
+                    <div id="timelineText">
+                        <h3 id="currentPosition">0:00</h3>
+                        <h3 id="trackLength" data-bind="text: CurrentTrack().DurationFormated()">00:00</h3>
+                    </div>
+                </div>
+            </section>
+        </section>
+        
+    </div>
+</body>
+</html>

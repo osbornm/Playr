@@ -29,7 +29,7 @@ namespace Playr.Api.Controller
         [HttpGet]
         public Song CurrentTrack()
         {
-            var song = itunes.CurrentTrack.toSong(itunes.PlayerPosition);
+            var song = itunes.CurrentTrack.toSong(itunes.PlayerPosition, itunes);
             var token = Request.GetToken();
             if (!String.IsNullOrEmpty(token))
             {
@@ -168,7 +168,7 @@ namespace Playr.Api.Controller
                 if (!user.Favorites.Where(fav => fav.Id==id).Any())
                 {
                     track.Rating += 5;
-                    user.Favorites.Add(track.toSong());
+                    user.Favorites.Add(track.toSong(itunes));
                     session.SaveChanges();
                 }
             }
@@ -267,15 +267,15 @@ namespace Playr.Api.Controller
                 if (!currentTrackReached && track.TrackDatabaseID == itunes.CurrentTrack.TrackDatabaseID)
                 {
                     currentTrackReached = true;
-                    queue.CurrentTrack = track.toSong(itunes.PlayerPosition, user);
+                    queue.CurrentTrack = track.toSong(itunes.PlayerPosition, user, itunes);
                 }
                 else if (currentTrackReached)
                 {
-                    queue.Queue.Add(track.toSong(user));
+                    queue.Queue.Add(track.toSong(user, itunes));
                 } 
                 else 
                 {
-                    queue.History.Add(track.toSong(user));
+                    queue.History.Add(track.toSong(user, itunes));
                 }
             }
             return queue;
