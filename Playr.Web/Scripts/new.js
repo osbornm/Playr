@@ -70,7 +70,7 @@
         function SetupFanart() {
             $(".fanart").cycle("stop").fadeOut(500, function () {
                 $(this).cycle("destroy").empty().fadeIn(100);
-                $.getJSON("/home/Fanart?artist=" + viewModel.CurrentTrack().Artist(), function (art) {
+                $.getJSON("/home/Fanart?artist=" + encodeURIComponent(viewModel.CurrentTrack().Artist()), function (art) {
                     $.each(art, function (idx, item) {
                         $(".fanart").append($("<div/>").css("background-image", "url(" + item + ")"));
                     });
