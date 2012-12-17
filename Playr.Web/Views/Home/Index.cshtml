@@ -6,10 +6,11 @@
 
 @section scripts {
 
-<script src="@Href("~/scripts/jquery.signalr-0.5.3.js")"></script>
+<script src="~/scripts/jquery.signalr-0.5.3.js"></script>
 <script src="@(Playr.Web.Helpers.GetNotificationUrl() + "/signalr/hubs")"></script>
-<script src="@Href("~/scripts/jquery.balloon.min.js")"></script>
-    
+<script src="~/scripts/jquery.jgrowl.js"></script>
+<link href="~/Content/jquery.jgrowl.css" rel="stylesheet" />
+
 <script>
     $(function () {
         playr.initMainPage(@Html.Raw(Model), "@Playr.Web.Helpers.BuildNotificationUrl()");
@@ -41,8 +42,13 @@
             paramname: 'files',
             maxFiles: 5,
             maxfilesize: 512,
-            uploadFinished: function (i, file, response, time) {
-                alert(response);
+            uploadFinished: function (i, file, response, time, xhr) {
+                if(xhr.status === 200){
+                    $.jGrowl(file.name + " has been uploaded");
+                }
+            },
+            error: function(err, file, i) {
+                $.jGrowl("error uploading: " + err, { header: "Important", sticky: true });
             }
         });
     });
