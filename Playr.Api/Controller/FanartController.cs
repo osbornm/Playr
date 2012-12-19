@@ -42,7 +42,11 @@ namespace Playr.Api.Controller
             if (!fanart.ContainsKey(artist))
             {
                 var fanartTvUrls = GetLocalUrlsForArtist(artist);
-                fanart[artist] = fanartTvUrls;
+                // Only add it to the cache if there were urls
+                if (fanartTvUrls.Any())
+                {
+                    fanart[artist] = fanartTvUrls;
+                }
 
             }
             return fanart[artist];
