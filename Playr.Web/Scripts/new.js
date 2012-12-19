@@ -71,6 +71,7 @@
             $(".fanart").cycle("stop").fadeOut(500, function () {
                 $(this).cycle("destroy").empty().fadeIn(100);
                 $.getJSON("/home/Fanart?artist=" + encodeURIComponent(viewModel.CurrentTrack().Artist()), function (art) {
+                    fisherYates(art);
                     $.each(art, function (idx, item) {
                         $(".fanart").append($("<div/>").css("background-image", "url(" + item + ")"));
                     });
@@ -83,6 +84,18 @@
                     }
                 });
             });
+        }
+
+        function fisherYates(myArray) {
+            var i = myArray.length;
+            if (i == 0) return false;
+            while (--i) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var tempi = myArray[i];
+                var tempj = myArray[j];
+                myArray[i] = tempj;
+                myArray[j] = tempi;
+            }
         }
 
         function UpdateProgress() {
