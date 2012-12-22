@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playr.Web", "Playr.Web\Play
 		{4AE1F493-2CF4-4B08-94BD-E6E2EAF92166} = {4AE1F493-2CF4-4B08-94BD-E6E2EAF92166}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playr", "Playr\Playr.csproj", "{9EE634F4-FF17-46AB-B5E6-435D2A900330}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{9549F9A0-ABBB-446D-B714-25649DAC01AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9549F9A0-ABBB-446D-B714-25649DAC01AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9549F9A0-ABBB-446D-B714-25649DAC01AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EE634F4-FF17-46AB-B5E6-435D2A900330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EE634F4-FF17-46AB-B5E6-435D2A900330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EE634F4-FF17-46AB-B5E6-435D2A900330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EE634F4-FF17-46AB-B5E6-435D2A900330}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
