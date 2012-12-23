@@ -13,6 +13,9 @@ namespace Playr
 
             // Web API
             var config = new HttpConfiguration();
+#if DEBUG
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+#endif
             Routes.RegisterRoutes(config.Routes);
             builder.UseHttpServer(config);
 

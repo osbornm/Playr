@@ -43,6 +43,9 @@
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\RavenDB.Database.1.2.2045-Unstable\lib\net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="Lucene.Net">
       <HintPath>..\packages\RavenDB.Database.1.2.2045-Unstable\lib\net40\Lucene.Net.dll</HintPath>
     </Reference>
@@ -86,9 +89,6 @@
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Owin.Extensions">
-      <HintPath>..\Lib\Gate.Adapters.Nancy\Owin.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="policy.2.0.taglib-sharp">
       <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
@@ -139,10 +139,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\MusicLibraryController.cs" />
+    <Compile Include="Api\RequireTokenAttribute.cs" />
+    <Compile Include="DataModels\DbAlbum.cs" />
+    <Compile Include="DataModels\DbEvent.cs" />
+    <Compile Include="DataModels\DbTrack.cs" />
+    <Compile Include="DataModels\DbUser.cs" />
+    <Compile Include="DataModels\DocumentStore.cs" />
+    <Compile Include="DataModels\Indexes\DbAlbum_LowercaseLookup.cs" />
+    <Compile Include="Extensions\HttpContentExtensions.cs" />
+    <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Extensions\NancyOwinExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\MusicLibraryService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -160,8 +171,7 @@
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Target Name="AfterBuild" Condition=" '$(ConfigurationName)' == 'Debug' ">
     <ItemGroup>
-      <BuildProviders Include="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.14.1\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll;
-                               $(SolutionDir)packages\Nancy.Viewengines.Razor.0.14.1\lib\Net40\Nancy.ViewEngines.Razor.dll" />
+      <BuildProviders Include="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.14.1\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll;&#xD;&#xA;                               $(SolutionDir)packages\Nancy.Viewengines.Razor.0.14.1\lib\Net40\Nancy.ViewEngines.Razor.dll" />
     </ItemGroup>
     <Copy SkipUnchangedFiles="true" SourceFiles="@(BuildProviders)" DestinationFolder="$(ProjectDir)bin\$(ConfigurationName)" />
   </Target>
