@@ -5,7 +5,7 @@ using Nancy.Bootstrapper;
 using Nancy.Hosting.Owin;
 using Owin;
 
-public static class NancyOwinExtensions
+public static class AppBuilderExtensions
 {
     public static void UseNancy(this IAppBuilder app)
     {

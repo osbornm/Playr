@@ -20,7 +20,7 @@ namespace Playr.Services
             get { return session.Value; }
         }
 
-        public DbTrack AddFile(string filePath, MediaTypeHeaderValue mediaType)
+        public virtual DbTrack AddFile(string filePath, MediaTypeHeaderValue mediaType)
         {
             var extension = mediaType.ToFileExtension();
             var newPath = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath) + extension);
@@ -51,16 +51,17 @@ namespace Playr.Services
                 Year = file.Tag.Year
             };
 
-            var normalizedArtistName = Normalize(track.ArtistName);
-            var normalizedAlbumName = Normalize(track.AlbumName);
-            var normalizedTrackName = Normalize(track.Name);
-            var normalizedDiscPrefix = track.DiscNumber > 1 || file.Tag.DiscCount > 1 ? track.DiscNumber.ToString() + "-" : "";
-
             track.Location = Path.Combine(
                 Program.MusicLibraryPath,
-                normalizedArtistName,
-                normalizedAlbumName,
-                String.Format("{0}{1:00} {2}{3}", normalizedDiscPrefix, track.TrackNumber, normalizedTrackName, extension)
+                PathHelpers.ToFolderName(track.ArtistName),
+                PathHelpers.ToFolderName(track.AlbumName),
+                PathHelpers.ToFileName(String.Format(
+                    "{0}{1:00} {2}{3}",
+                    track.DiscNumber > 1 || file.Tag.DiscCount > 1 ? track.DiscNumber + "-" : "",
+                    track.TrackNumber,
+                    track.Name,
+                    extension
+                ))
             );
 
             if (File.Exists(track.Location))
@@ -70,7 +71,7 @@ namespace Playr.Services
             }
             else
             {
-                Program.EnsurePathExists(Path.GetDirectoryName(track.Location));
+                PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
                 File.Move(filePath, track.Location);
 
                 Session.Store(track);
@@ -79,6 +80,34 @@ namespace Playr.Services
 
             return track;
         }
+
+        public virtual DbAlbum GetAlbumById(int id)
+        {
+            return Session.Load<DbAlbum>("DbAlbums/" + id);
+        }
+
+        public virtual DbAlbum GetAlbumByArtistAndAlbumName(string artistName, string albumName)
+        {
+            return Get<DbAlbum, DbAlbum_LowercaseLookup>(a => a.ArtistName == artistName.ToLowerInvariant()
+                                                           && a.Name == albumName.ToLowerInvariant());
+        }
+
+        public virtual List<DbAlbum> GetAlbums()
+        {
+            return Session.Query<DbAlbum>().ToList();
+        }
+
+        public virtual List<DbTrack> GetTracks()
+        {
+            return Session.Query<DbTrack>().ToList();
+        }
+
+        public virtual DbTrack GetTrackById(int id)
+        {
+            return Session.Load<DbTrack>("DbTracks/" + id);
+        }
+
+        // Private helpers
 
         private T Get<T>(Expression<Func<T, bool>> filter)
         {
@@ -91,25 +120,9 @@ namespace Playr.Services
             return Session.Query<T, TIndexCreator>().Where(filter).FirstOrDefault();
         }
 
-        public DbAlbum GetAlbum(string artistName, string albumName)
-        {
-            return Get<DbAlbum, DbAlbum_LowercaseLookup>(a => a.ArtistName == artistName.ToLowerInvariant()
-                                                           && a.Name == albumName.ToLowerInvariant());
-        }
-
-        public List<DbAlbum> GetAlbums()
-        {
-            return Session.Query<DbAlbum>().ToList();
-        }
-
-        public List<DbTrack> GetTracks()
-        {
-            return Session.Query<DbTrack>().ToList();
-        }
-
         private DbAlbum GetOrCreateAlbum(string artistName, string albumName, string genre)
         {
-            var album = GetAlbum(artistName, albumName);
+            var album = GetAlbumByArtistAndAlbumName(artistName, albumName);
 
             if (album == null)
             {
@@ -119,11 +132,6 @@ namespace Playr.Services
             }
 
             return album;
-        }
-
-        private string Normalize(string name)
-        {
-            return name;
         }
     }
 }

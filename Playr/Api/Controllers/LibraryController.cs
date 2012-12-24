@@ -5,29 +5,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Playr.DataModels;
-using Playr.Services;
 
-namespace Playr.Api
+namespace Playr.Api.Controllers
 {
-    public class MusicLibraryController : ApiController
+    public class LibraryController : MusicLibraryControllerBase
     {
-        private MusicLibraryService libraryService = new MusicLibraryService();
+        public LibraryController()
+            : base("Library") { }
 
-        [HttpGet]
-        public List<DbAlbum> Albums()
-        {
-            return libraryService.GetAlbums();
-        }
-
-        [HttpGet]
-        public List<DbTrack> Tracks()
-        {
-            return libraryService.GetTracks();
-        }
-
-        public async Task<HttpResponseMessage> Upload()
+        public async Task<HttpResponseMessage> PostTracks()
         {
             try
             {
@@ -42,7 +29,7 @@ namespace Playr.Api
 
                     foreach (var file in provider.FileData.Where(f => f.Headers.ContentType.IsAudio()))
                     {
-                        tracks.Add(libraryService.AddFile(file.LocalFileName, file.Headers.ContentType));
+                        tracks.Add(MusicLibraryService.AddFile(file.LocalFileName, file.Headers.ContentType));
                     }
                 }
 
@@ -75,7 +62,7 @@ namespace Playr.Api
                 {
                     var tempFile = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
                     await Request.Content.ReadAsFileAsync(tempFile, true);
-                    tracks.Add(libraryService.AddFile(tempFile, mediaType));
+                    tracks.Add(MusicLibraryService.AddFile(tempFile, mediaType));
                 }
 
                 if (tracks.Count > 0)

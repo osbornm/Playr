@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Microsoft.Owin.Hosting;
-using Playr.DataModels;
 
 namespace Playr
 {
@@ -11,16 +11,18 @@ namespace Playr
         public static string MusicLibraryPath { get; set; }
         public static string TempPath { get; set; }
 
-        static void Main(string[] args)
+        static void Main()
         {
-            var baseUrl = "http://localhost:5555/";
+            var baseUrl = ConfigurationManager.AppSettings["Playr:Url"] ?? "http://localhost:5555/";
 
+            // TODO: Remove me
             var exePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
-            Database.Initialize();
+            TempPath = Path.Combine(exePath, "Temp");
+            MusicLibraryPath = Path.Combine(exePath, "Music");
 
-            TempPath = EnsurePathExists(exePath, "Temp", clean: true);
-            MusicLibraryPath = EnsurePathExists(exePath, "Music");
+            PathHelpers.EnsurePathExists(TempPath, forceClean: true);
+            PathHelpers.EnsurePathExists(MusicLibraryPath);
 
             using (WebApplication.Start<Startup>(baseUrl, "Microsoft.Owin.Host.HttpListener"))
             {
@@ -30,31 +32,6 @@ namespace Playr
                 Console.WriteLine("Press any key to stop server...");
                 Console.ReadKey(intercept: true);
             }
-        }
-
-        public static void EnsurePathExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-        }
-
-        private static string EnsurePathExists(string basePath, string subFolder, bool clean = false)
-        {
-            string result = Path.Combine(basePath, subFolder);
-
-            if (!Directory.Exists(result))
-            {
-                Directory.CreateDirectory(result);
-            }
-            else if (clean)
-            {
-                Directory.Delete(result, recursive: true);
-                Directory.CreateDirectory(result);
-            }
-
-            return result;
         }
     }
 }

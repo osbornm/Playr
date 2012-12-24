@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Web.Http;
 using Owin;
+using Playr.Api;
 
 namespace Playr
 {
@@ -16,7 +17,7 @@ namespace Playr
 #if DEBUG
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 #endif
-            Routes.RegisterRoutes(config.Routes);
+            ApiRoutes.Register(config.Routes);
             builder.UseHttpServer(config);
 
             // Nancy
