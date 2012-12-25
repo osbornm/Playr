@@ -2,7 +2,7 @@
 
 namespace Playr.DataModels
 {
-    public class DbEvent
+    public class DbEvent : DbModel
     {
         public DateTimeOffset Date { get; set; }
         public string UserId { get; set; }

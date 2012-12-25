@@ -14,7 +14,7 @@ namespace Playr.Api
         public IEnumerable<Track> GetTracks()
         {
             return MusicLibraryService.GetTracks()
-                                      .Select(dbTrack => new Track(dbTrack, SelfLink(dbTrack.Id)));
+                                      .Select(dbTrack => new Track(dbTrack, Link(dbTrack)));
         }
 
         public Track GetTrackById(int id)
@@ -23,7 +23,7 @@ namespace Playr.Api
             if (dbTrack == null)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 
-            return new Track(dbTrack, SelfLink(dbTrack.Id));
+            return new Track(dbTrack, Link(dbTrack));
         }
     }
 }

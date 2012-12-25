@@ -14,7 +14,7 @@ namespace Playr.Api
         public IEnumerable<Album> GetAlbums()
         {
             return MusicLibraryService.GetAlbums()
-                                      .Select(dbAlbum => new Album(dbAlbum, SelfLink(dbAlbum.Id)));
+                                      .Select(dbAlbum => new Album(dbAlbum, Link(dbAlbum)));
         }
 
         public Album GetAlbumById(int id)
@@ -23,7 +23,7 @@ namespace Playr.Api
             if (dbAlbum == null)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 
-            return new Album(dbAlbum, SelfLink(dbAlbum.Id));
+            return new Album(dbAlbum, Link(dbAlbum));
         }
     }
 }

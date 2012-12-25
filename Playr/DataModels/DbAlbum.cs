@@ -1,13 +1,7 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace Playr.DataModels
+﻿namespace Playr.DataModels
 {
-    public class DbAlbum
+    public class DbAlbum : DbModel
     {
-        public string Id { get; set; }
-
         public string ArtistName { get; set; }
         public string Genre { get; set; }
         public string Name { get; set; }

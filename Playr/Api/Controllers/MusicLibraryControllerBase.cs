@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
+using Playr.DataModels;
 using Playr.Services;
 
 namespace Playr.Api
@@ -16,9 +18,19 @@ namespace Playr.Api
         public string RouteName { get; set; }
 
         [NonAction]
-        public string SelfLink(string ravenDbIdentifier)
+        public string Link(int? id = null, string routeName = null)
         {
-            return Url.SelfLink(RouteName, ravenDbIdentifier);
+            var routeValues = new Dictionary<string, object>();
+            if (id.HasValue)
+                routeValues.Add("id", id.Value);
+
+            return Url.Link(routeName ?? RouteName, routeValues);
+        }
+
+        [NonAction]
+        public string Link(DbModel model, string routeName = null)
+        {
+            return Link(model.Id, routeName);
         }
     }
 }

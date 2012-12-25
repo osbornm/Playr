@@ -116,6 +116,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -151,6 +152,7 @@
     <Compile Include="Api\ApiRoutes.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
+    <Compile Include="DataModels\DbModel.cs" />
     <Compile Include="DataModels\DbTrack.cs" />
     <Compile Include="DataModels\DbUser.cs" />
     <Compile Include="DataModels\Database.cs" />
@@ -158,7 +160,6 @@
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
-    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

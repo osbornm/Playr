@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Playr.DataModels
 {
-    public class DbUser
+    public class DbUser : DbModel
     {
         public string EmailAddress { get; set; }
         public string DisplayName { get; set; }
