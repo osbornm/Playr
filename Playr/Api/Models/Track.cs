@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Web.Http.Routing;
 using Playr.DataModels;
 
 namespace Playr.Api
 {
-    public class Track : SelfLinkModel
+    public class Track
     {
         public Track() { }
 
-        public Track(DbTrack track, string selfLink)
+        public Track(DbTrack track, UrlHelper url)
         {
-            _Self = selfLink;
+            _Album = url.LinkToAlbum(track.AlbumId);
+
             AlbumName = track.AlbumName;
             AudioBitrate = track.AudioBitrate;
             AudioChannels = track.AudioChannels;
@@ -26,6 +28,8 @@ namespace Playr.Api
             TrackNumber = track.TrackNumber;
             Year = track.Year;
         }
+
+        public string _Album { get; set; }
 
         // TODO: Expose Rating as a function of favorite count vs. user count
 

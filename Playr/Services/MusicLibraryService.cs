@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using Playr.DataModels;
 using Playr.DataModels.Indexes;
 using Raven.Client;
+using Raven.Client.Linq;
 using FileMetadata = TagLib.File;
 
 namespace Playr.Services
 {
     public class MusicLibraryService
     {
-        Lazy<IDocumentSession> session = new Lazy<IDocumentSession>(Database.OpenSession, isThreadSafe: false);
-
-        private IDocumentSession Session
-        {
-            get { return session.Value; }
-        }
-
         public virtual DbTrack AddFile(string filePath, MediaTypeHeaderValue mediaType)
         {
             var extension = mediaType.ToFileExtension();
@@ -55,27 +48,30 @@ namespace Playr.Services
                 Program.MusicLibraryPath,
                 PathHelpers.ToFolderName(track.ArtistName),
                 PathHelpers.ToFolderName(track.AlbumName),
-                PathHelpers.ToFileName(String.Format(
+                String.Format(
                     "{0}{1:00} {2}{3}",
                     track.DiscNumber > 1 || file.Tag.DiscCount > 1 ? track.DiscNumber + "-" : "",
                     track.TrackNumber,
-                    track.Name,
+                    PathHelpers.ToFileName(track.Name),
                     extension
-                ))
+                )
             );
 
-            if (File.Exists(track.Location))
+            using (var session = Database.OpenSession())
             {
-                File.Delete(filePath);
-                track = Session.Query<DbTrack>().Where(t => t.Location == track.Location).Single();
-            }
-            else
-            {
-                PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
-                File.Move(filePath, track.Location);
+                if (File.Exists(track.Location))
+                {
+                    File.Delete(filePath);
+                    track = session.Query<DbTrack>().Where(t => t.Location == track.Location).Single();
+                }
+                else
+                {
+                    PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
+                    File.Move(filePath, track.Location);
 
-                Session.Store(track);
-                Session.SaveChanges();
+                    session.Store(track);
+                    session.SaveChanges();
+                }
             }
 
             return track;
@@ -83,55 +79,91 @@ namespace Playr.Services
 
         public virtual DbAlbum GetAlbumById(int id)
         {
-            return Session.Load<DbAlbum>("DbAlbums/" + id);
+            DbAlbum album = null;
+
+            using (var session = Database.OpenSession())
+            {
+                var tracks = session.Query<DbTrack, DbTrack_ByAlbumId>()
+                                    .Where(track => track.AlbumId == id)
+                                    .ToArray();
+
+                if (tracks.Length > 0)
+                {
+                    album = session.Load<DbAlbum>(id);
+                    album.Tracks = tracks;
+                }
+            }
+
+            return album;
         }
 
         public virtual DbAlbum GetAlbumByArtistAndAlbumName(string artistName, string albumName)
         {
-            return Get<DbAlbum, DbAlbum_LowercaseLookup>(a => a.ArtistName == artistName.ToLowerInvariant()
-                                                           && a.Name == albumName.ToLowerInvariant());
+            using (var session = Database.OpenSession())
+                return GetAlbumByArtistAndAlbumName(artistName, albumName, session);
+        }
+
+        private DbAlbum GetAlbumByArtistAndAlbumName(string artistName, string albumName, IDocumentSession session)
+        {
+            return session.Query<DbAlbum, DbAlbum_LowercaseLookup>()
+                          .Where(a => a.ArtistName == artistName.ToLowerInvariant()
+                                   && a.Name == albumName.ToLowerInvariant())
+                          .FirstOrDefault();
         }
 
         public virtual List<DbAlbum> GetAlbums()
         {
-            return Session.Query<DbAlbum>().ToList();
+            using (var session = Database.OpenSession())
+                return session.Query<DbAlbum>().ToList();
         }
 
-        public virtual List<DbTrack> GetTracks()
+        public virtual List<DbAlbum> GetAlbumsByGenre(string genre)
         {
-            return Session.Query<DbTrack>().ToList();
+            using (var session = Database.OpenSession())
+                return session.Query<DbAlbum, DbAlbum_ByGenre>().Where(album => album.Genre == genre.ToLowerInvariant()).ToList();
         }
 
-        public virtual DbTrack GetTrackById(int id)
+        public virtual List<string> GetGenres()
         {
-            return Session.Load<DbTrack>("DbTracks/" + id);
+            using (var session = Database.OpenSession())
+                return session.Query<DbAlbum, DbAlbum_Genres>().As<DbAlbum_Genres.Result>().Select(result => result.Genre).ToList();
+        }
+
+        public virtual DbLibrary GetLibraryInfo()
+        {
+            using (var session = Database.OpenSession())
+            {
+                return new DbLibrary
+                {
+                    TotalAlbums = session.Query<DbAlbum>().Count(),
+                    TotalTracks = session.Query<DbTrack>().Count()
+                };
+            }
+        }
+
+        public virtual List<DbTrack> GetTracks(int albumId)
+        {
+            using (var session = Database.OpenSession())
+                return session.Query<DbTrack>().Where(track => track.AlbumId == albumId).ToList();
         }
 
         // Private helpers
 
-        private T Get<T>(Expression<Func<T, bool>> filter)
-        {
-            return Session.Query<T>().Where(filter).FirstOrDefault();
-        }
-
-        private T Get<T, TIndexCreator>(Expression<Func<T, bool>> filter)
-            where TIndexCreator : Raven.Client.Indexes.AbstractIndexCreationTask, new()
-        {
-            return Session.Query<T, TIndexCreator>().Where(filter).FirstOrDefault();
-        }
-
         private DbAlbum GetOrCreateAlbum(string artistName, string albumName, string genre)
         {
-            var album = GetAlbumByArtistAndAlbumName(artistName, albumName);
-
-            if (album == null)
+            using (var session = Database.OpenSession())
             {
-                album = new DbAlbum { ArtistName = artistName, Name = albumName, Genre = genre };
-                Session.Store(album);
-                Session.SaveChanges();
-            }
+                var album = GetAlbumByArtistAndAlbumName(artistName, albumName, session);
 
-            return album;
+                if (album == null)
+                {
+                    album = new DbAlbum { ArtistName = artistName, Name = albumName, Genre = genre };
+                    session.Store(album);
+                    session.SaveChanges();
+                }
+
+                return album;
+            }
         }
     }
 }

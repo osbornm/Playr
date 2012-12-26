@@ -14,8 +14,8 @@ namespace Playr.DataModels.Indexes
                                               Name = album.Name.ToLowerInvariant(),
                                           });
 
-            Index(x => x.ArtistName, FieldIndexing.Analyzed);
-            Index(x => x.Name, FieldIndexing.Analyzed);
+            Index(album => album.ArtistName, FieldIndexing.Analyzed);
+            Index(album => album.Name, FieldIndexing.Analyzed);
         }
     }
 }

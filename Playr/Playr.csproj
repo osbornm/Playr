@@ -90,9 +90,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="policy.2.0.taglib-sharp">
-      <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>..\packages\RavenDB.Client.1.2.2045-Unstable\lib\net40\Raven.Abstractions.dll</HintPath>
     </Reference>
@@ -142,24 +139,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\AlbumsController.cs" />
+    <Compile Include="Api\Controllers\GenresController.cs" />
     <Compile Include="Api\Controllers\LibraryController.cs" />
     <Compile Include="Api\Controllers\TracksController.cs" />
     <Compile Include="Api\Controllers\MusicLibraryControllerBase.cs" />
     <Compile Include="Api\Models\Album.cs" />
-    <Compile Include="Api\Models\SelfLinkModel.cs" />
+    <Compile Include="Api\Models\Genre.cs" />
+    <Compile Include="Api\Models\Library.cs" />
     <Compile Include="Api\Models\Track.cs" />
     <Compile Include="Api\RequireTokenAttribute.cs" />
-    <Compile Include="Api\ApiRoutes.cs" />
+    <Compile Include="Api\WebApiConfig.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
+    <Compile Include="DataModels\DbLibrary.cs" />
     <Compile Include="DataModels\DbModel.cs" />
     <Compile Include="DataModels\DbTrack.cs" />
     <Compile Include="DataModels\DbUser.cs" />
     <Compile Include="DataModels\Database.cs" />
+    <Compile Include="DataModels\Indexes\DbAlbum_Genres.cs" />
+    <Compile Include="DataModels\Indexes\DbAlbum_ByGenre.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_LowercaseLookup.cs" />
+    <Compile Include="DataModels\Indexes\DbTrack_ByAlbumId.cs" />
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

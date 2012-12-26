@@ -5,14 +5,17 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Playr.Api.Models;
 using Playr.DataModels;
 
 namespace Playr.Api.Controllers
 {
     public class LibraryController : MusicLibraryControllerBase
     {
-        public LibraryController()
-            : base("Library") { }
+        public Library GetLibraryInfo()
+        {
+            return new Library(MusicLibraryService.GetLibraryInfo(), Url);
+        }
 
         public async Task<HttpResponseMessage> PostTracks()
         {

@@ -1,18 +1,24 @@
-﻿using Playr.DataModels;
+﻿using System.Web.Http.Routing;
+using Playr.DataModels;
 
 namespace Playr.Api
 {
-    public class Album : SelfLinkModel
+    public class Album
     {
         public Album() { }
 
-        public Album(DbAlbum album, string selfLink)
+        public Album(DbAlbum album, UrlHelper url)
         {
-            _Self = selfLink;
+            _Self = url.LinkToAlbum(album);
+            _Tracks = url.LinkToTracks(album);
+
             ArtistName = album.ArtistName;
             Genre = album.Genre;
             Name = album.Name;
         }
+
+        public string _Self { get; set; }
+        public string _Tracks { get; set; }
 
         public string ArtistName { get; set; }
         public string Genre { get; set; }
