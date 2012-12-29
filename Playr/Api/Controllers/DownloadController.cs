@@ -60,15 +60,36 @@ namespace Playr.Api.Controllers
 
         private string Zip(string path)
         {
-            string result = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N") + ".zip");
+            TemporaryZipFile result = new TemporaryZipFile();
+            Request.RegisterForDispose(result);
 
-            using (ZipFile zipFile = new ZipFile(result))
+            using (ZipFile zipFile = new ZipFile(result.Path))
             {
                 zipFile.AddDirectory(path);
                 zipFile.Save();
             }
 
-            return result;
+            return result.Path;
+        }
+
+        private class TemporaryZipFile : IDisposable
+        {
+            public TemporaryZipFile()
+            {
+                Path = System.IO.Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N") + ".zip");
+            }
+
+            public string Path { get; private set; }
+
+            public void Dispose()
+            {
+                try
+                {
+                    if (File.Exists(Path))
+                        File.Delete(Path);
+                }
+                catch { }
+            }
         }
     }
 }
