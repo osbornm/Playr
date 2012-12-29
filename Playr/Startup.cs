@@ -18,7 +18,6 @@ namespace Playr
             builder.UseHttpServer(config);
 
             // Nancy
-            Assembly.Load("Nancy.ViewEngines.Razor");
             builder.UseNancy();
         }
     }
