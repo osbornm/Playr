@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -139,11 +140,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\AlbumsController.cs" />
+    <Compile Include="Api\Controllers\ArtistsController.cs" />
+    <Compile Include="Api\Controllers\DownloadController.cs" />
     <Compile Include="Api\Controllers\GenresController.cs" />
     <Compile Include="Api\Controllers\LibraryController.cs" />
     <Compile Include="Api\Controllers\TracksController.cs" />
     <Compile Include="Api\Controllers\MusicLibraryControllerBase.cs" />
     <Compile Include="Api\Models\Album.cs" />
+    <Compile Include="Api\Models\Artist.cs" />
     <Compile Include="Api\Models\Genre.cs" />
     <Compile Include="Api\Models\Library.cs" />
     <Compile Include="Api\Models\Track.cs" />
@@ -156,6 +160,8 @@
     <Compile Include="DataModels\DbTrack.cs" />
     <Compile Include="DataModels\DbUser.cs" />
     <Compile Include="DataModels\Database.cs" />
+    <Compile Include="DataModels\Indexes\DbAlbum_ByArtist.cs" />
+    <Compile Include="DataModels\Indexes\DbAlbum_Artists.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_Genres.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_ByGenre.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_LowercaseLookup.cs" />

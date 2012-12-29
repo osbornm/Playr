@@ -9,6 +9,7 @@ namespace Playr.Api
 
         public Album(DbAlbum album, UrlHelper url)
         {
+            _Download = url.LinkToAlbumDownload(album);
             _Self = url.LinkToAlbum(album);
             _Tracks = url.LinkToTracks(album);
 
@@ -17,6 +18,7 @@ namespace Playr.Api
             Name = album.Name;
         }
 
+        public string _Download { get; set; }
         public string _Self { get; set; }
         public string _Tracks { get; set; }
 

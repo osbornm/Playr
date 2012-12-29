@@ -117,10 +117,22 @@ namespace Playr.Services
                 return session.Query<DbAlbum>().ToList();
         }
 
+        public virtual List<DbAlbum> GetAlbumsByArtist(string artistName)
+        {
+            using (var session = Database.OpenSession())
+                return session.Query<DbAlbum, DbAlbum_ByArtist>().Where(album => album.ArtistName == artistName.ToLowerInvariant()).ToList();
+        }
+
         public virtual List<DbAlbum> GetAlbumsByGenre(string genre)
         {
             using (var session = Database.OpenSession())
                 return session.Query<DbAlbum, DbAlbum_ByGenre>().Where(album => album.Genre == genre.ToLowerInvariant()).ToList();
+        }
+
+        public virtual List<string> GetArtists()
+        {
+            using (var session = Database.OpenSession())
+                return session.Query<DbAlbum, DbAlbum_Artists>().As<DbAlbum_Artists.Result>().Select(result => result.ArtistName).ToList();
         }
 
         public virtual List<string> GetGenres()
@@ -139,6 +151,12 @@ namespace Playr.Services
                     TotalTracks = session.Query<DbTrack>().Count()
                 };
             }
+        }
+
+        public virtual DbTrack GetTrackById(int id)
+        {
+            using (var session = Database.OpenSession())
+                return session.Load<DbTrack>(id);
         }
 
         public virtual List<DbTrack> GetTracks(int albumId)

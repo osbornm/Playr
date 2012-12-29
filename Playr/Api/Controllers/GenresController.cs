@@ -15,9 +15,9 @@ namespace Playr.Api.Controllers
                                       .Select(genre => new Genre(genre, Url));
         }
 
-        public IEnumerable<Album> Get(string id)
+        public IEnumerable<Album> Get(string genreName)
         {
-            var albums = MusicLibraryService.GetAlbumsByGenre(id);
+            var albums = MusicLibraryService.GetAlbumsByGenre(genreName);
             if (albums == null || albums.Count == 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 

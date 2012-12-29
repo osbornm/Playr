@@ -19,22 +19,20 @@ namespace Playr.Api.Controllers
 
         public async Task<HttpResponseMessage> PostTracks()
         {
-            try
+            var mediaType = Request.Content.Headers.ContentType;
+
+            List<DbTrack> tracks = new List<DbTrack>();
+
+            if (mediaType.IsMultipartFormData())
             {
-                var mediaType = Request.Content.Headers.ContentType;
+                var provider = new MultipartFormDataStreamProvider(Program.TempPath);
+                await Request.Content.ReadAsMultipartAsync(provider);
 
-                List<DbTrack> tracks = new List<DbTrack>();
-
-                if (mediaType.IsMultipartFormData())
+                foreach (var file in provider.FileData.Where(f => f.Headers.ContentType.IsAudio()))
                 {
-                    var provider = new MultipartFormDataStreamProvider(Program.TempPath);
-                    await Request.Content.ReadAsMultipartAsync(provider);
-
-                    foreach (var file in provider.FileData.Where(f => f.Headers.ContentType.IsAudio()))
-                    {
-                        tracks.Add(MusicLibraryService.AddFile(file.LocalFileName, file.Headers.ContentType));
-                    }
+                    tracks.Add(MusicLibraryService.AddFile(file.LocalFileName, file.Headers.ContentType));
                 }
+            }
 
 #if false
             // Did they upload a zip file? 
@@ -60,26 +58,21 @@ namespace Playr.Api.Controllers
             }
 #endif
 
-                // Did they upload just a single file?
-                else if (mediaType.IsAudio())
-                {
-                    var tempFile = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
-                    await Request.Content.ReadAsFileAsync(tempFile, true);
-                    tracks.Add(MusicLibraryService.AddFile(tempFile, mediaType));
-                }
-
-                if (tracks.Count > 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.Accepted, tracks);
-                }
-
-                // Well they uploaded something we don't support!
-                return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported.");
-            }
-            catch (Exception ex)
+            // Did they upload just a single file?
+            else if (mediaType.IsAudio())
             {
-                throw;
+                var tempFile = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
+                await Request.Content.ReadAsFileAsync(tempFile, true);
+                tracks.Add(MusicLibraryService.AddFile(tempFile, mediaType));
             }
+
+            if (tracks.Count > 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.Accepted, tracks);
+            }
+
+            // Well they uploaded something we don't support!
+            return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported.");
         }
     }
 }

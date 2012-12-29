@@ -11,6 +11,7 @@ namespace Playr.Api
         public Track(DbTrack track, UrlHelper url)
         {
             _Album = url.LinkToAlbum(track.AlbumId);
+            _Download = url.LinkToTrackDownload(track);
 
             AlbumName = track.AlbumName;
             AudioBitrate = track.AudioBitrate;
@@ -30,6 +31,7 @@ namespace Playr.Api
         }
 
         public string _Album { get; set; }
+        public string _Download { get; set; }
 
         // TODO: Expose Rating as a function of favorite count vs. user count
 

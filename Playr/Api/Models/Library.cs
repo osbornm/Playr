@@ -8,6 +8,7 @@ namespace Playr.Api.Models
         public Library(DbLibrary library, UrlHelper url)
         {
             _Albums = url.LinkToAlbums();
+            _Artists = url.LinkToArtists();
             _Genres = url.LinkToGenres();
             _Upload = url.LinkToLibrary();
 
@@ -16,6 +17,7 @@ namespace Playr.Api.Models
         }
 
         public string _Albums { get; set; }
+        public string _Artists { get; set; }
         public string _Genres { get; set; }
         public string _Upload { get; set; }
 

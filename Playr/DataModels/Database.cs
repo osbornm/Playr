@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Reflection;
 using Raven.Client;
 using Raven.Client.Embedded;
@@ -13,6 +14,17 @@ namespace Playr.DataModels
         private static IDocumentStore Initialize()
         {
             var result = new EmbeddableDocumentStore();
+#if DEBUG
+            result.UseEmbeddedHttpServer = true;
+#else
+            var embeddedHttpServer = false;
+            var embeddedConfigValue = ConfigurationManager.AppSettings["RavenDB:Embedded"];
+
+            if (embeddedConfigValue != null)
+                Boolean.TryParse(embeddedConfigValue, out embeddedHttpServer);
+
+            result.UseEmbeddedHttpServer = embeddedHttpServer;
+#endif
             result.Initialize();
 
             IndexCreation.CreateIndexes(Assembly.GetExecutingAssembly(), result);

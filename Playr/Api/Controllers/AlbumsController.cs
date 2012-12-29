@@ -11,16 +11,9 @@ namespace Playr.Api
     {
         public IEnumerable<Album> GetAlbums()
         {
-            try
-            {
-                return MusicLibraryService.GetAlbums()
-                                          .Select(dbAlbum => new Album(dbAlbum, Url))
-                                          .ToList();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return MusicLibraryService.GetAlbums()
+                                      .Select(dbAlbum => new Album(dbAlbum, Url))
+                                      .ToList();
         }
 
         public Album GetAlbumById(int id)
