@@ -108,6 +108,7 @@ namespace Playr.Services
             return session.Query<DbAlbum, DbAlbum_LowercaseLookup>()
                           .Where(a => a.ArtistName == artistName.ToLowerInvariant()
                                    && a.Name == albumName.ToLowerInvariant())
+                          .Customize(x => x.WaitForNonStaleResults())
                           .FirstOrDefault();
         }
 
