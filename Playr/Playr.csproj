@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,13 +29,13 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <ApplicationIcon>Web\Content\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
@@ -183,20 +183,22 @@
     <Compile Include="Services\MusicLibraryService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Web\Modules\HomeModule.cs" />
-    <Compile Include="Web\NancyBootstrapper.cs" />
+    <Compile Include="Web\Support\NancyBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="App.manifest" />
     <None Include="packages.config" />
-    <None Include="web.config" />
+    <EmbeddedResource Include="Web\Views\_layout.cshtml" />
+    <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\RavenDB.Embedded.1.2.2045-Unstable\tools\Raven.Studio.xap">
       <Link>Raven.Studio.xap</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="favicon.ico" />
+    <EmbeddedResource Include="Web\Content\css\site.css" />
+    <EmbeddedResource Include="Web\Content\favicon.ico" />
     <EmbeddedResource Include="Web\Views\index.cshtml" />
   </ItemGroup>
   <ItemGroup />
