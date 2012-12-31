@@ -157,6 +157,8 @@
     <Compile Include="Api\Models\Artist.cs" />
     <Compile Include="Api\Models\Genre.cs" />
     <Compile Include="Api\Models\Library.cs" />
+    <Compile Include="Api\Models\Link.cs" />
+    <Compile Include="Api\Models\ModelWithLinks.cs" />
     <Compile Include="Api\Models\Track.cs" />
     <Compile Include="Api\RequireTokenAttribute.cs" />
     <Compile Include="Api\WebApiConfig.cs" />

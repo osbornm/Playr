@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using Playr.DataModels;
 using Playr.DataModels.Indexes;
 using Raven.Client;
@@ -13,18 +12,9 @@ namespace Playr.Services
 {
     public class MusicLibraryService
     {
-        public virtual DbTrack AddFile(string filePath, MediaTypeHeaderValue mediaType)
+        public virtual DbTrack AddFile(string fileName)
         {
-            var extension = mediaType.ToFileExtension();
-            var newPath = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath) + extension);
-
-            if (newPath != filePath)
-            {
-                File.Move(filePath, newPath);
-                filePath = newPath;
-            }
-
-            var file = FileMetadata.Create(filePath);
+            var file = FileMetadata.Create(fileName);
             var album = GetOrCreateAlbum(file.Tag.FirstAlbumArtist, file.Tag.Album, file.Tag.FirstGenre);
             var track = new DbTrack
             {
@@ -53,7 +43,7 @@ namespace Playr.Services
                     track.DiscNumber > 1 || file.Tag.DiscCount > 1 ? track.DiscNumber + "-" : "",
                     track.TrackNumber,
                     PathHelpers.ToFileName(track.Name),
-                    extension
+                    Path.GetExtension(fileName)
                 )
             );
 
@@ -61,13 +51,13 @@ namespace Playr.Services
             {
                 if (File.Exists(track.Location))
                 {
-                    File.Delete(filePath);
+                    File.Delete(fileName);
                     track = session.Query<DbTrack>().Where(t => t.Location == track.Location).Single();
                 }
                 else
                 {
                     PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
-                    File.Move(filePath, track.Location);
+                    File.Move(fileName, track.Location);
 
                     session.Store(track);
                     session.SaveChanges();

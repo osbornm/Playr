@@ -2,18 +2,16 @@
 
 namespace Playr.Api.Models
 {
-    public class Genre
+    public class Genre : ModelWithLinks
     {
         public Genre() { }
 
         public Genre(string name, UrlHelper url)
         {
-            _Albums = url.LinkToAlbumsByGenre(name);
+            AddLink("albums", url.LinkToAlbumsByGenre(name));
 
             Name = name;
         }
-
-        public string _Albums { get; set; }
 
         public string Name { get; set; }
     }

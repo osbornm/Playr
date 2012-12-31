@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Ionic.Zip;
 using Playr.Api.Models;
-using Playr.DataModels;
 
 namespace Playr.Api.Controllers
 {
@@ -19,60 +19,138 @@ namespace Playr.Api.Controllers
 
         public async Task<HttpResponseMessage> PostTracks()
         {
-            var mediaType = Request.Content.Headers.ContentType;
+            var result = new UploadResult();
+            var content = Request.Content;
 
-            List<DbTrack> tracks = new List<DbTrack>();
-
-            if (mediaType.IsMultipartFormData())
+            if (content.Headers.ContentType.IsMultipartFormData())
             {
                 var provider = new MultipartFormDataStreamProvider(Program.TempPath);
-                await Request.Content.ReadAsMultipartAsync(provider);
+                await content.ReadAsMultipartAsync(provider);
 
-                foreach (var file in provider.FileData.Where(f => f.Headers.ContentType.IsAudio()))
-                {
-                    tracks.Add(MusicLibraryService.AddFile(file.LocalFileName, file.Headers.ContentType));
-                }
+                foreach (var file in provider.FileData)
+                    ProcessFile(file.LocalFileName, file.Headers.ContentType, result);
             }
-
-#if false
-            // Did they upload a zip file? 
-            if (mediaType.Equals("application/x-zip-compressed", StringComparison.InvariantCultureIgnoreCase))
+            else
             {
-                // We assume this is going to be a large file lets copy it to disc
-                var tempFile = Path.Combine(ApplicationSettings.TempPath, string.Format("{0}.zip", Guid.NewGuid()));
-                using (var fileStream = File.Create(tempFile))
-                {
-                    stream.CopyTo(fileStream);
-                    fileStream.Close();
-                    stream.Close();
-                }
-
-                // Extract all the audio files for the temp file and copy them to iTunes Add Folder.
-                using (var zip = ZipFile.Read(tempFile))
-                {
-                    zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.aac or name = *.wav", String.Empty, ApplicationSettings.iTunesAddFolder);
-                }
-
-                // Delete the temp zip file we created
-                File.Delete(tempFile);
+                var fileName = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
+                await content.ReadAsFileAsync(fileName, true);
+                ProcessFile(fileName, Request.Content.Headers.ContentType, result);
             }
-#endif
 
-            // Did they upload just a single file?
-            else if (mediaType.IsAudio())
+            return Request.CreateResponse(
+                result.Tracks.Count > 0 ? HttpStatusCode.OK : HttpStatusCode.UnsupportedMediaType,
+                result
+            );
+        }
+
+        /// <summary>
+        /// This version of ProcessFile assumes the filename has the correct extension.
+        /// </summary>
+        private void ProcessFile(string fileName, UploadResult result)
+        {
+            Console.WriteLine("> Processing: {0}", fileName);
+
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+
+            switch (extension)
             {
-                var tempFile = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
-                await Request.Content.ReadAsFileAsync(tempFile, true);
-                tracks.Add(MusicLibraryService.AddFile(tempFile, mediaType));
-            }
+                case ".zip":
+                    ProcessFile_Zip(fileName, result);
+                    break;
 
-            if (tracks.Count > 0)
+                case ".mp3":
+                case ".m4a":
+                    ProcessFile_Audio(fileName, result);
+                    break;
+
+                default:
+                    result.Errors.Add(String.Format("Unsupported media type for file {0} (only .mp3, .m4a, and .zip are supported)", Path.GetFileName(fileName)));
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// This version of ProcessFile ensures that the file extension matches the media type.
+        /// </summary>
+        private void ProcessFile(string fileName, MediaTypeHeaderValue mediaType, UploadResult result)
+        {
+            var extension = mediaType.ToFileExtension();
+            var newPath = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + extension);
+
+            if (newPath != fileName)
             {
-                return Request.CreateResponse(HttpStatusCode.Accepted, tracks);
+                File.Move(fileName, newPath);
+                fileName = newPath;
             }
 
-            // Well they uploaded something we don't support!
-            return Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, "The file type is unsupported.");
+            ProcessFile(fileName, result);
+        }
+
+        private void ProcessFile_Audio(string fileName, UploadResult result)
+        {
+            try
+            {
+                var dbTrack = MusicLibraryService.AddFile(fileName);
+                result.Tracks.Add(new Track(dbTrack, Url));
+            }
+            catch (Exception ex)
+            {
+                result.Errors.Add(ex.Message);
+            }
+        }
+
+        private void ProcessFile_Zip(string zipFile, UploadResult result)
+        {
+            try
+            {
+                var outputPath = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
+                PathHelpers.EnsurePathExists(outputPath, forceClean: true);
+
+                using (var zip = ZipFile.Read(zipFile))
+                    zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.zip", null, outputPath);
+
+                ProcessFolder(outputPath, result);
+
+                SwallowExceptions(() => File.Delete(zipFile));
+                SwallowExceptions(() => Directory.Delete(outputPath, recursive: true));
+            }
+            catch (Exception ex)
+            {
+                result.Errors.Add(ex.Message);
+            }
+        }
+
+        private void ProcessFolder(string folder, UploadResult result)
+        {
+            Console.WriteLine("> Searching: {0}", folder);
+
+            foreach (var file in Directory.GetFiles(folder))
+                ProcessFile(file, result);
+
+            foreach (var subFolder in Directory.GetDirectories(folder))
+                ProcessFolder(subFolder, result);
+        }
+
+        private void SwallowExceptions(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch { }
+        }
+
+        class UploadResult
+        {
+            public UploadResult()
+            {
+                Errors = new List<string>();
+                Tracks = new List<Track>();
+            }
+
+            public List<string> Errors { get; private set; }
+
+            public List<Track> Tracks { get; private set; }
         }
     }
 }

@@ -2,16 +2,16 @@
 using System.Web.Http.Routing;
 using Playr.DataModels;
 
-namespace Playr.Api
+namespace Playr.Api.Models
 {
-    public class Track
+    public class Track : ModelWithLinks
     {
         public Track() { }
 
         public Track(DbTrack track, UrlHelper url)
         {
-            _Album = url.LinkToAlbum(track.AlbumId);
-            _Download = url.LinkToTrackDownload(track);
+            AddLink("album", url.LinkToAlbum(track.AlbumId));
+            AddLink("download", url.LinkToTrackDownload(track));
 
             AlbumName = track.AlbumName;
             AudioBitrate = track.AudioBitrate;
@@ -29,9 +29,6 @@ namespace Playr.Api
             TrackNumber = track.TrackNumber;
             Year = track.Year;
         }
-
-        public string _Album { get; set; }
-        public string _Download { get; set; }
 
         // TODO: Expose Rating as a function of favorite count vs. user count
 
