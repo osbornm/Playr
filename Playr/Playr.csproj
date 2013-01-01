@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9EE634F4-FF17-46AB-B5E6-435D2A900330}</ProjectGuid>
     <OutputType>Exe</OutputType>
+    <ApplicationManifest>App.manifest</ApplicationManifest>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Playr</RootNamespace>
     <AssemblyName>Playr</AssemblyName>
