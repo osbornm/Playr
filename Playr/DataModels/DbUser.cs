@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Playr.DataModels
 {
-    public class DbUser : DbModel
+    public class DbUser
     {
-        public string EmailAddress { get; set; }
+        public string ApiToken { get; private set; }
         public string DisplayName { get; set; }
-        public string ApiToken { get; set; }
+        public string EmailAddress { get; set; }
         public string HashedPassword { get; private set; }
         public string PasswordSalt { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Playr.DataModels
             .GenerateApiToken();
         }
 
-        public DbUser GenerateApiToken()
+        private DbUser GenerateApiToken()
         {
             ApiToken = Guid.NewGuid().ToString();
             return this;

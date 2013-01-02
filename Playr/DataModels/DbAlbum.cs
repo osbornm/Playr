@@ -1,6 +1,6 @@
 ﻿namespace Playr.DataModels
 {
-    public class DbAlbum : DbModel
+    public class DbAlbum : DbModelWithId
     {
         public string ArtistName { get; set; }
         public string Genre { get; set; }

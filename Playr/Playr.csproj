@@ -45,6 +45,12 @@
     <Reference Include="Esent.Interop">
       <HintPath>..\packages\RavenDB.Database.1.2.2045-Unstable\lib\net40\Esent.Interop.dll</HintPath>
     </Reference>
+    <Reference Include="Gate">
+      <HintPath>..\packages\Gate.0.27\lib\net40\Gate.dll</HintPath>
+    </Reference>
+    <Reference Include="Gate.Middleware">
+      <HintPath>..\packages\Gate.Middleware.0.27\lib\net40\Gate.Middleware.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\RavenDB.Database.1.2.2045-Unstable\lib\net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
@@ -149,6 +155,7 @@
   <ItemGroup>
     <Compile Include="Api\Controllers\AlbumsController.cs" />
     <Compile Include="Api\Controllers\ArtistsController.cs" />
+    <Compile Include="Api\Controllers\AuthenticationController.cs" />
     <Compile Include="Api\Controllers\DownloadController.cs" />
     <Compile Include="Api\Controllers\GenresController.cs" />
     <Compile Include="Api\Controllers\LibraryController.cs" />
@@ -160,13 +167,15 @@
     <Compile Include="Api\Models\Library.cs" />
     <Compile Include="Api\Models\Link.cs" />
     <Compile Include="Api\Models\ModelWithLinks.cs" />
+    <Compile Include="Api\Models\Registration.cs" />
     <Compile Include="Api\Models\Track.cs" />
+    <Compile Include="Api\Models\User.cs" />
     <Compile Include="Api\RequireTokenAttribute.cs" />
     <Compile Include="Api\WebApiConfig.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
     <Compile Include="DataModels\DbLibrary.cs" />
-    <Compile Include="DataModels\DbModel.cs" />
+    <Compile Include="DataModels\DbModelWithId.cs" />
     <Compile Include="DataModels\DbTrack.cs" />
     <Compile Include="DataModels\DbUser.cs" />
     <Compile Include="DataModels\Database.cs" />
@@ -176,15 +185,21 @@
     <Compile Include="DataModels\Indexes\DbAlbum_ByGenre.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_LowercaseLookup.cs" />
     <Compile Include="DataModels\Indexes\DbTrack_ByAlbumId.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Helpers\AuthHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
+    <Compile Include="Helpers\PlayrIdentity.cs" />
+    <Compile Include="Owin\NancyHandler.cs" />
+    <Compile Include="Owin\PlayrAuthMiddleware.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MusicLibraryService.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Owin\Startup.cs" />
     <Compile Include="Web\Modules\HomeModule.cs" />
     <Compile Include="Web\Support\NancyBootstrapper.cs" />
   </ItemGroup>

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Microsoft.Owin.Hosting;
+using Playr.Owin;
 
 namespace Playr
 {

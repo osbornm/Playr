@@ -5,20 +5,10 @@ namespace Playr.Api
 {
     public static class WebApiConfig
     {
-        public static class Routes
+        public static HttpConfiguration GetConfiguration()
         {
-            public const string Albums = "Library-Albums";
-            public const string AlbumDownload = "Library-DownloadAlbum";
-            public const string Artists = "Library-Artists";
-            public const string ArtistDownload = "Library-DownloadArtist";
-            public const string Genres = "Library-Genres";
-            public const string Library = "Library";
-            public const string Tracks = "Library-Tracks";
-            public const string TrackDownload = "Library-TrackDownload";
-        }
+            var config = new HttpConfiguration();
 
-        public static void Configure(HttpConfiguration config)
-        {
 #if DEBUG
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 #endif
@@ -73,6 +63,51 @@ namespace Playr.Api
                 routeTemplate: "api/library/tracks/{id}/download",
                 defaults: new { controller = "Download", action = "Track" }
             );
+
+            Routes.Auth.RegisterRoutes(config.Routes);
+
+            return config;
+        }
+
+        public static class Routes
+        {
+            public static class Auth
+            {
+                public const string Login = "Auth-Login";
+                public const string Logout = "Auth-Logout";
+                public const string Registration = "Auth-Registration";
+
+                public static void RegisterRoutes(HttpRouteCollection routes)
+                {
+                    routes.MapHttpRoute(
+                        name: Login,
+                        routeTemplate: "api/auth/login",
+                        defaults: new { controller = "Authentication", action = "Login" }
+                    );
+
+                    routes.MapHttpRoute(
+                        name: Logout,
+                        routeTemplate: "api/auth/logout",
+                        defaults: new { controller = "Authentication", action = "Logout" }
+                    );
+
+                    routes.MapHttpRoute(
+                        name: Registration,
+                        routeTemplate: "api/auth/register",
+                        defaults: new { controller = "Authentication", action = "Register" }
+                    );
+                }
+            }
+
+            // TODO: Move these to a sub-class like Auth
+            public const string Albums = "Albums";
+            public const string AlbumDownload = "DownloadAlbum";
+            public const string Artists = "Artists";
+            public const string ArtistDownload = "DownloadArtist";
+            public const string Genres = "Genres";
+            public const string Library = "Library";
+            public const string Tracks = "Tracks";
+            public const string TrackDownload = "TrackDownload";
         }
     }
 }

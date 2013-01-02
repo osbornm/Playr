@@ -2,7 +2,7 @@
 
 namespace Playr.DataModels
 {
-    public class DbTrack : DbModel
+    public class DbTrack : DbModelWithId
     {
         public int AlbumId { get; set; }
         public string AlbumName { get; set; }

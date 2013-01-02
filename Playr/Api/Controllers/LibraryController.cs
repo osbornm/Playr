@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Ionic.Zip;
 using Playr.Api.Models;
 
@@ -17,6 +18,7 @@ namespace Playr.Api.Controllers
             return new Library(MusicLibraryService.GetLibraryInfo(), Url);
         }
 
+        [Authorize]
         public async Task<HttpResponseMessage> PostTracks()
         {
             var result = new UploadResult();
