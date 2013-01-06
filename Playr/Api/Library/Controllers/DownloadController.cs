@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using Ionic.Zip;
 
-namespace Playr.Api.Controllers
+namespace Playr.Api.Library.Controllers
 {
     public class DownloadController : MusicLibraryControllerBase
     {

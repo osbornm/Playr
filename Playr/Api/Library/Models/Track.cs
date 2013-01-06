@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Web.Http.Routing;
+using Playr.Api.Shared.Models;
 using Playr.DataModels;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Library.Models
 {
     public class Track : ModelWithLinks
     {

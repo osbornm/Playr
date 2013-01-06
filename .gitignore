@@ -21,3 +21,5 @@ DebugConstants.cs
 packages/*
 Playr.Web/App_Data/*
 playr.web/properties/PublishProfiles/*
+.JustCode
+*ncrunch*

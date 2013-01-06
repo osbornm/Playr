@@ -1,6 +1,6 @@
 ﻿using Playr.DataModels;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Authentication.Models
 {
     public class User
     {

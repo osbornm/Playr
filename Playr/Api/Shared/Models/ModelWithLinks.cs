@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Shared.Models
 {
     public abstract class ModelWithLinks
     {

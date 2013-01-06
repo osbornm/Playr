@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Playr.Services;
 
-namespace Playr.Api
+namespace Playr.Api.Library.Controllers
 {
     public abstract class MusicLibraryControllerBase : ApiController
     {

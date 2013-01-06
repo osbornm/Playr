@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Authentication.Models
 {
     public class Registration
     {

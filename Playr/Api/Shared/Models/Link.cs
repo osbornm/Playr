@@ -1,4 +1,4 @@
-namespace Playr.Api.Models
+namespace Playr.Api.Shared.Models
 {
     public class Link
     {

@@ -1,11 +1,12 @@
 ﻿using System.Web.Http.Routing;
+using Playr.Api.Shared.Models;
 using Playr.DataModels;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Library.Models
 {
-    public class Library : ModelWithLinks
+    public class MusicLibrary : ModelWithLinks
     {
-        public Library(DbLibrary library, UrlHelper url)
+        public MusicLibrary(DbLibrary library, UrlHelper url)
         {
             AddLink("albums", url.LinkToAlbums());
             AddLink("artists", url.LinkToArtists());

@@ -7,15 +7,15 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Ionic.Zip;
-using Playr.Api.Models;
+using Playr.Api.Library.Models;
 
-namespace Playr.Api.Controllers
+namespace Playr.Api.Library.Controllers
 {
     public class LibraryController : MusicLibraryControllerBase
     {
-        public Library GetLibraryInfo()
+        public MusicLibrary GetLibraryInfo()
         {
-            return new Library(MusicLibraryService.GetLibraryInfo(), Url);
+            return new MusicLibrary(MusicLibraryService.GetLibraryInfo(), Url);
         }
 
         [Authorize]

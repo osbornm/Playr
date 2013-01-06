@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using Playr.Api.Models;
+using Playr.Api.Library.Models;
 
-namespace Playr.Api
+namespace Playr.Api.Library.Controllers
 {
     public class ArtistsController : MusicLibraryControllerBase
     {

@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Playr.Api.Models;
+using Playr.Api.Library.Models;
 
-namespace Playr.Api.Controllers
+namespace Playr.Api.Library.Controllers
 {
     public class GenresController : MusicLibraryControllerBase
     {

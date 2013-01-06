@@ -153,24 +153,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\Controllers\AlbumsController.cs" />
-    <Compile Include="Api\Controllers\ArtistsController.cs" />
-    <Compile Include="Api\Controllers\AuthenticationController.cs" />
-    <Compile Include="Api\Controllers\DownloadController.cs" />
-    <Compile Include="Api\Controllers\GenresController.cs" />
-    <Compile Include="Api\Controllers\LibraryController.cs" />
-    <Compile Include="Api\Controllers\TracksController.cs" />
-    <Compile Include="Api\Controllers\MusicLibraryControllerBase.cs" />
-    <Compile Include="Api\Models\Album.cs" />
-    <Compile Include="Api\Models\Artist.cs" />
-    <Compile Include="Api\Models\Genre.cs" />
-    <Compile Include="Api\Models\Library.cs" />
-    <Compile Include="Api\Models\Link.cs" />
-    <Compile Include="Api\Models\ModelWithLinks.cs" />
-    <Compile Include="Api\Models\Registration.cs" />
-    <Compile Include="Api\Models\Track.cs" />
-    <Compile Include="Api\Models\User.cs" />
-    <Compile Include="Api\RequireTokenAttribute.cs" />
+    <Compile Include="Api\Authentication\AuthenticationEndpoints.cs" />
+    <Compile Include="Api\Library\Controllers\AlbumsController.cs" />
+    <Compile Include="Api\Library\Controllers\ArtistsController.cs" />
+    <Compile Include="Api\Authentication\Controllers\AuthenticationController.cs" />
+    <Compile Include="Api\Library\Controllers\DownloadController.cs" />
+    <Compile Include="Api\Library\Controllers\GenresController.cs" />
+    <Compile Include="Api\Library\Controllers\LibraryController.cs" />
+    <Compile Include="Api\Library\Controllers\TracksController.cs" />
+    <Compile Include="Api\Library\Controllers\MusicLibraryControllerBase.cs" />
+    <Compile Include="Api\Library\LibraryEndpoints.cs" />
+    <Compile Include="Api\Library\Models\Album.cs" />
+    <Compile Include="Api\Library\Models\Artist.cs" />
+    <Compile Include="Api\Library\Models\Genre.cs" />
+    <Compile Include="Api\Library\Models\MusicLibrary.cs" />
+    <Compile Include="Api\Shared\Models\Link.cs" />
+    <Compile Include="Api\Shared\Models\ModelWithLinks.cs" />
+    <Compile Include="Api\Authentication\Models\Registration.cs" />
+    <Compile Include="Api\Library\Models\Track.cs" />
+    <Compile Include="Api\Authentication\Models\User.cs" />
     <Compile Include="Api\WebApiConfig.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
@@ -189,7 +190,6 @@
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
-    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Helpers\AuthHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="Helpers\PlayrIdentity.cs" />

@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Routing;
+using Playr.Api.Shared.Models;
 
-namespace Playr.Api.Models
+namespace Playr.Api.Library.Models
 {
     public class Artist : ModelWithLinks
     {
