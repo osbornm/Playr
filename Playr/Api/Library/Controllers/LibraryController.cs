@@ -35,7 +35,7 @@ namespace Playr.Api.Library.Controllers
             else
             {
                 var fileName = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
-                await content.ReadAsFileAsync(fileName, true);
+                await content.ReadAsFileAsync(fileName);
                 ProcessFile(fileName, Request.Content.Headers.ContentType, result);
             }
 

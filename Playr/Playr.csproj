@@ -186,10 +186,9 @@
     <Compile Include="DataModels\Indexes\DbAlbum_ByGenre.cs" />
     <Compile Include="DataModels\Indexes\DbAlbum_LowercaseLookup.cs" />
     <Compile Include="DataModels\Indexes\DbTrack_ByAlbumId.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Extensions\HttpContentExtensions.cs" />
-    <Compile Include="Extensions\MediaTypeHeaderValueExtensions.cs" />
-    <Compile Include="Extensions\AppBuilderExtensions.cs" />
+    <Compile Include="Api\Shared\HttpContentExtensions.cs" />
+    <Compile Include="Api\Shared\MediaTypeHeaderValueExtensions.cs" />
+    <Compile Include="Owin\AppBuilderExtensions.cs" />
     <Compile Include="Helpers\AuthHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
     <Compile Include="Helpers\PlayrIdentity.cs" />
