@@ -4,13 +4,15 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Owin.Hosting;
 using Playr.Owin;
+using Playr.Services;
 
 namespace Playr
 {
     public class Program
     {
-        public static string MusicLibraryPath { get; set; }
-        public static string TempPath { get; set; }
+        public static ControlService Control { get; private set; }
+        public static string MusicLibraryPath { get; private set; }
+        public static string TempPath { get; private set; }
 
         static void Main()
         {
@@ -34,6 +36,8 @@ namespace Playr
                 PathHelpers.EnsurePathExists(MusicLibraryPath);
 
                 using (WebApplication.Start<Startup>(baseUrl, "Microsoft.Owin.Host.HttpListener"))
+                using (var audio = new Playr.Services.AudioService())
+                using (Control = new ControlService(audio))
                 {
                     Console.WriteLine("Playr is running at {0}", baseUrl);
                     Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");

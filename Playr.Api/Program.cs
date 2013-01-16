@@ -34,6 +34,8 @@ namespace Playr.Api
             var itunes = new iTunesAppClass();
             Start(itunes);
 
+            var m = new Playr.Services.MusicLibraryService();
+
             Console.WriteLine("API is avalible at " + ApplicationSettings.apiBaseUrl);
             Console.WriteLine("Singlar Nortifications avalible at " + ApplicationSettings.signalrBaseUrl);
             Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");

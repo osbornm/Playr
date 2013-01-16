@@ -14,6 +14,7 @@ using Raven.Client;
 using Raven.Client.Embedded;
 using SpeechLib;
 using System.Collections.Concurrent;
+using Raven.Database.Server;
 
 namespace Playr.Api
 {
@@ -138,7 +139,10 @@ namespace Playr.Api
 
         public static void InitializeDocumentStore()
         {
-            docStore = new EmbeddableDocumentStore();
+            docStore = new EmbeddableDocumentStore()
+            {
+                UseEmbeddedHttpServer = true
+            };
             docStore.Initialize();
         }
 

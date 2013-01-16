@@ -156,6 +156,12 @@ namespace Playr.Services
                 return session.Query<DbTrack>().Where(track => track.AlbumId == albumId).ToList();
         }
 
+        public virtual DbTrack GetRandomTrack()
+        {
+            using (var session = Database.OpenSession())
+                return session.Query<DbTrack>().Customize(x => x.RandomOrdering()).First();
+        }
+
         // Private helpers
 
         private DbAlbum GetOrCreateAlbum(string artistName, string albumName, string genre)
