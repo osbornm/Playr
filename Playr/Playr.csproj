@@ -177,6 +177,7 @@
     <Compile Include="Api\Library\Models\Track.cs" />
     <Compile Include="Api\Authentication\Models\User.cs" />
     <Compile Include="Api\WebApiConfig.cs" />
+    <Compile Include="Helpers\Deque.cs" />
     <Compile Include="Services\Models\CurrentTrack.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
@@ -210,7 +211,9 @@
     <Compile Include="Web\Support\NancyBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="App.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Web\Views\_layout.cshtml" />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Playr.DataModels;
+using Playr.Helpers;
 
 namespace Playr.Services
 {
@@ -12,56 +13,143 @@ namespace Playr.Services
     {
         private AudioService audio;
         private MusicLibraryService library = new MusicLibraryService();
-        private Queue<DbTrack> playlist = new Queue<DbTrack>();
+        private Deque<DbTrack> playlist = new Deque<DbTrack>();
+        private Deque<DbTrack> previous = new Deque<DbTrack>();
         private DbTrack currentTrack;
         private int queueLength;
 
         public ControlService(AudioService audio)
         {
             this.audio = audio;
-            audio.PlaybackStopped += PlayNext;
+            audio.PlaybackStopped += Next;
 
             queueLength = Convert.ToInt32(ConfigurationManager.AppSettings["Playr:QueueLength"]);
             for (int i = 0; i < queueLength; i++)
             {
-                playlist.Enqueue(library.GetRandomTrack());
+                playlist.AddLast(library.GetRandomTrack());
             }
-
-            PlayNext();
         }
 
-        private void PlayNext()
+        public void Spin()
+        {
+            Next();
+        }
+
+        public DbTrack CurrentTrack
+        {
+            get
+            {
+                return currentTrack;
+            }
+        }
+
+        public IEnumerable<DbTrack> Upcoming
+        {
+            get
+            {
+                return playlist.ToArray();
+            }
+        }
+
+        public IEnumerable<DbTrack> Recent
+        {
+            get
+            {
+                return previous.ToArray();
+            }
+        }
+
+        public event Action<DbTrack> CurrentTrackChanged;
+        public event Action QueueChanged;
+        public event Action Paused;
+        public event Action Resumed;
+
+        public void Pause()
+        {
+            audio.Pause();
+            OnPause();
+        }
+
+        public void Resume()
+        {
+            audio.Resume();
+            OnResume();
+        }
+
+        public void Next()
         {
             // Get the song
-            currentTrack = playlist.Dequeue();
-            var filePath = currentTrack.Location;
+            if (currentTrack != null)
+                AddToPrevious(currentTrack);
+
+            currentTrack = playlist.PopFirst();
 
             // Fill back up the queue
             var songsToAdd = playlist.Count - queueLength;
             for (int i = 0; i < songsToAdd; i++)
             {
-                playlist.Enqueue(library.GetRandomTrack());
+                playlist.AddLast(library.GetRandomTrack());
             }
 
             // DJ spin that shit
-            audio.Play(filePath);
+            audio.Play(currentTrack.Location);
+
+            OnQueueChnaged();
+            OnCurrentTrackChnaged();
         }
 
-        // Queue 
-        // QueueSong -> add to bottom of list
-        // PlayNow -> stop current play this now
-        // CurrentTrack
-        // Pasue
-        // Play
-        // NextSong
-        // PrevSong
-        // Pausing, 
-        // playing, 
-        // track change, 
-        // queue change 
+        public void Previous()
+        {
+            if (previous.Count == 0)
+                return;
+
+            playlist.AddFirst(currentTrack);
+            currentTrack = previous.PopLast();
+            // DJ spin that shit
+            audio.Play(currentTrack.Location);
+
+            OnQueueChnaged();
+            OnCurrentTrackChnaged();
+        }
+
+        private void AddToPrevious(DbTrack track)
+        {
+            for (int i = 0; i <= previous.Count - queueLength; i++)
+            {
+                previous.RemoveFirst();
+            }
+            previous.AddLast(track);
+        }
+
+        private void OnCurrentTrackChnaged()
+        {
+            if (CurrentTrackChanged != null)
+                CurrentTrackChanged(currentTrack);
+        }
+
+        private void OnQueueChnaged()
+        {
+            if (QueueChanged != null)
+                QueueChanged();
+        }
+
+        private void OnPause()
+        {
+            if (Paused != null)
+                Paused();
+        }
+
+        private void OnResume()
+        {
+            if (Resumed != null)
+                Resumed();
+        }
+
+        //TODO: QueueSong, PlayNow
 
         public void Dispose()
         {
+            //TODO: Save Queue to RavenDB for Resume when Playr starts up
         }
     }
 }

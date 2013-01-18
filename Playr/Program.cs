@@ -10,7 +10,7 @@ namespace Playr
 {
     public class Program
     {
-        public static ControlService Control { get; private set; }
+        public static ControlService control { get; private set; }
         public static string MusicLibraryPath { get; private set; }
         public static string TempPath { get; private set; }
 
@@ -37,12 +37,32 @@ namespace Playr
 
                 using (WebApplication.Start<Startup>(baseUrl, "Microsoft.Owin.Host.HttpListener"))
                 using (var audio = new Playr.Services.AudioService())
-                using (Control = new ControlService(audio))
+                using (control = new ControlService(audio))
                 {
+                    control.CurrentTrackChanged += track =>
+                    {
+                        Console.WriteLine(track.Name);
+                    };
+
+                    control.Paused += () =>
+                    {
+                        Console.WriteLine("Paused Playing");
+                    };
+
+                    control.Resumed += () =>
+                    {
+                        Console.WriteLine("Resumed Playing");
+                    };
+
                     Console.WriteLine("Playr is running at {0}", baseUrl);
                     Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");
                     Console.WriteLine();
                     Console.WriteLine("Press any key to stop server...");
+                    control.Spin();
+                    Console.ReadKey(intercept: true);
+                    control.Pause();
+                    Console.ReadKey(intercept: true);
+                    control.Resume();
                     Console.ReadKey(intercept: true);
                 }
             }

@@ -7,7 +7,7 @@ namespace Playr.Services
     {
         private IWavePlayer player;
         private WaveStream fileWaveStream;
-        private bool disposed; 
+        private bool disposed;
 
         public event Action PlaybackStopped;
 
@@ -32,34 +32,44 @@ namespace Playr.Services
         public void Pause()
         {
             GuardDisposed();
-
             player.Pause();
+        }
+
+        public void Resume()
+        {
+            GuardDisposed();
+            player.Play();
         }
 
         public void Play(string filePath)
         {
             GuardDisposed();
-
             EnsureWaveCleanUp();
 
             // DJ spin that shit
             player = new WaveOutEvent();
             fileWaveStream = new MediaFoundationReader(filePath);
             player.Init(fileWaveStream);
-            player.PlaybackStopped += (sender, evn) =>
-            {
-                if (!disposed && PlaybackStopped != null)
-                    PlaybackStopped();
-            };
+            player.PlaybackStopped += OnPlaybackStopped;
 
             player.Play();
         }
 
+        private void OnPlaybackStopped(object sender, StoppedEventArgs evn)
+        {
+            if (!disposed && PlaybackStopped != null)
+                PlaybackStopped();
+        }
+
         private void EnsureWaveCleanUp()
         {
-            if (player != null && player.PlaybackState != PlaybackState.Stopped)
+            if (player != null)
             {
-                player.Stop();
+                player.PlaybackStopped -= OnPlaybackStopped;
+                if (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    player.Stop();
+                }
             }
             if (fileWaveStream != null)
             {
