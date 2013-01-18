@@ -39,30 +39,15 @@ namespace Playr
                 using (var audio = new Playr.Services.AudioService())
                 using (control = new ControlService(audio))
                 {
-                    control.CurrentTrackChanged += track =>
-                    {
-                        Console.WriteLine(track.Name);
-                    };
-
-                    control.Paused += () =>
-                    {
-                        Console.WriteLine("Paused Playing");
-                    };
-
-                    control.Resumed += () =>
-                    {
-                        Console.WriteLine("Resumed Playing");
-                    };
+                    control.CurrentTrackChanged += track => Console.WriteLine(track.Name);
+                    control.Paused += () => Console.WriteLine("Paused Playing");
+                    control.Resumed += () => Console.WriteLine("Resumed Playing");
 
                     Console.WriteLine("Playr is running at {0}", baseUrl);
                     Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");
                     Console.WriteLine();
                     Console.WriteLine("Press any key to stop server...");
                     control.Spin();
-                    Console.ReadKey(intercept: true);
-                    control.Pause();
-                    Console.ReadKey(intercept: true);
-                    control.Resume();
                     Console.ReadKey(intercept: true);
                 }
             }

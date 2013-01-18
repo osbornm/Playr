@@ -178,7 +178,6 @@
     <Compile Include="Api\Authentication\Models\User.cs" />
     <Compile Include="Api\WebApiConfig.cs" />
     <Compile Include="Helpers\Deque.cs" />
-    <Compile Include="Services\Models\CurrentTrack.cs" />
     <Compile Include="DataModels\DbAlbum.cs" />
     <Compile Include="DataModels\DbEvent.cs" />
     <Compile Include="DataModels\DbLibrary.cs" />
