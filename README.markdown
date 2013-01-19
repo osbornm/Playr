@@ -44,6 +44,9 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 ## Screenshots
 ![Main Page](https://github.com/osbornm/Playr/blob/master/Media/Screenshot1.png?raw=true)
 
+## License
+<a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png" width="80" height="15" alt="WTFPL" /></a>
+
 ###Special Thanks
 
 to [Black Raven](http://blackravenbrewing.com), where most of this app was coded, to my lovely wife to be for understanding my desire to work on side projects, and to all the folks, too numerous to list, who have helped get bits and pieces working. 
