@@ -18,6 +18,7 @@ namespace Playr.Api
 
             LibraryEndpoints.Configure(config);
             AuthenticationEndpoints.Configure(config);
+            MusicEndpoints.Configure(config);
 
             return config;
         }

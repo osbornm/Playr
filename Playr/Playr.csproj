@@ -158,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Authentication\AuthenticationEndpoints.cs" />
+    <Compile Include="Api\Music\Controllers\InfoController.cs" />
+    <Compile Include="Api\Music\MusicEndpoints.cs" />
+    <Compile Include="Api\Music\Controllers\ControlController.cs" />
     <Compile Include="Api\Library\Controllers\AlbumsController.cs" />
     <Compile Include="Api\Library\Controllers\ArtistsController.cs" />
     <Compile Include="Api\Authentication\Controllers\AuthenticationController.cs" />
