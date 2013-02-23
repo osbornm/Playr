@@ -15,7 +15,6 @@ namespace Playr.Services
         private MusicLibraryService library = new MusicLibraryService();
         private Deque<DbTrack> playlist = new Deque<DbTrack>();
         private Deque<DbTrack> previous = new Deque<DbTrack>();
-        private DbTrack currentTrack;
         private int queueLength;
 
         public ControlService(AudioService audio)
@@ -40,13 +39,9 @@ namespace Playr.Services
             Next();
         }
 
-        public DbTrack CurrentTrack
-        {
-            get
-            {
-                return currentTrack;
-            }
-        }
+        public DbAlbum CurrentAlbum { get; private set; }
+
+        public DbTrack CurrentTrack { get; private set; }
 
         public IEnumerable<DbTrack> Upcoming
         {
@@ -84,14 +79,17 @@ namespace Playr.Services
         public void Next()
         {
             // Get the song
-            if (currentTrack != null)
-                AddToPrevious(currentTrack);
+            if (CurrentTrack != null)
+                AddToPrevious(CurrentTrack);
+
             //if there is nothing in the playlist move on
             if (playlist.Count == 0)
             {
                 return;
             }
-            currentTrack = playlist.PopFirst();
+            
+            CurrentTrack = playlist.PopFirst();
+            CurrentAlbum = library.GetAlbumById(CurrentTrack.AlbumId);
 
             // Fill back up the queue
             var songsToAdd = queueLength - playlist.Count;
@@ -101,7 +99,7 @@ namespace Playr.Services
             }
 
             // DJ spin that shit
-            audio.Play(currentTrack.Location);
+            audio.Play(CurrentTrack.Location);
 
             OnQueueChanged();
             OnCurrentTrackChanged();
@@ -112,10 +110,10 @@ namespace Playr.Services
             if (previous.Count == 0)
                 return;
 
-            playlist.AddFirst(currentTrack);
-            currentTrack = previous.PopLast();
+            playlist.AddFirst(CurrentTrack);
+            CurrentTrack = previous.PopLast();
             // DJ spin that shit
-            audio.Play(currentTrack.Location);
+            audio.Play(CurrentTrack.Location);
 
             OnQueueChanged();
             OnCurrentTrackChanged();
@@ -133,7 +131,7 @@ namespace Playr.Services
         private void OnCurrentTrackChanged()
         {
             if (CurrentTrackChanged != null)
-                CurrentTrackChanged(currentTrack);
+                CurrentTrackChanged(CurrentTrack);
         }
 
         private void OnQueueChanged()

@@ -12,6 +12,7 @@ namespace Playr.Api.Library.Models
         public Track(DbTrack track, UrlHelper url)
         {
             AddLink("album", url.LinkToAlbum(track.AlbumId));
+            AddLink("artwork", url.LinkToAlbumArt(track.AlbumId));
             AddLink("download", url.LinkToTrackDownload(track));
 
             AlbumName = track.AlbumName;

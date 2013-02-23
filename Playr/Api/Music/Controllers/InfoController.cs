@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Playr.Api.Library.Models;
+using Playr.Api.Music.Models;
 
 namespace Playr.Api.Music.Controllers
 {
@@ -16,10 +11,10 @@ namespace Playr.Api.Music.Controllers
     public class InfoController : ApiController
     {
         [HttpGet]
-        public Track CurrentTrack()
+        public CurrentTrack CurrentTrack()
         {
             ControlNotNull();
-            return new Track(Program.control.CurrentTrack, Url);
+            return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, Url);
         }
 
         private void ControlNotNull()

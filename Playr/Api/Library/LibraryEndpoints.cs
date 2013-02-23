@@ -7,9 +7,12 @@ public static class LibraryEndpoints
     const string Album = "Album";
     const string Albums = "Albums";
     const string AlbumDownload = "DownloadAlbum";
-    const string AlbumArtowrk = "AlbumArtwork";
+    const string AlbumArtwork = "AlbumArtwork";
+    const string AlbumsByArtist = "AlbumsByArtist";
+    const string Artist = "Artist";
     const string Artists = "Artists";
     const string ArtistDownload = "DownloadArtist";
+    const string ArtistFanart = "ArtistFanart";
     const string Genres = "Genres";
     const string Root = "Library";
     const string Tracks = "Tracks";
@@ -26,7 +29,7 @@ public static class LibraryEndpoints
         config.Routes.MapHttpRoute(
             name: Album,
             routeTemplate: "api/library/albums/{id}",
-            defaults: new { controller = "Albums", action = "Album"}
+            defaults: new { controller = "Albums", action = "Album" }
         );
 
         config.Routes.MapHttpRoute(
@@ -36,7 +39,7 @@ public static class LibraryEndpoints
         );
 
         config.Routes.MapHttpRoute(
-            name: AlbumArtowrk,
+            name: AlbumArtwork,
             routeTemplate: "api/library/albums/{id}/artwork",
             defaults: new { controller = "Albums", action = "Artwork" }
         );
@@ -49,14 +52,32 @@ public static class LibraryEndpoints
 
         config.Routes.MapHttpRoute(
             name: Artists,
+            routeTemplate: "api/library/artists",
+            defaults: new { controller = "Artists", action = "GetArtists" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: Artist,
             routeTemplate: "api/library/artists/{artistName}",
-            defaults: new { controller = "Artists", artistName = RouteParameter.Optional }
+            defaults: new { controller = "Artists", action = "GetArtist" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: AlbumsByArtist,
+            routeTemplate: "api/library/artists/{artistName}/albums",
+            defaults: new { controller = "Artists", action = "GetAlbumsByArtist" }
         );
 
         config.Routes.MapHttpRoute(
             name: ArtistDownload,
             routeTemplate: "api/library/artists/{artistName}/download",
             defaults: new { controller = "Download", action = "Artist" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: ArtistFanart,
+            routeTemplate: "api/library/artists/{artistName}/fanart/{fanartId}",
+            defaults: new { controller = "Artists", action = "GetFanart" }
         );
 
         config.Routes.MapHttpRoute(
@@ -88,6 +109,16 @@ public static class LibraryEndpoints
         return url.Link(Albums, new { id = albumId });
     }
 
+    public static string LinkToAlbumArt(this UrlHelper url, DbAlbum album)
+    {
+        return LinkToAlbumArt(url, album.Id);
+    }
+
+    public static string LinkToAlbumArt(this UrlHelper url, int albumId)
+    {
+        return url.Link(AlbumArtwork, new { id = albumId });
+    }
+
     public static string LinkToAlbumDownload(this UrlHelper url, DbAlbum album)
     {
         return url.Link(AlbumDownload, new { id = album.Id });
@@ -105,7 +136,7 @@ public static class LibraryEndpoints
 
     public static string LinkToAlbumsByArtist(this UrlHelper url, string artist)
     {
-        return url.Link(Artists, new { artistName = artist });
+        return url.Link(AlbumsByArtist, new { artistName = artist });
     }
 
     public static string LinkToAlbumsByGenre(this UrlHelper url, string genre)
@@ -113,9 +144,19 @@ public static class LibraryEndpoints
         return url.Link(Genres, new { genreName = genre });
     }
 
+    public static string LinkToArtist(this UrlHelper url, string artist)
+    {
+        return url.Link(Artist, new { artistName = artist });
+    }
+
     public static string LinkToArtistDownload(this UrlHelper url, string artist)
     {
         return url.Link(ArtistDownload, new { artistName = artist });
+    }
+
+    public static string LinkToArtistFanart(this UrlHelper url, string artist, string fanartId)
+    {
+        return url.Link(ArtistFanart, new { artistName = artist, fanartId });
     }
 
     public static string LinkToArtists(this UrlHelper url)

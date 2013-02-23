@@ -57,7 +57,7 @@ namespace Playr.Services
 
                 player.Play();
             }
-            catch(Exception ex)
+            catch
             {
                 // If playback failed because of an incompatible file, log it and move on.
                 Console.WriteLine("Could not play file: {0}", filePath);

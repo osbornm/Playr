@@ -159,6 +159,7 @@
   <ItemGroup>
     <Compile Include="Api\Authentication\AuthenticationEndpoints.cs" />
     <Compile Include="Api\Music\Controllers\InfoController.cs" />
+    <Compile Include="Api\Music\Models\CurrentTrack.cs" />
     <Compile Include="Api\Music\MusicEndpoints.cs" />
     <Compile Include="Api\Music\Controllers\ControlController.cs" />
     <Compile Include="Api\Library\Controllers\AlbumsController.cs" />
@@ -226,6 +227,7 @@
       <Link>Raven.Studio.xap</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\CD.jpg" />
     <EmbeddedResource Include="Web\Content\css\site.css" />
     <EmbeddedResource Include="Web\Content\favicon.ico" />
     <EmbeddedResource Include="Web\Views\index.cshtml" />
