@@ -12,6 +12,8 @@ namespace Playr
     {
         public static ControlService control { get; private set; }
         public static string MusicLibraryPath { get; private set; }
+        public static string AlbumArtworkPath { get; private set; }
+        public static string FanArtworkPath { get; private set; }
         public static string TempPath { get; private set; }
 
         static void Main()
@@ -31,9 +33,13 @@ namespace Playr
 
                 TempPath = Path.Combine(exePath, "Temp");
                 MusicLibraryPath = Path.Combine(exePath, "Music");
+                AlbumArtworkPath = Path.Combine(exePath, "Artwork", "Album");
+                FanArtworkPath = Path.Combine(exePath, "Artwork", "Fan");
 
                 PathHelpers.EnsurePathExists(TempPath, forceClean: true);
                 PathHelpers.EnsurePathExists(MusicLibraryPath);
+                PathHelpers.EnsurePathExists(AlbumArtworkPath);
+                PathHelpers.EnsurePathExists(FanArtworkPath);
 
                 using (WebApplication.Start<Startup>(baseUrl, "Microsoft.Owin.Host.HttpListener"))
                 using (var audio = new Playr.Services.AudioService())

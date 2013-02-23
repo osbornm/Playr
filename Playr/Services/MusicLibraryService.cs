@@ -15,7 +15,7 @@ namespace Playr.Services
         public virtual DbTrack AddFile(string fileName)
         {
             var file = FileMetadata.Create(fileName);
-            var album = GetOrCreateAlbum(file.Tag.FirstAlbumArtist, file.Tag.Album, file.Tag.FirstGenre);
+            var album = GetOrCreateAlbum(file);
             var track = new DbTrack
             {
                 AlbumId = album.Id,
@@ -159,26 +159,48 @@ namespace Playr.Services
         public virtual DbTrack GetRandomTrack()
         {
             using (var session = Database.OpenSession())
-                return session.Query<DbTrack>().Customize(x => x.RandomOrdering()).First();
+                return session.Query<DbTrack>().Customize(x => x.RandomOrdering()).FirstOrDefault();
         }
 
         // Private helpers
 
-        private DbAlbum GetOrCreateAlbum(string artistName, string albumName, string genre)
-        {
-            using (var session = Database.OpenSession())
-            {
-                var album = GetAlbumByArtistAndAlbumName(artistName, albumName, session);
+        private static object lockObject = new object();
 
-                if (album == null)
+        private DbAlbum GetOrCreateAlbum(FileMetadata file)
+        {
+            var artistName = file.Tag.FirstAlbumArtist;
+            var albumName =file.Tag.Album;
+            var genre = file.Tag.FirstGenre;
+            DbAlbum album;
+
+            // TODO: This is a terrible way to prevent re-entry, but it'll be good enough for now
+            // until we can make a worker-thread to do background processing on uploads.
+            lock (lockObject)
+            {
+                using (var session = Database.OpenSession())
                 {
-                    album = new DbAlbum { ArtistName = artistName, Name = albumName, Genre = genre };
-                    session.Store(album);
-                    session.SaveChanges();
+                    album = GetAlbumByArtistAndAlbumName(artistName, albumName, session);
+                    if (album == null)
+                    {
+                        album = new DbAlbum { ArtistName = artistName, Name = albumName, Genre = genre };
+                        session.Store(album);
+                        session.SaveChanges();
+                    }
                 }
 
-                return album;
+                var albumArtwork = Path.Combine(Program.AlbumArtworkPath, String.Format("{0}.jpg", album.Id));
+                if (!File.Exists(albumArtwork))
+                {
+
+                    var img = file.Tag.Pictures.FirstOrDefault();
+                    if (img != null)
+                    {
+                        File.WriteAllBytes(albumArtwork, img.Data.ToArray());
+                    }
+                }
             }
+            // TODO: Consider FanArt here too?
+            return album;
         }
     }
 }

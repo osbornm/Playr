@@ -26,7 +26,12 @@ namespace Playr.Services
             queueLength = Convert.ToInt32(ConfigurationManager.AppSettings["Playr:QueueLength"]);
             for (int i = 0; i < queueLength; i++)
             {
-                playlist.AddLast(library.GetRandomTrack());
+                var track = library.GetRandomTrack();
+                if (track == null)
+                {
+                    return;
+                }
+                playlist.AddLast(track);
             }
         }
 
@@ -81,11 +86,15 @@ namespace Playr.Services
             // Get the song
             if (currentTrack != null)
                 AddToPrevious(currentTrack);
-
+            //if there is nothing in the playlist move on
+            if (playlist.Count == 0)
+            {
+                return;
+            }
             currentTrack = playlist.PopFirst();
 
             // Fill back up the queue
-            var songsToAdd = playlist.Count - queueLength;
+            var songsToAdd = queueLength - playlist.Count;
             for (int i = 0; i < songsToAdd; i++)
             {
                 playlist.AddLast(library.GetRandomTrack());
@@ -94,8 +103,8 @@ namespace Playr.Services
             // DJ spin that shit
             audio.Play(currentTrack.Location);
 
-            OnQueueChnaged();
-            OnCurrentTrackChnaged();
+            OnQueueChanged();
+            OnCurrentTrackChanged();
         }
 
         public void Previous()
@@ -108,8 +117,8 @@ namespace Playr.Services
             // DJ spin that shit
             audio.Play(currentTrack.Location);
 
-            OnQueueChnaged();
-            OnCurrentTrackChnaged();
+            OnQueueChanged();
+            OnCurrentTrackChanged();
         }
 
         private void AddToPrevious(DbTrack track)
@@ -121,13 +130,13 @@ namespace Playr.Services
             previous.AddLast(track);
         }
 
-        private void OnCurrentTrackChnaged()
+        private void OnCurrentTrackChanged()
         {
             if (CurrentTrackChanged != null)
                 CurrentTrackChanged(currentTrack);
         }
 
-        private void OnQueueChnaged()
+        private void OnQueueChanged()
         {
             if (QueueChanged != null)
                 QueueChanged();

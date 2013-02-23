@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using NAudio.Wave;
 
 namespace Playr.Services
@@ -46,13 +47,22 @@ namespace Playr.Services
             GuardDisposed();
             EnsureWaveCleanUp();
 
-            // DJ spin that shit
-            player = new WaveOutEvent();
-            fileWaveStream = new MediaFoundationReader(filePath);
-            player.Init(fileWaveStream);
-            player.PlaybackStopped += OnPlaybackStopped;
+            try
+            {
+                // DJ spin that shit
+                player = new WaveOutEvent();
+                fileWaveStream = new MediaFoundationReader(filePath);
+                player.Init(fileWaveStream);
+                player.PlaybackStopped += OnPlaybackStopped;
 
-            player.Play();
+                player.Play();
+            }
+            catch(Exception ex)
+            {
+                // If playback failed because of an incompatible file, log it and move on.
+                Console.WriteLine("Could not play file: {0}", filePath);
+                OnPlaybackStopped(null, null);
+            }
         }
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs evn)
@@ -74,10 +84,16 @@ namespace Playr.Services
             if (fileWaveStream != null)
             {
                 fileWaveStream.Dispose();
+                fileWaveStream = null;
             }
             if (player != null)
             {
-                player.Dispose();
+                try
+                {
+                    player.Dispose();
+                }
+                catch { } // Sometimes it throws NullRef if we dispose but never started playing anything
+
                 player = null;
             }
         }

@@ -4,8 +4,10 @@ using Playr.DataModels;
 
 public static class LibraryEndpoints
 {
+    const string Album = "Album";
     const string Albums = "Albums";
     const string AlbumDownload = "DownloadAlbum";
+    const string AlbumArtowrk = "AlbumArtwork";
     const string Artists = "Artists";
     const string ArtistDownload = "DownloadArtist";
     const string Genres = "Genres";
@@ -22,15 +24,27 @@ public static class LibraryEndpoints
         );
 
         config.Routes.MapHttpRoute(
-            name: Albums,
+            name: Album,
             routeTemplate: "api/library/albums/{id}",
-            defaults: new { controller = "Albums", id = RouteParameter.Optional }
+            defaults: new { controller = "Albums", action = "Album"}
         );
 
         config.Routes.MapHttpRoute(
             name: AlbumDownload,
             routeTemplate: "api/library/albums/{id}/download",
             defaults: new { controller = "Download", action = "Album" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: AlbumArtowrk,
+            routeTemplate: "api/library/albums/{id}/artwork",
+            defaults: new { controller = "Albums", action = "Artwork" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: Albums,
+            routeTemplate: "api/library/albums",
+            defaults: new { controller = "Albums", action = "Albums" }
         );
 
         config.Routes.MapHttpRoute(

@@ -4,10 +4,12 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Ionic.Zip;
 using Playr.Api.Library.Models;
+using Playr.DataModels;
 
 namespace Playr.Api.Library.Controllers
 {
@@ -18,10 +20,9 @@ namespace Playr.Api.Library.Controllers
             return new MusicLibrary(MusicLibraryService.GetLibraryInfo(), Url);
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<HttpResponseMessage> PostTracks()
         {
-            var result = new UploadResult();
             var content = Request.Content;
 
             if (content.Headers.ContentType.IsMultipartFormData())
@@ -30,25 +31,37 @@ namespace Playr.Api.Library.Controllers
                 await content.ReadAsMultipartAsync(provider);
 
                 foreach (var file in provider.FileData)
-                    ProcessFile(file.LocalFileName, file.Headers.ContentType, result);
+                    ThreadPool.QueueUserWorkItem(_ => ProcessFile(file.LocalFileName, file.Headers.ContentType));
             }
             else
             {
                 var fileName = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
                 await content.ReadAsFileAsync(fileName);
-                ProcessFile(fileName, Request.Content.Headers.ContentType, result);
+                ThreadPool.QueueUserWorkItem(_ => ProcessFile(fileName, Request.Content.Headers.ContentType));
             }
 
-            return Request.CreateResponse(
-                result.Tracks.Count > 0 ? HttpStatusCode.OK : HttpStatusCode.UnsupportedMediaType,
-                result
-            );
+            return Request.CreateResponse(HttpStatusCode.Accepted, "Thanks, brah");
         }
+
+
+        // 0) Put in temp folder?
+
+
+
+
+        // 1) Check for Item Exists
+        // 2) Return if found Otherwise Lock
+        // 3) Check again to make sure nothing was created between then
+        //     - ThreadPool.QueueUserWorkItem
+        // 4) If found return else Go get stuff
+        // 5) Unlock and move on here 
+
+
 
         /// <summary>
         /// This version of ProcessFile assumes the filename has the correct extension.
         /// </summary>
-        private void ProcessFile(string fileName, UploadResult result)
+        private void ProcessFile(string fileName)
         {
             Console.WriteLine("> Processing: {0}", fileName);
 
@@ -57,16 +70,17 @@ namespace Playr.Api.Library.Controllers
             switch (extension)
             {
                 case ".zip":
-                    ProcessFile_Zip(fileName, result);
+                    ProcessFile_Zip(fileName);
                     break;
 
                 case ".mp3":
                 case ".m4a":
-                    ProcessFile_Audio(fileName, result);
+                    ProcessFile_Audio(fileName);
                     break;
 
                 default:
-                    result.Errors.Add(String.Format("Unsupported media type for file {0} (only .mp3, .m4a, and .zip are supported)", Path.GetFileName(fileName)));
+                    Console.WriteLine("Unsupported file type: {0}", Path.GetFileName(fileName));
+                    File.Delete(fileName);
                     break;
             }
         }
@@ -74,7 +88,7 @@ namespace Playr.Api.Library.Controllers
         /// <summary>
         /// This version of ProcessFile ensures that the file extension matches the media type.
         /// </summary>
-        private void ProcessFile(string fileName, MediaTypeHeaderValue mediaType, UploadResult result)
+        private void ProcessFile(string fileName, MediaTypeHeaderValue mediaType)
         {
             var extension = mediaType.ToFileExtension();
             var newPath = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + extension);
@@ -85,23 +99,22 @@ namespace Playr.Api.Library.Controllers
                 fileName = newPath;
             }
 
-            ProcessFile(fileName, result);
+            ProcessFile(fileName);
         }
 
-        private void ProcessFile_Audio(string fileName, UploadResult result)
+        private void ProcessFile_Audio(string fileName)
         {
             try
             {
-                var dbTrack = MusicLibraryService.AddFile(fileName);
-                result.Tracks.Add(new Track(dbTrack, Url));
+                MusicLibraryService.AddFile(fileName);
             }
             catch (Exception ex)
             {
-                result.Errors.Add(ex.Message);
+                Console.WriteLine("ERROR: {0}", ex.Message);
             }
         }
 
-        private void ProcessFile_Zip(string zipFile, UploadResult result)
+        private void ProcessFile_Zip(string zipFile)
         {
             try
             {
@@ -111,26 +124,25 @@ namespace Playr.Api.Library.Controllers
                 using (var zip = ZipFile.Read(zipFile))
                     zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.zip", null, outputPath);
 
-                ProcessFolder(outputPath, result);
+                ProcessFolder(outputPath);
 
                 SwallowExceptions(() => File.Delete(zipFile));
-                SwallowExceptions(() => Directory.Delete(outputPath, recursive: true));
             }
             catch (Exception ex)
             {
-                result.Errors.Add(ex.Message);
+                Console.WriteLine("ERROR: {0}", ex.Message);
             }
         }
 
-        private void ProcessFolder(string folder, UploadResult result)
+        private void ProcessFolder(string folder)
         {
             Console.WriteLine("> Searching: {0}", folder);
 
             foreach (var file in Directory.GetFiles(folder))
-                ProcessFile(file, result);
+                ThreadPool.QueueUserWorkItem(_ => ProcessFile(file));
 
             foreach (var subFolder in Directory.GetDirectories(folder))
-                ProcessFolder(subFolder, result);
+                ProcessFolder(subFolder);
         }
 
         private void SwallowExceptions(Action action)
@@ -140,19 +152,6 @@ namespace Playr.Api.Library.Controllers
                 action();
             }
             catch { }
-        }
-
-        class UploadResult
-        {
-            public UploadResult()
-            {
-                Errors = new List<string>();
-                Tracks = new List<Track>();
-            }
-
-            public List<string> Errors { get; private set; }
-
-            public List<Track> Tracks { get; private set; }
         }
     }
 }
