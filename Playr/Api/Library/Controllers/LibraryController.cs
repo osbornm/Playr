@@ -43,21 +43,6 @@ namespace Playr.Api.Library.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, "Thanks, brah");
         }
 
-
-        // 0) Put in temp folder?
-
-
-
-
-        // 1) Check for Item Exists
-        // 2) Return if found Otherwise Lock
-        // 3) Check again to make sure nothing was created between then
-        //     - ThreadPool.QueueUserWorkItem
-        // 4) If found return else Go get stuff
-        // 5) Unlock and move on here 
-
-
-
         /// <summary>
         /// This version of ProcessFile assumes the filename has the correct extension.
         /// </summary>

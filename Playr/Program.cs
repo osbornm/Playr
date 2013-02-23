@@ -15,6 +15,8 @@ namespace Playr
         public static string AlbumArtworkPath { get; private set; }
         public static string FanArtworkPath { get; private set; }
         public static string TempPath { get; private set; }
+        public static string FanartApiKey { get; set; }
+        public static bool FanartEnabled { get { return !String.IsNullOrWhiteSpace(FanartApiKey); } }
 
         static void Main()
         {
@@ -27,6 +29,8 @@ namespace Playr
             try
             {
                 var baseUrl = ConfigurationManager.AppSettings["Playr:Url"] ?? "http://localhost:5555/";
+                FanartApiKey = ConfigurationManager.AppSettings["Playr:FanartApiKey"];
+
 
                 // TODO: Remove me
                 var exePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
@@ -52,9 +56,9 @@ namespace Playr
                     Console.WriteLine("Playr is running at {0}", baseUrl);
                     Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");
                     Console.WriteLine();
-                    Console.WriteLine("Press any key to stop server...");
+                    Console.WriteLine("Press ENTER to stop server...");
                     control.Spin();
-                    Console.ReadKey(intercept: true);
+                    Console.ReadLine();
                 }
             }
             catch (Exception ex)
