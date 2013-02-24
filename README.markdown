@@ -143,12 +143,12 @@ I'm not going to lie this is basically a rip off of [play](https://github.com/pl
 		<td><em>GET</em></td>
 		<td>Get the current music queue</td>
 	</tr>
-	<tfoot>
-		<tr>
-			<td><img src="https://f.cloud.github.com/assets/674284/190162/2196b8be-7ed2-11e2-887f-ea3cdd151a2b.png" alt="Requires API Key"/></td>
-			<td colspan="3">Endpoint Requires API Key.</td>
-		</tr>
-	</tfoot>
+</table>
+<table>
+	<tr>
+		<td><img src="https://f.cloud.github.com/assets/674284/190162/2196b8be-7ed2-11e2-887f-ea3cdd151a2b.png" alt="Requires API Key"/></td>
+		<td colspan="3">Endpoint Requires API Key.</td>
+	</tr>
 </table>
 
 ## Screenshots
