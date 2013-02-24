@@ -1,20 +1,24 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Playr.Api.Music.Models;
 
 namespace Playr.Api.Music.Controllers
 {
-    // api/info/currentTrack
-    // api/info/queue
-
     public class InfoController : ApiController
     {
         [HttpGet]
-        public CurrentTrack CurrentTrack()
+        public CurrentTrack Current()
         {
             ControlNotNull();
             return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, Url);
+        }
+
+        [HttpGet]
+        public CurrentTrack Queue()
+        {
+            throw new NotImplementedException();
         }
 
         private void ControlNotNull()

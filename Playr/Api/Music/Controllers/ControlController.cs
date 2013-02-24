@@ -9,11 +9,6 @@ using System.Web.Http;
 
 namespace Playr.Api.Control.Controllers
 {
-    // api/control/resume
-    // api/control/pause
-    // api/control/next
-    // api/control/previous
-
     [Authorize]
     public class ControlController : ApiController
     {
