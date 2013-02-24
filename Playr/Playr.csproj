@@ -227,6 +227,7 @@
       <Link>Raven.Studio.xap</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\playr.ico" />
     <EmbeddedResource Include="Resources\CD.jpg" />
     <EmbeddedResource Include="Web\Content\css\site.css" />
     <EmbeddedResource Include="Web\Content\favicon.ico" />

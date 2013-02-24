@@ -13,6 +13,12 @@ namespace Playr.Web.Support
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
         private static readonly Assembly thisAssembly = typeof(NancyBootstrapper).Assembly;
+        private byte[] favicon;
+
+        protected override byte[] FavIcon
+        {
+            get { return this.favicon ?? (this.favicon = LoadFavIcon()); }
+        }
 
         protected override NancyInternalConfiguration InternalConfiguration
         {
@@ -43,6 +49,16 @@ namespace Playr.Web.Support
 
                 return new EmbeddedFileResponse(thisAssembly, path, fileName);
             });
+        }
+
+        private static byte[] LoadFavIcon()
+        {
+            using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Playr.Resources.playr.ico"))
+            {
+                var tempFavicon = new byte[resourceStream.Length];
+                resourceStream.Read(tempFavicon, 0, (int)resourceStream.Length);
+                return tempFavicon;
+            }
         }
     }
 }
