@@ -11,6 +11,7 @@ models.fullscreen = {
         self.totalTime = ko.observable("");
         self.currentTime = ko.observable("00:00");
         self.fanart = ko.observableArray([]);
+        self.albumArtUrl = ko.observable("/images/albumArt.jpg");
         self.updateTrack = function (data) {
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);

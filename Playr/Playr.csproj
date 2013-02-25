@@ -205,6 +205,7 @@
     <EmbeddedResource Include="Web\Views\fullscreen.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Web\Content\images\albumArt.jpg" />
     <EmbeddedResource Include="Web\Content\scripts\playr.js" />
     <EmbeddedResource Include="Web\Content\scripts\knockout-2.2.1.js" />
     <EmbeddedResource Include="Web\Content\scripts\playr.fullscreen.js" />

@@ -16,6 +16,7 @@ namespace Playr.Api.Library.Models
             AddLink("download", url.LinkToTrackDownload(track));
 
             AlbumName = track.AlbumName;
+            ArtistName = track.ArtistName;
             AudioBitrate = track.AudioBitrate;
             AudioChannels = track.AudioChannels;
             AudioSampleRate = track.AudioSampleRate;

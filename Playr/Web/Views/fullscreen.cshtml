@@ -6,11 +6,31 @@
     <link rel="stylesheet" href="css/fullscreen.css"/>
 </head>
 <body>
-    <!-- ko if: (name() === "") -->
-        <h1>Loading...</h1>
-    <!-- /ko -->
+<!-- ko if: (name() === "") -->
+    <h1>Loading...</h1>
+    <h2>Please Wait</h2>
+<!-- /ko -->
+<!-- ko ifnot: (name() === "") -->
+    <section class="fanart"></section>
+    <section class="content">
+        <div id="currentTrack">
+            <div id="albumArtContainer">
+                <div id="albumArt">
+                    <div class="front face"><img data-bind="attr: { src: albumArtUrl }"></div>
+                    <div class="back face"></div>
+                </div>
+            </div>
+            <div class="text">
+                <hgroup>
+                    <h1 data-bind="text: name"></h1>
+                    <h2 data-bind="text: artistName"></h2>
+                </hgroup>
+            </div>
+        </div>
+    </section>
 
-    <h1 data-bind="text:name"></h1>
+
+<!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/knockout-2.2.1.js"></script>
