@@ -12,27 +12,23 @@ namespace Playr.Api.Music.Models
 {
     public class CurrentTrack
     {
-        public CurrentTrack(DbAlbum album, DbTrack track, UrlHelper url)
+        public CurrentTrack(DbAlbum album, DbTrack track, TimeSpan currentTime, UrlHelper url)
         {
             Track = new Track(track, url);
-
+            CurrentTime = currentTime;
             // TODO: Figure out default background strategy
             Fanart = Enumerable.Empty<string>();
-
-            if (Program.FanartEnabled)
+            try
             {
-                try
-                {
-                    var fanartFolder = Path.Combine(Program.FanArtworkPath, album.ArtistName);
-                    Fanart = Directory.GetFiles(fanartFolder)
-                                      .Select(path => url.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
-                }
-                catch { }
+                var fanartFolder = Path.Combine(Program.FanArtworkPath, album.ArtistName);
+                Fanart = Directory.GetFiles(fanartFolder)
+                                    .Select(path => url.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
             }
+            catch { }
         }
 
         public IEnumerable<string> Fanart { get; set; }
-
+        public TimeSpan CurrentTime { get; set; }
         public Track Track { get; set; }
     }
 }

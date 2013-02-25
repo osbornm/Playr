@@ -1,0 +1,166 @@
+﻿@import url("http://fonts.googleapis.com/css?family=Oswald:300");
+
+html {
+    background-color: #f2e9e1;
+    font-family: 'Oswald', sans-serif;
+    color: #1c140d;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.fanart {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    -moz-opacity: .4;
+    opacity: .4;
+}
+
+    .fanart div {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+    }
+
+.content {
+    padding: 20px;
+}
+
+#currentTrack {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+}
+
+    #currentTrack img {
+        height: 250px;
+        width: 250px;
+        border: solid 1px #1c140d;
+        -moz-box-shadow: 5px 5px 15px #777;
+        -o-box-shadow: 5px 5px 15px #777;
+        -webkit-box-shadow: 5px 5px 15px #777;
+        box-shadow: 5px 5px 15px #777;
+        float: left;
+        margin-top: 22px;
+    }
+
+    #currentTrack .text {
+        padding-left: 280px;
+        text-shadow: 2px 2px 10px #777;
+    }
+
+        #currentTrack .text h1,
+        #currentTrack .text h2 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        #currentTrack .text h1 {
+            font-size: 4em;
+        }
+
+        #currentTrack .text h2 {
+            font-size: 4em;
+        }
+
+#timeline {
+    margin-top: 27px;
+}
+
+
+#trackLength,
+#currentPosition {
+    font-size: 2em;
+    margin: 0;
+}
+
+#currentPosition {
+    float: left;
+}
+
+#trackLength {
+    text-align: right;
+}
+
+#progressBar {
+    background-color: #fff;
+    -moz-box-shadow: 5px 5px 15px #777;
+    -o-box-shadow: 5px 5px 15px #777;
+    -webkit-box-shadow: 5px 5px 15px #777;
+    box-shadow: 5px 5px 15px #777;
+}
+
+    #progressBar #progress {
+        background-color: #cbe86b;
+        height: 10px;
+        width: 0%;
+    }
+
+
+/* Album Art Stuff */
+#albumArtContainer {
+    height: 250px;
+    width: 250px;
+    float: left;
+    -moz-perspective: 1000;
+    -ms-perspective: 1000;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+}
+
+    #albumArtContainer #albumArt img {
+        width: 250px;
+        height: 250px;
+        border: solid 1px #1c140d;
+        background-color: #000;
+        -moz-box-shadow: 5px 5px 15px #777;
+        -o-box-shadow: 5px 5px 15px #777;
+        -webkit-box-shadow: 5px 5px 15px #777;
+        box-shadow: 5px 5px 15px #777;
+    }
+
+    #albumArtContainer #albumArt {
+        width: 100%;
+        height: 100%;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transition: all 1.5s linear;
+        transition: all 1.0s linear;
+    }
+
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+    .face.back {
+        display: block;
+        -webkit-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        color: white;
+        text-align: center;
+        background-image: -webkit-gradient(radial, 50% 0%, 0, 50% 0%, 317, color-stop(35%, #47382b), color-stop(79%, #1c140d));
+        background-image: -webkit-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+        background-image: -moz-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+        background-image: -ms-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+        background-image: -o-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
+        background-image: radial-gradient(farthest-corner at center top, #47382b 35%, #1c140d 79%);
+    }

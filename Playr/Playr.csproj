@@ -223,12 +223,17 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Web\Views\_layout.cshtml" />
     <None Include="Web.config" />
+    <EmbeddedResource Include="Web\Views\fullscreen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\RavenDB.Embedded.1.2.2045-Unstable\tools\Raven.Studio.xap">
       <Link>Raven.Studio.xap</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Web\Content\scripts\playr.js" />
+    <EmbeddedResource Include="Web\Content\scripts\knockout-2.2.1.js" />
+    <EmbeddedResource Include="Web\Content\scripts\playr.fullscreen.js" />
+    <EmbeddedResource Include="Web\Content\css\fullscreen.css" />
     <EmbeddedResource Include="Web\Content\scripts\modernizr.js" />
     <EmbeddedResource Include="Web\Content\css\bootstrap.css" />
     <EmbeddedResource Include="Web\Content\css\jquery-ui-1.10.1.css" />

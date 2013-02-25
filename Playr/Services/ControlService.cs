@@ -43,6 +43,13 @@ namespace Playr.Services
 
         public DbTrack CurrentTrack { get; private set; }
 
+        public TimeSpan CurrentTime {
+            get
+            {
+                return audio.CurrentTime;
+            }
+        }
+
         public IEnumerable<DbTrack> Upcoming
         {
             get

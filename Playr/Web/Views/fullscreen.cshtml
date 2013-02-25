@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Playr</title>
+    <script src="scripts/modernizr.js"></script>
+    <link rel="stylesheet" href="css/fullscreen.css"/>
+</head>
+<body>
+    <!-- ko if: (name() === "") -->
+        <h1>Loading...</h1>
+    <!-- /ko -->
+
+    <h1 data-bind="text:name"></h1>
+
+    <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/knockout-2.2.1.js"></script>
+    <script src="scripts/playr.js"></script>
+    <script src="scripts/playr.fullscreen.js"></script>
+</body>
+</html>
