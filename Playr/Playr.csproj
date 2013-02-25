@@ -237,7 +237,12 @@
     <EmbeddedResource Include="Web\Content\css\site.css" />
     <EmbeddedResource Include="Web\Views\index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\scripts\playr.cycle.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\scripts\playr.knockout.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

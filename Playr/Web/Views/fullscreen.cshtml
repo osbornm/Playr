@@ -11,7 +11,9 @@
     <h2>Please Wait</h2>
 <!-- /ko -->
 <!-- ko ifnot: (name() === "") -->
-    <section class="fanart"></section>
+    <section class="fanart" data-bind="foreach: fanart">
+        <div data-bind="style: {backgroundImage: ('url('+ $data + ')') }" />
+    </section>
     <section class="content">
         <div id="currentTrack">
             <div id="albumArtContainer">
@@ -28,13 +30,13 @@
             </div>
         </div>
     </section>
-
-
 <!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/knockout-2.2.1.js"></script>
     <script src="scripts/playr.js"></script>
+    <script src="scripts/playr.knockout.js"></script>
+    <script src="scripts/playr.cycle.js"></script>
     <script src="scripts/playr.fullscreen.js"></script>
 </body>
 </html>
