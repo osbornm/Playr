@@ -9,19 +9,16 @@ models.fullscreen = {
         self.artistName = ko.observable("");
         self.name = ko.observable("");
         self.totalTime = ko.observable("");
-        self.currentTime = ko.observable("00:00");
+        self.currentTime = ko.observable("");
         self.fanart = ko.observableArray([]);
         self.albumArtUrl = ko.observable("/images/albumArt.jpg");
-        self.fanartTimer;
         self.updateTrack = function (data) {
-            if (self.fanartTimer) {
-                clearInterval(self.fanartTimer);
-            }
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);
             self.name(data.track.name);
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
+            helpers.SortRandom(data.fanart)
             self.fanart(data.fanart);
             if (data.track.links) {
                 $.each(data.track.links, function () {

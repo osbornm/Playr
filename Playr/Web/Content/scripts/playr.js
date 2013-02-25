@@ -14,3 +14,16 @@ helpers.padNumber = function (number, width) {
 helpers.RandomNumber = function (number) {
     return Math.floor(Math.random() * number) + 1;
 };
+
+// fisher Yates Method
+helpers.SortRandom = function (myArray) {
+    var i = myArray.length;
+    if (i == 0) return false;
+    while (--i) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tempi = myArray[i];
+        var tempj = myArray[j];
+        myArray[i] = tempj;
+        myArray[j] = tempi;
+    }
+}
