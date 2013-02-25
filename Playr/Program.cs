@@ -45,7 +45,7 @@ namespace Playr
                 PathHelpers.EnsurePathExists(AlbumArtworkPath);
                 PathHelpers.EnsurePathExists(FanArtworkPath);
 
-                using (WebApplication.Start<Startup>(baseUrl, "Microsoft.Owin.Host.HttpListener"))
+                using (WebApplication.Start<Startup>(baseUrl))
                 using (var audio = new Playr.Services.AudioService())
                 using (control = new ControlService(audio))
                 {

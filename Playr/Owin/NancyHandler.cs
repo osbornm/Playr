@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nancy.Bootstrapper;
-using Nancy.Hosting.Owin;
+using Nancy.Owin;
 
 namespace Playr.Owin
 {
@@ -11,21 +11,15 @@ namespace Playr.Owin
         private readonly Func<IDictionary<string, object>, Task> _next;
         private readonly NancyOwinHost _owinHost;
 
-        public NancyHandler(Func<IDictionary<string, object>, Task> next)
-        {
-            _next = next;
-            _owinHost = new NancyOwinHost();
-        }
-
         public NancyHandler(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper)
         {
             _next = next;
-            _owinHost = new NancyOwinHost(bootstrapper);
+            _owinHost = new NancyOwinHost(next, bootstrapper);
         }
 
         public Task Invoke(IDictionary<string, object> env)
         {
-            return _owinHost.ProcessRequest(env);
+            return _owinHost.Invoke(env);
         }
     }
 }

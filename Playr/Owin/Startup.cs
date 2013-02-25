@@ -8,7 +8,7 @@ namespace Playr.Owin
         public void Configuration(IAppBuilder builder)
         {
             builder.UsePlayrAuthentication()
-                   .MapHubs("/signalr")
+                   .MapHubs()
                    .UseHttpServer(WebApiConfig.GetConfiguration())
                    .UseNancy();
         }
