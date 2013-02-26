@@ -8,8 +8,12 @@ models.fullscreen = {
         self.albumName = ko.observable("");
         self.artistName = ko.observable("");
         self.name = ko.observable("");
-        self.totalTime = ko.observable("");
-        self.currentTime = ko.observable("");
+        self.totalTime = ko.observable(0);
+        self.currentTime = ko.observable(0);
+        self.TimeRemaining = ko.computed(function () {
+            var time = self.totalTime() - self.currentTime()
+            return time < 0 ? 0 : time;
+        });
         self.fanart = ko.observableArray([]);
         self.albumArtUrl = ko.observable("/images/albumArt.jpg");
         self.updateTrack = function (data) {
@@ -18,6 +22,7 @@ models.fullscreen = {
             self.name(data.track.name);
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
+            // Crazy awesome fanart stuff
             helpers.SortRandom(data.fanart)
             self.fanart(data.fanart);
             if (data.track.links) {
@@ -34,6 +39,22 @@ models.fullscreen = {
                     timeout: 15000
                 });
             }
+            // Animate the progress bard
+            $("#progress").stop(true, true)
+                .width(((self.currentTime() / self.totalTime()) * 100) + "%")
+                .animate({ width: "100%" }, self.TimeRemaining(), "linear");
+            // Kick off time countdown
+            if (self.timer) {
+                clearInterval(self.timer);
+            }
+            self.timer = setInterval(function () {
+                var newTime = self.currentTime() + 1000;
+                if (newTime > self.totalTime()) {
+                    newTime = self.totalTime();
+                    clearInterval(self.timer);
+                }
+                self.currentTime(newTime);
+            }, 1000);
         };
         
     }

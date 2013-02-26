@@ -12,7 +12,7 @@ namespace Playr.Api.Music.Controllers
         public CurrentTrack Current()
         {
             ControlNotNull();
-            return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, Program.control.CurrentTime, Url);
+            return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, Program.control.CurrentTime.TotalMilliseconds, Url);
         }
 
         [HttpGet]

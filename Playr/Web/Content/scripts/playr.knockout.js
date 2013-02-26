@@ -34,4 +34,13 @@
             $(element)[widgetBindings.widgetName](widgetBindings.widgetOptions);
         }
     };
+
+    ko.bindingHandlers.time = {
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            var value = valueAccessor(),
+                valueUnwrapped = ko.utils.unwrapObservable(value);
+
+            $(element).text(helpers.ConvetToMinSec(valueUnwrapped));
+        }
+    };
 }(jQuery, ko));

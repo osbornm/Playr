@@ -27,12 +27,23 @@
                     <h1 data-bind="text: name"></h1>
                     <h2 data-bind="text: artistName"></h2>
                 </hgroup>
+                <div id="timeline">
+                    <div id="timelineText">
+                        <h3 id="currentPosition" data-bind="time: currentTime"></h3>
+                        <h3 id="trackLength" data-bind="time: totalTime"></h3>
+                    </div>
+                    <div id="progressBar">
+                        <div id="progress"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 <!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/date.js"></script>
+    <script src="scripts/time.js"></script>
     <script src="scripts/knockout-2.2.1.js"></script>
     <script src="scripts/playr.js"></script>
     <script src="scripts/playr.knockout.js"></script>

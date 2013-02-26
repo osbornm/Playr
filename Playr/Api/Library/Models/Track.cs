@@ -28,7 +28,7 @@ namespace Playr.Api.Library.Models
             Name = track.Name;
             Plays = track.Plays;
             SkipCount = track.SkipCount;
-            Time = track.Time;
+            Time = track.Time.TotalMilliseconds;
             TrackNumber = track.TrackNumber;
             Year = track.Year;
         }
@@ -48,7 +48,7 @@ namespace Playr.Api.Library.Models
         public string Name { get; set; }
         public int Plays { get; set; }
         public int SkipCount { get; set; }
-        public TimeSpan Time { get; set; }
+        public double Time { get; set; }
         public uint TrackNumber { get; set; }
         public uint Year { get; set; }
     }

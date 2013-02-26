@@ -59,6 +59,8 @@ html, body {
 
         #currentTrack .text h1,
         #currentTrack .text h2 {
+            font-size: 4em;
+            line-height: 1.25em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -66,16 +68,8 @@ html, body {
             font-weight: normal;
         }
 
-        #currentTrack .text h1 {
-            font-size: 4em;
-        }
-
-        #currentTrack .text h2 {
-            font-size: 4em;
-        }
-
 #timeline {
-    margin-top: 27px;
+    margin-top: 30px;
 }
 
 

@@ -12,7 +12,7 @@ namespace Playr.Api.Music.Models
 {
     public class CurrentTrack
     {
-        public CurrentTrack(DbAlbum album, DbTrack track, TimeSpan currentTime, UrlHelper url)
+        public CurrentTrack(DbAlbum album, DbTrack track, double currentTime, UrlHelper url)
         {
             Track = new Track(track, url);
             CurrentTime = currentTime;
@@ -28,7 +28,7 @@ namespace Playr.Api.Music.Models
         }
 
         public IEnumerable<string> Fanart { get; set; }
-        public TimeSpan CurrentTime { get; set; }
+        public double CurrentTime { get; set; }
         public Track Track { get; set; }
     }
 }
