@@ -18,7 +18,7 @@
         <div id="currentTrack">
             <div id="albumArtContainer">
                 <div id="albumArt">
-                    <div class="front face"><img data-bind="attr: { src: albumArtUrl }"></div>
+                    <div class="front face"><img data-bind="imgFlip3d: { src: albumArtUrl }"></div>
                     <div class="back face"></div>
                 </div>
             </div>
@@ -42,6 +42,7 @@
 <!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/jquery.transit.min.js"></script>
     <script src="scripts/knockout-2.2.1.js"></script>
     <script src="scripts/playr.js"></script>
     <script src="scripts/playr.knockout.js"></script>

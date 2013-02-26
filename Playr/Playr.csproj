@@ -244,10 +244,7 @@
     <EmbeddedResource Include="Web\Content\scripts\playr.knockout.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Web\Content\scripts\date.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Web\Content\scripts\time.js" />
+    <EmbeddedResource Include="Web\Content\scripts\jquery.transit.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

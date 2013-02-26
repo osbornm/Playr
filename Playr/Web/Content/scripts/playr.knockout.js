@@ -43,4 +43,41 @@
             $(element).text(helpers.ConvetToMinSec(valueUnwrapped));
         }
     };
+
+    ko.bindingHandlers.imgFlip3d = {
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor()) || {},
+                update = function () {
+                    for (var attrName in value) {
+                        if (typeof attrName == "string") {
+                            var attrValue = ko.utils.unwrapObservable(value[attrName]),
+                                toRemove = (attrValue === false) || (attrValue === null) || (attrValue === undefined);
+                            if (toRemove)
+                                element.removeAttribute(attrName);
+                            if (ko.utils.ieVersion <= 8 && attrName in attrHtmlToJavascriptMap) {
+                                attrName = attrHtmlToJavascriptMap[attrName];
+                                if (toRemove)
+                                    element.removeAttribute(attrName);
+                                else
+                                    element[attrName] = attrValue;
+                            } else if (!toRemove) {
+                                element.setAttribute(attrName, attrValue.toString());
+                            }
+                        }
+                    }
+                };
+
+            $("#albumArt").transition({
+                perspective: '1000',
+                rotateX: '+=180'
+            }, 500, "in", function () {
+                update();
+                $(this).transition({
+                    perspective: '1000',
+                    rotateX: '-=180'
+                }, 500, "ease");
+            });
+        }
+    };
+
 }(jQuery, ko));
