@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace Playr.Api.Control.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ControlController : ApiController
     {
         [HttpPost]

@@ -1,46 +1,55 @@
-﻿using System.Web.Http;
+﻿using System.Text.RegularExpressions;
+using System.Web.Http;
 using System.Web.Http.Routing;
 using Playr.DataModels;
 
 public static class LibraryEndpoints
 {
     const string Album = "Album";
+    const string AlbumUrl = "api/library/albums/{id}";
     const string Albums = "Albums";
     const string AlbumDownload = "DownloadAlbum";
+    const string AlbumDownloadUrl = "api/library/albums/{id}/download";
     const string AlbumArtwork = "AlbumArtwork";
+    const string AlbumArtworkUrl = "api/library/albums/{id}/artwork";
     const string AlbumsByArtist = "AlbumsByArtist";
     const string Artist = "Artist";
     const string Artists = "Artists";
     const string ArtistDownload = "DownloadArtist";
     const string ArtistFanart = "ArtistFanart";
+    const string ArtistFanartUrl = "api/library/artists/{artistName}/fanart/{fanartId}";
     const string Genres = "Genres";
     const string Root = "Library";
+    const string RootUrl = "api/library";
     const string Tracks = "Tracks";
     const string TrackDownload = "TrackDownload";
+    const string TrackDownloadUrl = "api/library/tracks/{id}/download";
+
+
 
     public static void Configure(HttpConfiguration config)
     {
         config.Routes.MapHttpRoute(
             name: Root,
-            routeTemplate: "api/library",
+            routeTemplate: RootUrl,
             defaults: new { controller = "Library" }
         );
 
         config.Routes.MapHttpRoute(
             name: Album,
-            routeTemplate: "api/library/albums/{id}",
+            routeTemplate: AlbumUrl,
             defaults: new { controller = "Albums", action = "Album" }
         );
 
         config.Routes.MapHttpRoute(
             name: AlbumDownload,
-            routeTemplate: "api/library/albums/{id}/download",
+            routeTemplate: AlbumDownloadUrl,
             defaults: new { controller = "Download", action = "Album" }
         );
 
         config.Routes.MapHttpRoute(
             name: AlbumArtwork,
-            routeTemplate: "api/library/albums/{id}/artwork",
+            routeTemplate: AlbumArtworkUrl,
             defaults: new { controller = "Albums", action = "Artwork" }
         );
 
@@ -76,7 +85,7 @@ public static class LibraryEndpoints
 
         config.Routes.MapHttpRoute(
             name: ArtistFanart,
-            routeTemplate: "api/library/artists/{artistName}/fanart/{fanartId}",
+            routeTemplate: ArtistFanartUrl,
             defaults: new { controller = "Artists", action = "GetFanart" }
         );
 
@@ -94,39 +103,40 @@ public static class LibraryEndpoints
 
         config.Routes.MapHttpRoute(
             name: TrackDownload,
-            routeTemplate: "api/library/tracks/{id}/download",
+            routeTemplate: TrackDownloadUrl,
             defaults: new { controller = "Download", action = "Track" }
         );
     }
 
-    public static string LinkToAlbum(this UrlHelper url, DbAlbum album)
+
+    public static string LinkToAlbum(DbAlbum album)
     {
-        return url.Link(Albums, new { id = album.Id });
+        return LinkToAlbum(album.Id);
     }
 
-    public static string LinkToAlbum(this UrlHelper url, int albumId)
+    public static string LinkToAlbum(int albumId)
     {
-        return url.Link(Albums, new { id = albumId });
+        return Regex.Replace(AlbumUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
     }
 
-    public static string LinkToAlbumArt(this UrlHelper url, DbAlbum album)
+    public static string LinkToAlbumArt( DbAlbum album)
     {
-        return LinkToAlbumArt(url, album.Id);
+        return LinkToAlbumArt(album.Id);
     }
 
-    public static string LinkToAlbumArt(this UrlHelper url, int albumId)
+    public static string LinkToAlbumArt(int albumId)
     {
-        return url.Link(AlbumArtwork, new { id = albumId });
+        return Regex.Replace(AlbumArtworkUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
     }
 
-    public static string LinkToAlbumDownload(this UrlHelper url, DbAlbum album)
+    public static string LinkToAlbumDownload(DbAlbum album)
     {
-        return url.Link(AlbumDownload, new { id = album.Id });
+        return LinkToAlbumDownload(album.Id);
     }
 
-    public static string LinkToAlbumDownload(this UrlHelper url, int albumId)
+    public static string LinkToAlbumDownload(int albumId)
     {
-        return url.Link(AlbumDownload, new { id = albumId });
+        return Regex.Replace(AlbumDownloadUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
     }
 
     public static string LinkToAlbums(this UrlHelper url)
@@ -154,9 +164,10 @@ public static class LibraryEndpoints
         return url.Link(ArtistDownload, new { artistName = artist });
     }
 
-    public static string LinkToArtistFanart(this UrlHelper url, string artist, string fanartId)
+    public static string LinkToArtistFanart(string artist, string fanartId)
     {
-        return url.Link(ArtistFanart, new { artistName = artist, fanartId });
+        var url = Regex.Replace(ArtistFanartUrl, Regex.Escape("{artistName}"), Regex.Escape(artist), RegexOptions.IgnoreCase);
+        return Regex.Replace(url, Regex.Escape("{fanartId}"), Regex.Escape(fanartId), RegexOptions.IgnoreCase);
     }
 
     public static string LinkToArtists(this UrlHelper url)
@@ -174,14 +185,14 @@ public static class LibraryEndpoints
         return url.Link(Root, null);
     }
 
-    public static string LinkToTrackDownload(this UrlHelper url, DbTrack track)
+    public static string LinkToTrackDownload(DbTrack track)
     {
-        return url.Link(TrackDownload, new { id = track.Id });
+        return LinkToTrackDownload(track.Id);
     }
 
-    public static string LinkToTrackDownload(this UrlHelper url, int trackId)
+    public static string LinkToTrackDownload(int trackId)
     {
-        return url.Link(TrackDownload, new { id = trackId });
+        return Regex.Replace(TrackDownloadUrl, Regex.Escape("{id}"), Regex.Escape(trackId.ToString()), RegexOptions.IgnoreCase);
     }
 
     public static string LinkToTracks(this UrlHelper url, DbAlbum album)

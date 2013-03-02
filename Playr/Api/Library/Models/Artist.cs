@@ -25,7 +25,7 @@ namespace Playr.Api.Library.Models
                 {
                     var fanartFolder = Path.Combine(Program.FanArtworkPath, name);
                     Fanart = Directory.GetFiles(fanartFolder)
-                                      .Select(path => url.LinkToArtistFanart(name, Path.GetFileNameWithoutExtension(path)));
+                                      .Select(path => LibraryEndpoints.LinkToArtistFanart(name, Path.GetFileNameWithoutExtension(path)));
                 }
                 catch { }
             }

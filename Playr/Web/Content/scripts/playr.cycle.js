@@ -123,7 +123,7 @@
         if (opts.busy)
             return;
         var p = els[0].parentNode, curr = els[opts.currSlide], next = els[opts.nextSlide];
-        if (p.cycleTimeout === 0 && !manual)
+        if (p && p.cycleTimeout === 0 && !manual)
             return;
 
         if (manual || !p.cyclePause) {

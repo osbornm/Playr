@@ -12,9 +12,9 @@ namespace Playr.Api.Music.Models
 {
     public class CurrentTrack
     {
-        public CurrentTrack(DbAlbum album, DbTrack track, double currentTime, UrlHelper url)
+        public CurrentTrack(DbAlbum album, DbTrack track, double currentTime)
         {
-            Track = new Track(track, url);
+            Track = new Track(track);
             CurrentTime = currentTime;
             // TODO: Figure out default background strategy
             Fanart = Enumerable.Empty<string>();
@@ -22,7 +22,7 @@ namespace Playr.Api.Music.Models
             {
                 var fanartFolder = Path.Combine(Program.FanArtworkPath, album.ArtistName);
                 Fanart = Directory.GetFiles(fanartFolder)
-                                    .Select(path => url.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
+                                    .Select(path => LibraryEndpoints.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
             }
             catch { }
         }

@@ -151,7 +151,7 @@ html, body {
         box-sizing: border-box;
         color: white;
         text-align: center;
-        background-image: -webkit-gradient(radial, 50% 0%, 0, 50% 0%, 317, color-stop(35%, #47382b), color-stop(79%, #1c140d));
+        z-index: 1;
         background-image: -webkit-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
         background-image: -moz-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);
         background-image: -ms-radial-gradient(center top, farthest-corner, #47382b 35%, #1c140d 79%);

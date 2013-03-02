@@ -15,7 +15,7 @@ namespace Playr.Api.Library.Controllers
             if (tracks == null || tracks.Count == 0)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 
-            return tracks.Select(dbTrack => new Track(dbTrack, Url));
+            return tracks.Select(dbTrack => new Track(dbTrack));
         }
     }
 }

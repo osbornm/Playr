@@ -1,5 +1,6 @@
 /// <reference path="jquery-1.9.1.js" />
 /// <reference path="playr.js" />
+/// <reference path="jquery.signalr-1.0.0.js" />
 /// <reference path="knockout-2.2.1.js" />
 
 models.fullscreen = {
@@ -11,7 +12,7 @@ models.fullscreen = {
         self.totalTime = ko.observable(0);
         self.currentTime = ko.observable(0);
         self.TimeRemaining = ko.computed(function () {
-            var time = self.totalTime() - self.currentTime()
+            var time = self.totalTime() - self.currentTime();
             return time < 0 ? 0 : time;
         });
         self.fanart = ko.observableArray([]);
@@ -23,7 +24,7 @@ models.fullscreen = {
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
             // Crazy awesome fanart stuff
-            helpers.SortRandom(data.fanart)
+            helpers.SortRandom(data.fanart);
             self.fanart(data.fanart);
             if (data.track.links) {
                 $.each(data.track.links, function () {
@@ -31,7 +32,9 @@ models.fullscreen = {
                         self.albumArtUrl(this.href);
                 });
             }
-            $(".fanart").cycle("destory");
+            if ($(".fanart").cycle("widget")) {
+                $(".fanart").cycle("destory");
+            }
             if (self.fanart && self.fanart.length > 1) {
                 $(".fanart").cycle({
                     fx: 'fade',
@@ -65,6 +68,14 @@ $(function () {
         jqhxr;
     
     ko.applyBindings(model);
-    
+      
+    var hub = $.connection.notificationHub;
+    $.extend(hub.client, {
+        CurrentTrackChanged: function (track) {
+            model.updateTrack(track);
+        }
+    });
+    $.connection.hub.start();
+
     jqxhr = $.getJSON("/api/info/current", model.updateTrack);
 });

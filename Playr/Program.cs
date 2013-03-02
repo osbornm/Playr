@@ -2,7 +2,12 @@
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Hosting;
+using Newtonsoft.Json;
+using Playr.Api.Music.Models;
+using Playr.Hubs;
 using Playr.Owin;
 using Playr.Services;
 
@@ -31,7 +36,6 @@ namespace Playr
                 var baseUrl = ConfigurationManager.AppSettings["Playr:Url"] ?? "http://localhost:5555/";
                 FanartApiKey = ConfigurationManager.AppSettings["Playr:FanartApiKey"];
 
-
                 // TODO: Remove me
                 var exePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
@@ -45,11 +49,22 @@ namespace Playr
                 PathHelpers.EnsurePathExists(AlbumArtworkPath);
                 PathHelpers.EnsurePathExists(FanArtworkPath);
 
+                // setup signalr json serialization to use lowercase
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new SignalRContractResolver();
+                var serializer = new JsonNetSerializer(settings);
+                GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer);
+
                 using (WebApplication.Start<Startup>(baseUrl))
                 using (var audio = new Playr.Services.AudioService())
                 using (control = new ControlService(audio))
                 {
-                    control.CurrentTrackChanged += track => Console.WriteLine(track.Name);
+                    control.CurrentTrackChanged += track => { 
+                        Console.WriteLine(track.Name);
+                        var current = new CurrentTrack(control.CurrentAlbum, control.CurrentTrack, control.CurrentTime.TotalMilliseconds);
+                        var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                        context.Clients.All.CurrentTrackChanged(current);
+                    };
                     control.Paused += () => Console.WriteLine("Paused Playing");
                     control.Resumed += () => Console.WriteLine("Resumed Playing");
 
