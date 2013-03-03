@@ -10,9 +10,9 @@ namespace Playr.Api.Library.Models
     {
         public Artist(string name, UrlHelper url)
         {
-            AddLink("albums", url.LinkToAlbumsByArtist(name));
-            AddLink("download", url.LinkToArtistDownload(name));
-            AddLink("self", url.LinkToArtist(name));
+            AddLink("albums", RouteLinks.LinkToAlbumsByArtist(name));
+            AddLink("download", RouteLinks.LinkToArtistDownload(name));
+            AddLink("self", RouteLinks.LinkToArtist(name));
 
             Name = name;
 
@@ -25,7 +25,7 @@ namespace Playr.Api.Library.Models
                 {
                     var fanartFolder = Path.Combine(Program.FanArtworkPath, name);
                     Fanart = Directory.GetFiles(fanartFolder)
-                                      .Select(path => LibraryEndpoints.LinkToArtistFanart(name, Path.GetFileNameWithoutExtension(path)));
+                                      .Select(path => RouteLinks.LinkToArtistFanart(name, Path.GetFileNameWithoutExtension(path)));
                 }
                 catch { }
             }

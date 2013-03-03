@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using Playr.DataModels;
@@ -6,26 +8,31 @@ using Playr.DataModels;
 public static class LibraryEndpoints
 {
     const string Album = "Album";
-    const string AlbumUrl = "api/library/albums/{id}";
+    public const string AlbumUrl = "api/library/albums/{id}";
     const string Albums = "Albums";
+    public const string AlbumsUrl = "api/library/albums";
     const string AlbumDownload = "DownloadAlbum";
-    const string AlbumDownloadUrl = "api/library/albums/{id}/download";
+    public const string AlbumDownloadUrl = "api/library/albums/{id}/download";
     const string AlbumArtwork = "AlbumArtwork";
-    const string AlbumArtworkUrl = "api/library/albums/{id}/artwork";
+    public const string AlbumArtworkUrl = "api/library/albums/{id}/artwork";
     const string AlbumsByArtist = "AlbumsByArtist";
+    public const string AlbumsByArtistUrl = "api/library/artists/{artistName}/albums";
     const string Artist = "Artist";
+    public const string ArtistUrl = "api/library/artists/{artistName}";
     const string Artists = "Artists";
+    public const string ArtistsUrl = "api/library/artists";
     const string ArtistDownload = "DownloadArtist";
+    public const string ArtistDownloadUrl = "api/library/artists/{artistName}/download";
     const string ArtistFanart = "ArtistFanart";
-    const string ArtistFanartUrl = "api/library/artists/{artistName}/fanart/{fanartId}";
+    public const string ArtistFanartUrl = "api/library/artists/{artistName}/fanart/{fanartId}";
     const string Genres = "Genres";
+    public const string GenresUrl = "api/library/genres/{genreName}";
     const string Root = "Library";
-    const string RootUrl = "api/library";
+    public const string RootUrl = "api/library";
     const string Tracks = "Tracks";
+    public const string TracksUrl = "api/library/albums/{id}/tracks";
     const string TrackDownload = "TrackDownload";
-    const string TrackDownloadUrl = "api/library/tracks/{id}/download";
-
-
+    public const string TrackDownloadUrl = "api/library/tracks/{id}/download";
 
     public static void Configure(HttpConfiguration config)
     {
@@ -55,31 +62,31 @@ public static class LibraryEndpoints
 
         config.Routes.MapHttpRoute(
             name: Albums,
-            routeTemplate: "api/library/albums",
+            routeTemplate: AlbumsUrl,
             defaults: new { controller = "Albums", action = "Albums" }
         );
 
         config.Routes.MapHttpRoute(
             name: Artists,
-            routeTemplate: "api/library/artists",
+            routeTemplate: ArtistsUrl,
             defaults: new { controller = "Artists", action = "GetArtists" }
         );
 
         config.Routes.MapHttpRoute(
             name: Artist,
-            routeTemplate: "api/library/artists/{artistName}",
+            routeTemplate: ArtistUrl,
             defaults: new { controller = "Artists", action = "GetArtist" }
         );
 
         config.Routes.MapHttpRoute(
             name: AlbumsByArtist,
-            routeTemplate: "api/library/artists/{artistName}/albums",
+            routeTemplate: AlbumsByArtist,
             defaults: new { controller = "Artists", action = "GetAlbumsByArtist" }
         );
 
         config.Routes.MapHttpRoute(
             name: ArtistDownload,
-            routeTemplate: "api/library/artists/{artistName}/download",
+            routeTemplate: ArtistDownloadUrl,
             defaults: new { controller = "Download", action = "Artist" }
         );
 
@@ -91,13 +98,13 @@ public static class LibraryEndpoints
 
         config.Routes.MapHttpRoute(
             name: Genres,
-            routeTemplate: "api/library/genres/{genreName}",
+            routeTemplate: GenresUrl,
             defaults: new { controller = "Genres", genreName = RouteParameter.Optional }
         );
 
         config.Routes.MapHttpRoute(
             name: Tracks,
-            routeTemplate: "api/library/albums/{id}/tracks",
+            routeTemplate: TracksUrl,
             defaults: new { controller = "Tracks" }
         );
 
@@ -107,8 +114,9 @@ public static class LibraryEndpoints
             defaults: new { controller = "Download", action = "Track" }
         );
     }
-
-
+}
+public static partial class RouteLinks
+{
     public static string LinkToAlbum(DbAlbum album)
     {
         return LinkToAlbum(album.Id);
@@ -116,17 +124,19 @@ public static class LibraryEndpoints
 
     public static string LinkToAlbum(int albumId)
     {
-        return Regex.Replace(AlbumUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
+        var replacements = new Dictionary<string, string>() { { "{id}", albumId.ToString() } };
+        return ReplaceTokens(LibraryEndpoints.AlbumUrl, replacements);
     }
 
-    public static string LinkToAlbumArt( DbAlbum album)
+    public static string LinkToAlbumArt(DbAlbum album)
     {
         return LinkToAlbumArt(album.Id);
     }
 
     public static string LinkToAlbumArt(int albumId)
     {
-        return Regex.Replace(AlbumArtworkUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
+        var replacements = new Dictionary<string, string>() { { "{id}", albumId.ToString() } };
+        return ReplaceTokens(LibraryEndpoints.AlbumArtworkUrl, replacements);
     }
 
     public static string LinkToAlbumDownload(DbAlbum album)
@@ -136,53 +146,61 @@ public static class LibraryEndpoints
 
     public static string LinkToAlbumDownload(int albumId)
     {
-        return Regex.Replace(AlbumDownloadUrl, Regex.Escape("{id}"), Regex.Escape(albumId.ToString()), RegexOptions.IgnoreCase);
+        var replacements = new Dictionary<string, string>() { { "{id}", albumId.ToString() } };
+        return ReplaceTokens(LibraryEndpoints.AlbumDownloadUrl, replacements);
     }
 
-    public static string LinkToAlbums(this UrlHelper url)
+    public static string LinkToAlbums()
     {
-        return url.Link(Albums, null);
+        return LibraryEndpoints.AlbumsUrl;
     }
 
-    public static string LinkToAlbumsByArtist(this UrlHelper url, string artist)
+    public static string LinkToAlbumsByArtist(string artist)
     {
-        return url.Link(AlbumsByArtist, new { artistName = artist });
+        var replacements = new Dictionary<string, string>() { { "{artistName}", artist } };
+        return ReplaceTokens(LibraryEndpoints.ArtistUrl, replacements);
     }
 
-    public static string LinkToAlbumsByGenre(this UrlHelper url, string genre)
+    public static string LinkToAlbumsByGenre(string genre)
     {
-        return url.Link(Genres, new { genreName = genre });
+        var replacements = new Dictionary<string, string>() { { "{genreName}", genre } };
+        return ReplaceTokens(LibraryEndpoints.GenresUrl, replacements);
     }
 
-    public static string LinkToArtist(this UrlHelper url, string artist)
+    public static string LinkToArtist(string artist)
     {
-        return url.Link(Artist, new { artistName = artist });
+        var replacements = new Dictionary<string, string>() { { "{artistName}", artist } };
+        return ReplaceTokens(LibraryEndpoints.ArtistUrl, replacements);
     }
 
-    public static string LinkToArtistDownload(this UrlHelper url, string artist)
+    public static string LinkToArtistDownload(string artist)
     {
-        return url.Link(ArtistDownload, new { artistName = artist });
+        var replacements = new Dictionary<string, string>() { { "{artistName}", artist } };
+        return ReplaceTokens(LibraryEndpoints.ArtistDownloadUrl, replacements);
     }
 
     public static string LinkToArtistFanart(string artist, string fanartId)
     {
-        var url = Regex.Replace(ArtistFanartUrl, Regex.Escape("{artistName}"), Regex.Escape(artist), RegexOptions.IgnoreCase);
-        return Regex.Replace(url, Regex.Escape("{fanartId}"), Regex.Escape(fanartId), RegexOptions.IgnoreCase);
+        var repalcements = new Dictionary<string, string>();
+        repalcements.Add("{artistName}", artist);
+        repalcements.Add("{fanartId}", fanartId);
+        return ReplaceTokens(LibraryEndpoints.ArtistFanartUrl, repalcements);
     }
 
-    public static string LinkToArtists(this UrlHelper url)
+    public static string LinkToArtists()
     {
-        return url.Link(Artists, null);
+        return LibraryEndpoints.ArtistsUrl;
     }
 
-    public static string LinkToGenres(this UrlHelper url)
+    public static string LinkToGenres()
     {
-        return url.Link(Genres, null);
+        var replacements = new Dictionary<string, string>() { { "{genreName}", String.Empty } };
+        return ReplaceTokens(LibraryEndpoints.GenresUrl, replacements);
     }
 
-    public static string LinkToLibrary(this UrlHelper url)
+    public static string LinkToLibrary()
     {
-        return url.Link(Root, null);
+        return LibraryEndpoints.RootUrl;
     }
 
     public static string LinkToTrackDownload(DbTrack track)
@@ -192,16 +210,26 @@ public static class LibraryEndpoints
 
     public static string LinkToTrackDownload(int trackId)
     {
-        return Regex.Replace(TrackDownloadUrl, Regex.Escape("{id}"), Regex.Escape(trackId.ToString()), RegexOptions.IgnoreCase);
+        return Regex.Replace(LibraryEndpoints.TrackDownloadUrl, Regex.Escape("{id}"), Regex.Escape(trackId.ToString()), RegexOptions.IgnoreCase);
     }
 
-    public static string LinkToTracks(this UrlHelper url, DbAlbum album)
+    public static string LinkToTracks(DbAlbum album)
     {
-        return url.Link(Tracks, new { id = album.Id });
+        return LinkToTracks(album.Id);
     }
 
-    public static string LinkToTracks(this UrlHelper url, int albumId)
+    public static string LinkToTracks(int albumId)
     {
-        return url.Link(Tracks, new { id = albumId });
+        var replacements = new Dictionary<string, string>() { { "{id}", albumId.ToString() } };
+        return ReplaceTokens(LibraryEndpoints.TracksUrl, replacements);
+    }
+
+    private static string ReplaceTokens(string route, Dictionary<string, string> replacementTokens)
+    {
+        foreach (var token in replacementTokens)
+        {
+            route = Regex.Replace(route, Regex.Escape(token.Key), Regex.Escape(token.Value), RegexOptions.IgnoreCase);
+        }
+        return route;
     }
 }

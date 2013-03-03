@@ -192,6 +192,7 @@
     <Compile Include="Services\ControlService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Owin\Startup.cs" />
+    <Compile Include="SignalRContractResolver.cs" />
     <Compile Include="Web\Modules\HomeModule.cs" />
     <Compile Include="Web\Support\NancyBootstrapper.cs" />
   </ItemGroup>

@@ -8,10 +8,10 @@ namespace Playr.Api.Library.Models
     {
         public MusicLibrary(DbLibrary library, UrlHelper url)
         {
-            AddLink("albums", url.LinkToAlbums());
-            AddLink("artists", url.LinkToArtists());
-            AddLink("genres", url.LinkToGenres());
-            AddLink("upload", url.LinkToLibrary());
+            AddLink("albums", RouteLinks.LinkToAlbums());
+            AddLink("artists", RouteLinks.LinkToArtists());
+            AddLink("genres", RouteLinks.LinkToGenres());
+            AddLink("upload", RouteLinks.LinkToLibrary());
 
             TotalAlbums = library.TotalAlbums;
             TotalTracks = library.TotalTracks;

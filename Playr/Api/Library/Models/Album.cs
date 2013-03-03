@@ -10,10 +10,10 @@ namespace Playr.Api.Library.Models
 
         public Album(DbAlbum album, UrlHelper url)
         {
-            AddLink("artwork", LibraryEndpoints.LinkToAlbumArt(album));
-            AddLink("self", LibraryEndpoints.LinkToAlbum(album));
-            AddLink("tracks", url.LinkToTracks(album));
-            AddLink("download", LibraryEndpoints.LinkToAlbumDownload(album));
+            AddLink("artwork", RouteLinks.LinkToAlbumArt(album));
+            AddLink("self", RouteLinks.LinkToAlbum(album));
+            AddLink("tracks", RouteLinks.LinkToTracks(album));
+            AddLink("download", RouteLinks.LinkToAlbumDownload(album));
 
             ArtistName = album.ArtistName;
             Genre = album.Genre;

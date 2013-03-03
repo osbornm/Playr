@@ -22,7 +22,7 @@ namespace Playr.Api.Music.Models
             {
                 var fanartFolder = Path.Combine(Program.FanArtworkPath, album.ArtistName);
                 Fanart = Directory.GetFiles(fanartFolder)
-                                    .Select(path => LibraryEndpoints.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
+                                    .Select(path => RouteLinks.LinkToArtistFanart(album.ArtistName, Path.GetFileNameWithoutExtension(path)));
             }
             catch { }
         }

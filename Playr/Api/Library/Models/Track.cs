@@ -11,9 +11,9 @@ namespace Playr.Api.Library.Models
 
         public Track(DbTrack track)
         {
-            AddLink("album", LibraryEndpoints.LinkToAlbum(track.AlbumId));
-            AddLink("artwork", LibraryEndpoints.LinkToAlbumArt(track.AlbumId));
-            AddLink("download", LibraryEndpoints.LinkToTrackDownload(track));
+            AddLink("album", RouteLinks.LinkToAlbum(track.AlbumId));
+            AddLink("artwork", RouteLinks.LinkToAlbumArt(track.AlbumId));
+            AddLink("download", RouteLinks.LinkToTrackDownload(track));
 
             AlbumName = track.AlbumName;
             ArtistName = track.ArtistName;

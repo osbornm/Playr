@@ -9,7 +9,7 @@ namespace Playr.Api.Library.Models
 
         public Genre(string name, UrlHelper url)
         {
-            AddLink("albums", url.LinkToAlbumsByGenre(name));
+            AddLink("albums", RouteLinks.LinkToAlbumsByGenre(name));
 
             Name = name;
         }
