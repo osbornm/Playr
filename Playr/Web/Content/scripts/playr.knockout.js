@@ -49,7 +49,7 @@
             var value = ko.utils.unwrapObservable(valueAccessor()) || {},
                 update = function () {
                     for (var attrName in value) {
-                        if (typeof attrName === "string") {
+                        if (typeof attrName == "string") {
                             var attrValue = ko.utils.unwrapObservable(value[attrName]),
                                 toRemove = (attrValue === false) || (attrValue === null) || (attrValue === undefined);
                             if (toRemove)

@@ -226,6 +226,7 @@ public static partial class RouteLinks
 
     private static string ReplaceTokens(string route, Dictionary<string, string> replacementTokens)
     {
+        route = "/" + route;
         foreach (var token in replacementTokens)
         {
             route = Regex.Replace(route, Regex.Escape(token.Key), Regex.Escape(token.Value), RegexOptions.IgnoreCase);

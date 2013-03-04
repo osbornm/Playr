@@ -12,13 +12,13 @@
 <!-- /ko -->
 <!-- ko ifnot: (name() === "") -->
     <section class="fanart" data-bind="foreach: fanart">
-        <div data-bind="style: {backgroundImage: ('url('+ $data + ')') }" />
+        <div data-bind="style: {backgroundImage: ('url('+ $data + ')') }"></div>
     </section>
     <section class="content">
         <div id="currentTrack">
             <div id="albumArtContainer">
                 <div id="albumArt">
-                    <div class="front face"><img data-bind="imgFlip3d: { src: albumArtUrl }"></div>
+                    <div class="front face"><img data-bind="attr: { src: albumArtUrl }" /></div>
                     <div class="back face"></div>
                 </div>
             </div>
