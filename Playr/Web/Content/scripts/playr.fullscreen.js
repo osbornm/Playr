@@ -11,55 +11,32 @@ models.fullscreen = {
         self.name = ko.observable("");
         self.totalTime = ko.observable(0);
         self.currentTime = ko.observable(0);
-        self.TimeRemaining = ko.computed(function () {
-            var time = self.totalTime() - self.currentTime();
-            return time < 0 ? 0 : time;
-        });
         self.fanart = ko.observableArray([]);
         self.albumArtUrl = ko.observable("/images/albumArt.jpg");
+        self.AlbumUrl = ko.observable("");
+        self.download = ko.observable("");
         self.updateTrack = function (data) {
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);
             self.name(data.track.name);
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
-            // Crazy awesome fanart stuff
-            helpers.SortRandom(data.fanart);
             self.fanart(data.fanart);
-            if (data.track.links) {
-                $.each(data.track.links, function () {
-                    if(this.rel === "artwork")
+            // Get all the links figured out
+            $.each(data.track.links, function () {
+                switch (this.rel) {
+                    case "artwork" :
                         self.albumArtUrl(this.href);
-                });
-            }
-            if ($(".fanart").cycle("widget")) {
-                $(".fanart").cycle("destory");
-            }
-            if (self.fanart && self.fanart.length > 1) {
-                $(".fanart").cycle({
-                    fx: 'fade',
-                    speed: 3000,
-                    timeout: 15000
-                });
-            }
-            // Animate the progress bard
-            $("#progress").stop(true, true)
-                .width(((self.currentTime() / self.totalTime()) * 100) + "%")
-                .animate({ width: "100%" }, self.TimeRemaining(), "linear");
-            // Kick off time countdown
-            if (self.timer) {
-                clearInterval(self.timer);
-            }
-            self.timer = setInterval(function () {
-                var newTime = self.currentTime() + 1000;
-                if (newTime > self.totalTime()) {
-                    newTime = self.totalTime();
-                    clearInterval(self.timer);
+                        break;
+                    case "album" :
+                        self.AlbumUrl(this.href);
+                        break;
+                    case "download":
+                        self.download(this.href);
+                        break;
                 }
-                self.currentTime(newTime);
-            }, 1000);
+            });
         };
-        
     }
 };
 

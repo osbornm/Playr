@@ -4,6 +4,8 @@
     <title>Playr</title>
     <script src="scripts/modernizr.js"></script>
     <link rel="stylesheet" href="css/fullscreen.css"/>
+    <link rel="stylesheet" href="css/playr.fanart.css"/>
+    <link rel="stylesheet" href="css/playr.timeline.css"/>
 </head>
 <body>
 <!-- ko if: (name() === "") -->
@@ -11,9 +13,8 @@
     <h2>Please Wait</h2>
 <!-- /ko -->
 <!-- ko ifnot: (name() === "") -->
-    <section class="fanart" data-bind="foreach: fanart">
-        <div data-bind="style: {backgroundImage: ('url('+ $data + ')') }"></div>
-    </section>
+    <div data-bind="widget: { name: 'fanart', options: { urls: fanart } }"></div>
+
     <section class="content">
         <div id="currentTrack">
             <div id="albumArtContainer">
@@ -27,28 +28,24 @@
                     <h1 data-bind="text: name"></h1>
                     <h2 data-bind="text: artistName"></h2>
                 </hgroup>
-                <div id="timeline">
-                    <div id="timelineText">
-                        <h3 id="currentPosition" data-bind="time: currentTime"></h3>
-                        <h3 id="trackLength" data-bind="time: totalTime"></h3>
-                    </div>
-                    <div id="progressBar">
-                        <div id="progress"></div>
-                    </div>
-                </div>
+                <section data-bind="widget: { name: 'timeline', options: { currentPosition: currentTime, total: totalTime } }"></section>
             </div>
         </div>
     </section>
 <!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/jquery-ui-1.10.1.js"></script>
     <script src="scripts/jquery.signalR-1.0.0.js"></script>
     <script src="scripts/jquery.transit.min.js"></script>
     <script src="scripts/knockout-2.2.1.js"></script>
     <script src="scripts/playr.js"></script>
     <script src="scripts/playr.knockout.js"></script>
+    <script src="scripts/playr.fanart.js"></script>
     <script src="scripts/playr.cycle.js"></script>
     <script src="scripts/playr.fullscreen.js"></script>
+    <script src="scripts/playr.timeline.js"></script>
     <script src="/signalr/hubs"></script>
+
 </body>
 </html>

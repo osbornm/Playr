@@ -1,6 +1,8 @@
 // Define some handy Closures
 if (typeof (models) == "undefined") models = {};
 
+if (typeof (models.widgets) == "undefined") models.widgets = {};
+
 if (typeof (helpers) == "undefined") helpers = {};
 
 helpers.padNumber = function (number, width) {
@@ -15,7 +17,6 @@ helpers.RandomNumber = function (number) {
     return Math.floor(Math.random() * number) + 1;
 };
 
-// fisher Yates Method
 helpers.SortRandom = function (myArray) {
     var i = myArray.length;
     if (i == 0) return false;

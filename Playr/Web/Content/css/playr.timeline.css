@@ -1,0 +1,33 @@
+
+.playr-timeline { 
+    margin-top: 30px;
+}
+
+    .playr-timeline .trackLength,
+    .playr-timeline .currentPosition {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    .playr-timeline .trackLength {
+        text-align: right;
+    }
+
+    .playr-timeline .currentPosition {
+        float: left;
+    }
+
+
+    .playr-timeline .progressBar {
+        background-color: #fff;
+        -moz-box-shadow: 5px 5px 15px #777;
+        -o-box-shadow: 5px 5px 15px #777;
+        -webkit-box-shadow: 5px 5px 15px #777;
+        box-shadow: 5px 5px 15px #777;
+    }
+
+        .playr-timeline .progressBar .progress {
+            background-color: #cbe86b;
+            height: 10px;
+            width: 0%;
+        }

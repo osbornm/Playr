@@ -29,6 +29,9 @@
     }
 
     ko.bindingHandlers.widget = {
+        init: function () {
+            return { controlsDescendantBindings: true };
+        },
         update: function (element, valueAccessor, allBindingsAccessor) {
             var widgetBindings = _getWidgetBindings(element, valueAccessor, allBindingsAccessor);
             $(element)[widgetBindings.widgetName](widgetBindings.widgetOptions);

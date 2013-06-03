@@ -7,109 +7,96 @@ using Playr.DataModels;
 
 public static class LibraryEndpoints
 {
-    const string Album = "Album";
     public const string AlbumUrl = "api/library/albums/{id}";
-    const string Albums = "Albums";
     public const string AlbumsUrl = "api/library/albums";
-    const string AlbumDownload = "DownloadAlbum";
     public const string AlbumDownloadUrl = "api/library/albums/{id}/download";
-    const string AlbumArtwork = "AlbumArtwork";
     public const string AlbumArtworkUrl = "api/library/albums/{id}/artwork";
-    const string AlbumsByArtist = "AlbumsByArtist";
     public const string AlbumsByArtistUrl = "api/library/artists/{artistName}/albums";
-    const string Artist = "Artist";
     public const string ArtistUrl = "api/library/artists/{artistName}";
-    const string Artists = "Artists";
     public const string ArtistsUrl = "api/library/artists";
-    const string ArtistDownload = "DownloadArtist";
     public const string ArtistDownloadUrl = "api/library/artists/{artistName}/download";
-    const string ArtistFanart = "ArtistFanart";
     public const string ArtistFanartUrl = "api/library/artists/{artistName}/fanart/{fanartId}";
-    const string Genres = "Genres";
     public const string GenresUrl = "api/library/genres/{genreName}";
-    const string Root = "Library";
     public const string RootUrl = "api/library";
-    const string Tracks = "Tracks";
     public const string TracksUrl = "api/library/albums/{id}/tracks";
-    const string TrackDownload = "TrackDownload";
     public const string TrackDownloadUrl = "api/library/tracks/{id}/download";
 
     public static void Configure(HttpConfiguration config)
     {
         config.Routes.MapHttpRoute(
-            name: Root,
+            name: "Library",
             routeTemplate: RootUrl,
             defaults: new { controller = "Library" }
         );
 
         config.Routes.MapHttpRoute(
-            name: Album,
+            name: "Album",
             routeTemplate: AlbumUrl,
             defaults: new { controller = "Albums", action = "Album" }
         );
 
         config.Routes.MapHttpRoute(
-            name: AlbumDownload,
+            name: "AlbumDownload",
             routeTemplate: AlbumDownloadUrl,
             defaults: new { controller = "Download", action = "Album" }
         );
 
         config.Routes.MapHttpRoute(
-            name: AlbumArtwork,
+            name: "AlbumArtwork",
             routeTemplate: AlbumArtworkUrl,
             defaults: new { controller = "Albums", action = "Artwork" }
         );
 
         config.Routes.MapHttpRoute(
-            name: Albums,
+            name: "Albums",
             routeTemplate: AlbumsUrl,
             defaults: new { controller = "Albums", action = "Albums" }
         );
 
         config.Routes.MapHttpRoute(
-            name: Artists,
+            name: "Artists",
             routeTemplate: ArtistsUrl,
             defaults: new { controller = "Artists", action = "GetArtists" }
         );
 
         config.Routes.MapHttpRoute(
-            name: Artist,
+            name: "Artist",
             routeTemplate: ArtistUrl,
             defaults: new { controller = "Artists", action = "GetArtist" }
         );
 
         config.Routes.MapHttpRoute(
-            name: AlbumsByArtist,
-            routeTemplate: AlbumsByArtist,
+            name: "AlbumsByArtist",
+            routeTemplate: AlbumsByArtistUrl,
             defaults: new { controller = "Artists", action = "GetAlbumsByArtist" }
         );
 
         config.Routes.MapHttpRoute(
-            name: ArtistDownload,
+            name: "ArtistDownload",
             routeTemplate: ArtistDownloadUrl,
             defaults: new { controller = "Download", action = "Artist" }
         );
 
         config.Routes.MapHttpRoute(
-            name: ArtistFanart,
+            name: "ArtistFanart",
             routeTemplate: ArtistFanartUrl,
             defaults: new { controller = "Artists", action = "GetFanart" }
         );
 
         config.Routes.MapHttpRoute(
-            name: Genres,
+            name: "Genres",
             routeTemplate: GenresUrl,
             defaults: new { controller = "Genres", genreName = RouteParameter.Optional }
         );
 
         config.Routes.MapHttpRoute(
-            name: Tracks,
+            name: "Tracks",
             routeTemplate: TracksUrl,
             defaults: new { controller = "Tracks" }
         );
 
         config.Routes.MapHttpRoute(
-            name: TrackDownload,
+            name: "TrackDownload",
             routeTemplate: TrackDownloadUrl,
             defaults: new { controller = "Download", action = "Track" }
         );

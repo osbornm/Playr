@@ -251,6 +251,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Web\Content\scripts\jquery.signalR-1.0.0.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\scripts\playr.fanart.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\scripts\playr.timeline.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\css\playr.timeline.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\css\playr.fanart.css" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
