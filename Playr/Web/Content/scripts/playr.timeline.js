@@ -50,10 +50,10 @@ models.widgets.timeline = function (currentPosition, total) {
             var $element = $(this.element),
                 $html = $(this.html);
 
-             self = model = this._createModel(this.options);
+            this.model = this._createModel(this.options);
 
             $element.html($html);
-            ko.applyBindings(model, $html[0]);
+            ko.applyBindings(this.model, $html[0]);
         },
         _createModel: function (options) {
             return new models.widgets.timeline(options.currentPosition, options.total);
