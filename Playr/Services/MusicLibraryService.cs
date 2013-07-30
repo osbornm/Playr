@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
+using Ionic.Zip;
 using Nancy.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -54,15 +57,18 @@ namespace Playr.Services
 
             using (var session = Database.OpenSession())
             {
-                if (File.Exists(track.Location))
+                if (track.Location != fileName && File.Exists(track.Location))
                 {
                     File.Delete(fileName);
                     track = session.Query<DbTrack>().Where(t => t.Location == track.Location).Single();
                 }
                 else
                 {
-                    PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
-                    File.Move(fileName, track.Location);
+                    if (track.Location != fileName)
+                    {
+                        PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
+                        File.Move(fileName, track.Location);
+                    }
 
                     session.Store(track);
                     session.SaveChanges();
@@ -70,6 +76,96 @@ namespace Playr.Services
             }
 
             return track;
+        }
+
+        public void ProcessFile(string fileName)
+        {
+            Console.WriteLine("> Processing: {0}", fileName);
+
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+
+            switch (extension)
+            {
+                case ".zip":
+                    ProcessFile_Zip(fileName);
+                    break;
+
+                case ".mp3":
+                case ".m4a":
+                    ProcessFile_Audio(fileName);
+                    break;
+
+                default:
+                    Console.WriteLine("Unsupported file type: {0}", Path.GetFileName(fileName));
+                    File.Delete(fileName);
+                    break;
+            }
+        }
+
+        public void ProcessFile(string fileName, MediaTypeHeaderValue mediaType)
+        {
+            var extension = mediaType.ToFileExtension();
+            var newPath = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + extension);
+
+            if (newPath != fileName)
+            {
+                File.Move(fileName, newPath);
+                fileName = newPath;
+            }
+
+            ProcessFile(fileName);
+        }
+
+        private void ProcessFile_Audio(string fileName)
+        {
+            try
+            {
+                AddFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: {0}", ex.Message);
+            }
+        }
+
+        private void ProcessFile_Zip(string zipFile)
+        {
+            try
+            {
+                var outputPath = Path.Combine(Program.TempPath, Guid.NewGuid().ToString("N"));
+                PathHelpers.EnsurePathExists(outputPath, forceClean: true);
+
+                using (var zip = ZipFile.Read(zipFile))
+                    zip.ExtractSelectedEntries("name = *.m4a or name = *.mp3 or name = *.zip", null, outputPath);
+
+                ProcessFolder(outputPath);
+
+                SwallowExceptions(() => File.Delete(zipFile));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: {0}", ex.Message);
+            }
+        }
+
+        public void ProcessFolder(string folder)
+        {
+            Console.WriteLine("> Searching: {0}", folder);
+
+            foreach (var file in Directory.GetFiles(folder))
+                ThreadPool.QueueUserWorkItem(_ => ProcessFile(file));
+
+            foreach (var subFolder in Directory.GetDirectories(folder))
+                ProcessFolder(subFolder);
+        }
+
+        private void SwallowExceptions(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch { }
         }
 
         public virtual DbAlbum GetAlbumById(int id)
@@ -165,6 +261,12 @@ namespace Playr.Services
         {
             using (var session = Database.OpenSession())
                 return session.Query<DbTrack>().Customize(x => x.RandomOrdering()).FirstOrDefault();
+        }
+
+        public virtual int TotalTrackCount()
+        {
+            using (var session = Database.OpenSession())
+                return session.Query<DbTrack>().Count();
         }
 
         // Private helpers

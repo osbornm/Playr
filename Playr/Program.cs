@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Json;
@@ -36,7 +37,7 @@ namespace Playr
                 var baseUrl = ConfigurationManager.AppSettings["Playr:Url"] ?? "http://localhost:5555/";
                 FanartApiKey = ConfigurationManager.AppSettings["Playr:FanartApiKey"];
 
-                // TODO: Remove me
+                // TODO: Remove me, this should be some kind of setting
                 var exePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
                 TempPath = Path.Combine(exePath, "Temp");
@@ -55,6 +56,33 @@ namespace Playr
                 var serializer = new JsonNetSerializer(settings);
                 GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer);
 
+                // First Run stuff...
+                var library = new MusicLibraryService();
+                var trackCount = library.TotalTrackCount();
+                if (trackCount < 1)
+                {
+                    foreach (var file in Directory.GetFiles(MusicLibraryPath, "*.*", SearchOption.AllDirectories))
+                    {
+                        library.ProcessFile(file);
+                    }
+
+                    foreach (var folder in Directory.GetDirectories(MusicLibraryPath, "*.*", SearchOption.AllDirectories).Reverse())
+                    {
+                        try
+                        {
+                            Directory.Delete(folder);
+                        }
+                        catch { }
+                    }
+
+                    trackCount = library.TotalTrackCount();
+                    if (trackCount < 1)
+                    {
+                        Console.WriteLine("Add music to '{0}'", MusicLibraryPath);
+                        return;
+                    }
+                }
+
                 using (WebApplication.Start<Startup>(baseUrl))
                 using (var audio = new Playr.Services.AudioService())
                 using (control = new ControlService(audio))
@@ -68,6 +96,7 @@ namespace Playr
                     control.Paused += () => Console.WriteLine("Paused Playing");
                     control.Resumed += () => Console.WriteLine("Resumed Playing");
 
+                    Console.WriteLine("There are {0} tracks in your library", trackCount);
                     Console.WriteLine("Playr is running at {0}", baseUrl);
                     Console.WriteLine("See http://github.com/osbornm/playr for more information on setup.");
                     Console.WriteLine();
