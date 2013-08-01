@@ -47,6 +47,20 @@
         }
     };
 
+    ko.bindingHandlers.foo = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+
+            $(element).html("<img src='" + value + "' alt='album art'/>");
+        },
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor()) || {};
+
+            $(element).find("img").attr("src", value);
+        }
+    };
+
+
     ko.bindingHandlers.imgFlip3d = {
         update: function (element, valueAccessor, allBindingsAccessor) {
             var value = ko.utils.unwrapObservable(valueAccessor()) || {},

@@ -17,27 +17,28 @@ models.widgets.fanart = function (urls, element) {
             }
 
             var animation = Math.floor(Math.random() * (3 + 1));
-
+            // for now we like crossfade only
+            animation = 3;
             switch (animation) {
                 // Slide Up
                 case 0:
-                    current.css("zIndex", 0).slideUp({ duration: 700, queue: false }).fadeOut({ duration: 1000, queue: false });
-                    next.css("zIndex", -1).fadeIn(1000);
+                    current.css("zIndex", -1).slideUp({ duration: 700, queue: false }).fadeOut({ duration: 1000, queue: false });
+                    next.css("zIndex", -2).fadeIn(1000);
                     break;
                 // Slide Right
                 case 1:
-                    current.css("zIndex", -1).fadeOut(2000);
-                    next.css("zIndex", 0).fadeIn({ duration: 1000, queue: false }).effect("slide", { duration: 1000, queue: false });
+                    current.css("zIndex", -2).fadeOut(2000);
+                    next.css("zIndex", -1).fadeIn({ duration: 1000, queue: false }).effect("slide", { duration: 1000, queue: false });
                     break;
                 // Clip
                 case 2:
-                    current.css("zIndex", 0).fadeOut({ duration: 1500, queue: false }).effect("clip", { duration: 1000, queue: false });
-                    next.css("zIndex", -1).fadeIn({ duration: 1500, queue: false })
+                    current.css("zIndex", -1).fadeOut({ duration: 1500, queue: false }).effect("clip", { duration: 1000, queue: false });
+                    next.css("zIndex", -2).fadeIn({ duration: 1500, queue: false })
                     break;
                 // Cross Fade
                 default:
-                    current.css("zIndex", 0).fadeOut({ duration: 2000, queue: false });
-                    next.css("zIndex", -1).fadeIn({ duration: 2000, queue: false });
+                    current.css("zIndex", -1).fadeOut({ duration: 2000, queue: false });
+                    next.css("zIndex", -2).fadeIn({ duration: 2000, queue: false });
             }
         }
     }
@@ -54,7 +55,8 @@ models.widgets.fanart = function (urls, element) {
     $.widget("playr.fanart", {
         html: "<section data-bind='foreach: artwork' class='fanart'>" +
                   "<div data-bind=\"visible: ($index() === 0), style: { backgroundImage: ('url('+ $data + ')') }\" />" +
-              "</section>",
+              "</section>" +
+              "<div class='gradient'></div>",
         model: null,
         _create: function () {
             var $element = $(this.element),

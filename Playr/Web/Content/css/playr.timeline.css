@@ -19,15 +19,11 @@
 
 
     .playr-timeline .progressBar {
-        background-color: #fff;
-        -moz-box-shadow: 5px 5px 15px #777;
-        -o-box-shadow: 5px 5px 15px #777;
-        -webkit-box-shadow: 5px 5px 15px #777;
-        box-shadow: 5px 5px 15px #777;
+        background-color: #2e3137;
     }
 
         .playr-timeline .progressBar .progress {
-            background-color: #cbe86b;
+            background-color: #62d962;
             height: 10px;
             width: 0%;
         }

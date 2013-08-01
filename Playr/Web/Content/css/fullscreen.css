@@ -1,9 +1,14 @@
-﻿@import url("http://fonts.googleapis.com/css?family=Oswald:300");
+﻿@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 
 html {
     background-color: #f2e9e1;
-    font-family: 'Oswald', sans-serif;
-    color: #1c140d;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+    color: #fff;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 200;
 }
 
 html, body {
@@ -23,30 +28,31 @@ html, body {
 }
 
     #currentTrack img {
-        height: 250px;
-        width: 250px;
-        border: solid 1px #1c140d;
-        -moz-box-shadow: 5px 5px 15px #777;
-        -o-box-shadow: 5px 5px 15px #777;
-        -webkit-box-shadow: 5px 5px 15px #777;
-        box-shadow: 5px 5px 15px #777;
+        height: 260px;
+        width: 260px;
         float: left;
+        position: absolute;
+        bottom: 0;
     }
 
     #currentTrack .text {
-        padding-left: 280px;
-        text-shadow: 2px 2px 10px #777;
+        padding-left: 290px;
     }
 
         #currentTrack .text h1,
         #currentTrack .text h2 {
-            font-size: 4em;
             line-height: 1.25em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             margin: 0;
-            font-weight: normal;
+        }
+
+        #currentTrack .text h1 {
+            font-size: 6em;
+        }
+        #currentTrack .text h2 {
+            font-size: 4em;
         }
 
 #timeline {

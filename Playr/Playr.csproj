@@ -236,7 +236,6 @@
     <EmbeddedResource Include="Web\Content\scripts\jquery-ui-1.10.1.js" />
     <EmbeddedResource Include="Resources\playr.ico" />
     <EmbeddedResource Include="Resources\CD.jpg" />
-    <EmbeddedResource Include="Web\Content\css\site.css" />
     <EmbeddedResource Include="Web\Views\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +261,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\Content\css\playr.fanart.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\scripts\playr.index.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\css\index.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

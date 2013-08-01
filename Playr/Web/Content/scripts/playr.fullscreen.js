@@ -8,6 +8,7 @@ models.fullscreen = {
         var self = this;
         self.albumName = ko.observable("");
         self.artistName = ko.observable("");
+        self.year = ko.observable("");
         self.name = ko.observable("");
         self.totalTime = ko.observable(0);
         self.currentTime = ko.observable(0);
@@ -15,9 +16,13 @@ models.fullscreen = {
         self.albumArtUrl = ko.observable("/images/albumArt.jpg");
         self.AlbumUrl = ko.observable("");
         self.download = ko.observable("");
+        self.albumDisplay = ko.computed(function () {
+            return self.albumName() + " ( " + self.year() + " )";
+        });
         self.updateTrack = function (data) {
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);
+            self.year(data.track.year);
             self.name(data.track.name);
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
