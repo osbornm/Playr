@@ -5,6 +5,9 @@
 models.widgets.fanart = function (urls, element) {
     var self = this;
     self.artwork = ko.isObservable(urls) ? urls : ko.observableArray(urls);
+    if (self.artwork().length < 1) {
+        self.artwork().push("/images/defaultFanart.jpg");
+    }
     self.element = $(element);
     self.currentIndex = 0;
     self.tickIterval = 5000;
