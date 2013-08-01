@@ -19,21 +19,14 @@
         <div id="currentTrack">
             <div data-bind="foo: albumArtUrl">
             </div>
-            @*<div id="albumArtContainer">
-                <div id="albumArt">
-                    <div class="front face"><img data-bind="attr: { src: albumArtUrl }" /></div>
-                    <div class="back face"></div>
-                </div>
-            </div>*@
             <div class="text">
-                <hgroup>
-                    <h1 data-bind="text: name"></h1>
-                    <h2 data-bind="text: artistName"></h2>
-                </hgroup>
-                <section data-bind="widget: { name: 'timeline', options: { currentPosition: currentTime, total: totalTime } }"></section>
+                <h1 data-bind="text: name"></h1>
+                <h2 data-bind="text: artistName"></h2>
+                <h2 data-bind="text: albumDisplay"></h2>
             </div>
         </div>
     </section>
+    <section id="progressBottom" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTime, total: totalTime } }"></section>
 <!-- /ko  -->
 
     <script src="scripts/jquery-1.9.1.js"></script>

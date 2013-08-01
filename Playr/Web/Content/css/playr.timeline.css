@@ -1,29 +1,24 @@
-
-.playr-timeline { 
-    margin-top: 30px;
+.playr-timeline .trackLength,
+.playr-timeline .currentPosition {
+    font-size: 2em;
+    margin: 0;
 }
 
-    .playr-timeline .trackLength,
-    .playr-timeline .currentPosition {
-        font-size: 2em;
-        margin: 0;
+.playr-timeline .trackLength {
+    text-align: right;
+}
+
+.playr-timeline .currentPosition {
+    float: left;
+}
+
+
+.playr-timeline .progressBar {
+    background-color: #2e3137;
+}
+
+    .playr-timeline .progressBar .progress {
+        background-color: #62d962;
+        height: 10px;
+        width: 0%;
     }
-
-    .playr-timeline .trackLength {
-        text-align: right;
-    }
-
-    .playr-timeline .currentPosition {
-        float: left;
-    }
-
-
-    .playr-timeline .progressBar {
-        background-color: #2e3137;
-    }
-
-        .playr-timeline .progressBar .progress {
-            background-color: #62d962;
-            height: 10px;
-            width: 0%;
-        }
