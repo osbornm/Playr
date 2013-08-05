@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace Playr.Api
@@ -15,6 +16,7 @@ namespace Playr.Api
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter());
 
             LibraryEndpoints.Configure(config);
             AuthenticationEndpoints.Configure(config);

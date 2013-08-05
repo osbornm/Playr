@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Playr.Api.Music.Models;
+using Playr.Models;
 
 namespace Playr.Api.Music.Controllers
 {
@@ -12,8 +13,9 @@ namespace Playr.Api.Music.Controllers
         public CurrentTrack Current()
         {
             ControlNotNull();
-            return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, Program.control.CurrentTime.TotalMilliseconds);
-        }
+            return new CurrentTrack(Program.control.CurrentAlbum, Program.control.CurrentTrack, 
+                Program.control.CurrentTime.TotalMilliseconds, Program.control.AudioState);
+        } 
 
         [HttpGet]
         public CurrentTrack Queue()

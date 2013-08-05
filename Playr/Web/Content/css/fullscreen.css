@@ -62,3 +62,8 @@ html, body {
     bottom: 0;
     width: 100%;
 }
+
+
+.playr-timeline .progressBar {
+    background-color: #2e3137;
+}

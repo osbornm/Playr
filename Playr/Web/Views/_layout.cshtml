@@ -5,12 +5,23 @@
     <script src="scripts/modernizr.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <link rel="stylesheet" href="css/jquery-ui-1.10.1.css"/>
-    <link rel="stylesheet" href="css/site.css"/>
+    <link rel="stylesheet" href="css/playr.css"/>
+    @RenderSection("styles", required: false)
 </head>
 <body>
     @RenderBody()
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/jquery-ui-1.10.1.js"></script>
+    <script src="scripts/jquery.signalR-1.0.0.js"></script>
+    <script src="scripts/jquery.transit.min.js"></script>
     <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/knockout-2.2.1.js"></script>
+    <script src="scripts/playr.js"></script>
+    <script src="scripts/playr.knockout.js"></script>
+    <script src="scripts/playr.fanart.js"></script>
+    <script src="scripts/playr.cycle.js"></script>
+    <script src="scripts/playr.timeline.js"></script>
+    <script src="/signalr/hubs"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

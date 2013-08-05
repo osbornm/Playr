@@ -14,11 +14,11 @@
 
 
 .playr-timeline .progressBar {
-    background-color: #2e3137;
+    background-color: #26282e;
 }
 
     .playr-timeline .progressBar .progress {
-        background-color: #62d962;
+       background-color: #62d962;
         height: 10px;
         width: 0%;
     }

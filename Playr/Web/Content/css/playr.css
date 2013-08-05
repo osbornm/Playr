@@ -1,0 +1,91 @@
+﻿/*
+    Dark Blue: #1d1f23
+    Black: #0e0f11
+    Blue: #3c485c
+    Green: #62d962    
+*/
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-fixed-bottom .navbar-inner {
+    border: none;
+    box-shadow: none;
+    background-image: none;
+    background-color: #1d1f23;
+}
+
+#control-panel {
+    height: 50px;
+}
+
+#left-controls {
+    width: 150px;
+    float: left;
+    padding: 10px;
+}
+
+    #left-controls a:hover, 
+    #left-controls a:active,
+    #left-controls a:visited {
+        outline: none;
+        border: none;
+        text-decoration: none;
+    }
+
+    #left-controls .micro-album {
+        margin-right: 10px;
+    }
+
+     #left-controls .playr-icon-play,
+     #left-controls .playr-icon-pause {
+        margin: 0 5px;
+    }
+
+#center-controls {
+    margin: 0 100px 0 170px;
+}
+
+    #center-controls .playr-timeline {
+        margin-top: 20px;
+    }
+
+#right-controls {
+    width: 100px;
+    float: right
+}
+
+
+img.micro-album  {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+}
+
+
+[class^="playr-icon-"],
+[class*=" playr-icon-"] {
+    display: inline-block;
+    width: 25px;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: top;
+}
+
+.playr-icon-play {
+    background-image: url('/images/play.png');
+}
+
+.playr-icon-pause {
+    background-image: url('/images/pause.png');
+}
+
+.playr-icon-skip {
+    background-image: url('/images/forward.png');
+}
+
+.playr-icon-previous {
+    background-image: url('/images/back.png');
+}

@@ -7,6 +7,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Playr.Api.Music.Models;
 using Playr.Hubs;
 using Playr.Owin;
@@ -53,7 +54,9 @@ namespace Playr
                 // setup signalr json serialization to use lowercase
                 var settings = new JsonSerializerSettings();
                 settings.ContractResolver = new SignalRContractResolver();
+                settings.Converters.Add(new StringEnumConverter());
                 var serializer = new JsonNetSerializer(settings);
+                
                 GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer);
 
                 // First Run stuff...
@@ -89,7 +92,7 @@ namespace Playr
                 {
                     control.CurrentTrackChanged += track => { 
                         Console.WriteLine(track.Name);
-                        var current = new CurrentTrack(control.CurrentAlbum, control.CurrentTrack, control.CurrentTime.TotalMilliseconds);
+                        var current = new CurrentTrack(control.CurrentAlbum, control.CurrentTrack, control.CurrentTime.TotalMilliseconds, control.AudioState);
                         var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
                         context.Clients.All.CurrentTrackChanged(current);
                     };

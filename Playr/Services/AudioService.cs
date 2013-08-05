@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using NAudio.Wave;
+using Playr.Models;
 
 namespace Playr.Services
 {
@@ -9,6 +10,8 @@ namespace Playr.Services
         private IWavePlayer player;
         private WaveStream fileWaveStream;
         private bool disposed;
+
+        public TrackState AudioState { get; private set; }
 
         public event Action PlaybackStopped;
 
@@ -34,12 +37,14 @@ namespace Playr.Services
         {
             GuardDisposed();
             player.Pause();
+            AudioState = TrackState.Paused;
         }
 
         public void Resume()
         {
             GuardDisposed();
             player.Play();
+            AudioState = TrackState.Playing;
         }
 
         public void Play(string filePath)
@@ -56,12 +61,14 @@ namespace Playr.Services
                 player.PlaybackStopped += OnPlaybackStopped;
 
                 player.Play();
+                AudioState = TrackState.Playing;
             }
             catch
             {
                 // If playback failed because of an incompatible file, log it and move on.
                 Console.WriteLine("Could not play file: {0}", filePath);
                 OnPlaybackStopped(null, null);
+                AudioState = TrackState.Stopped;
             }
         }
 

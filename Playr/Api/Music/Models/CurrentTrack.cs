@@ -7,16 +7,18 @@ using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Playr.Api.Library.Models;
 using Playr.DataModels;
+using Playr.Models;
 
 namespace Playr.Api.Music.Models
 {
     public class CurrentTrack
     {
-        public CurrentTrack(DbAlbum album, DbTrack track, double currentTime)
+        public CurrentTrack(DbAlbum album, DbTrack track, double currentTime, TrackState audioState)
         {
             Track = new Track(track);
             CurrentTime = currentTime;
-            // TODO: Figure out default background strategy
+            State = audioState;
+
             Fanart = Enumerable.Empty<string>();
             try
             {
@@ -30,5 +32,6 @@ namespace Playr.Api.Music.Models
         public IEnumerable<string> Fanart { get; set; }
         public double CurrentTime { get; set; }
         public Track Track { get; set; }
+        public TrackState State { get; set; }
     }
 }

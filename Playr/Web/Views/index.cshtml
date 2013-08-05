@@ -1,4 +1,39 @@
 ﻿@{
     Layout = "_layout.cshtml";
 }
-<h1>Hello from Nancy! Using Razor v@(1 + 1)!</h1>
+
+@section styles {
+    <link rel="stylesheet" href="css/playr.fanart.css"/>
+    <link rel="stylesheet" href="css/playr.timeline.css"/>
+}
+
+@section scripts {
+    <script src="~/scripts/playr.index.js"></script>
+}
+
+
+<div data-bind="widget: { name: 'fanart', options: { urls: currentTrack.fanart } }"></div>
+
+<div class="navbar navbar-fixed-bottom">
+    <div id="control-panel" class="navbar-inner">
+        <section id="left-controls">
+            <a data-bind="attr: { href: currentTrack.download }">
+                <img class="micro-album" data-bind="attr: { src: currentTrack.albumArtUrl, title: currentTrack.albumName }" />
+            </a>
+            <a href="#" data-bind="attr: {title: previousTitle}, click: previous">
+                <i class="playr-icon-previous"></i>
+            </a>
+            <a href="#" data-bind="attr: {title: playPauseTitle}, click: playPause">
+                <i class="playr-icon-play" data-bind="attr: {class: playPauseClass}"></i>
+            </a>
+            <a href="#" data-bind="attr: {title: skipTitle}, click: skip">
+                <i class="playr-icon-skip"></i>
+            </a>
+        </section>
+         <section id="right-controls">
+            
+        </section>
+        <section id="center-controls" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTrack.currentTime, total: currentTrack.totalTime } }"></section>
+
+    </div>
+</div>

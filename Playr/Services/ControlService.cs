@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Playr.DataModels;
 using Playr.Helpers;
+using Playr.Models;
 
 namespace Playr.Services
 {
@@ -47,6 +48,14 @@ namespace Playr.Services
             get
             {
                 return audio.CurrentTime;
+            }
+        }
+
+        public TrackState AudioState
+        {
+            get
+            {
+                return audio.AudioState;
             }
         }
 

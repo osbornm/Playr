@@ -179,6 +179,7 @@
     <Compile Include="Api\Shared\HttpContentExtensions.cs" />
     <Compile Include="Api\Shared\MediaTypeHeaderValueExtensions.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Models\TrackState.cs" />
     <Compile Include="Owin\AppBuilderExtensions.cs" />
     <Compile Include="Helpers\AuthHelpers.cs" />
     <Compile Include="Helpers\PathHelpers.cs" />
@@ -269,11 +270,18 @@
     <EmbeddedResource Include="Web\Content\scripts\playr.index.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Web\Content\css\index.css" />
+    <EmbeddedResource Include="Web\Content\css\playr.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\Content\images\defaultFanart.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\Content\images\back.png" />
+    <EmbeddedResource Include="Web\Content\images\forward.png" />
+    <EmbeddedResource Include="Web\Content\images\pause.png" />
+    <EmbeddedResource Include="Web\Content\images\play.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

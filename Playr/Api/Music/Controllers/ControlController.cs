@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace Playr.Api.Control.Controllers
 {
+    // TODO: uncomment once we have auth working 
     //[Authorize]
     public class ControlController : ApiController
     {
