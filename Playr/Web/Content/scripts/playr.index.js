@@ -10,6 +10,7 @@ models.index = {
         self.currentTrack = {
             albumName: ko.observable(""),
             artistName: ko.observable(""),
+            year: ko.observable(""),
             name: ko.observable(""),
             totalTime: ko.observable(0),
             currentTime: ko.observable(0),
@@ -17,7 +18,11 @@ models.index = {
             albumArtUrl: ko.observable("/images/albumArt.jpg"),
             albumUrl: ko.observable(""),
             download: ko.observable(""),
+            
         };
+        self.currentTrack.albumDisplay = ko.computed(function () {
+            return self.currentTrack.albumName() + " ( " + self.currentTrack.year() + " )";
+        })
 
         self.state = ko.observable("Stopped");
 
@@ -79,6 +84,7 @@ models.index = {
         self.updateCurrentTrack = function (data) {
             self.currentTrack.albumName(data.track.albumName);
             self.currentTrack.artistName(data.track.artistName);
+            self.currentTrack.year(data.track.year);
             self.currentTrack.name(data.track.name);
             self.currentTrack.totalTime(data.track.time);
             self.currentTrack.currentTime(data.currentTime);

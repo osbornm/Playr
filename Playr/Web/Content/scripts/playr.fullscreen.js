@@ -29,7 +29,6 @@ models.fullscreen = {
                 $("#progressBottom").timeline("pause");
             }
         };
-
         self.updateTrack = function (data) {
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);

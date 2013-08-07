@@ -10,12 +10,41 @@ html, body {
     padding: 0;
 }
 
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 200;
+}
+
 .navbar-fixed-bottom .navbar-inner {
     border: none;
     box-shadow: none;
     background-image: none;
     background-color: #1d1f23;
 }
+
+#currentTrack {
+    color: #fff;
+    position: absolute;
+    bottom: 60px;
+    right: 20px;
+    left: 20px;
+}
+
+    #currentTrack h1,
+    #currentTrack h2 {
+        line-height: 1.25em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+    }
+
+    #currentTrack h1 {
+        font-size: 5em;
+        margin-bottom: -10px;
+    }
+    #currentTrack h2 {
+        font-size: 3em;
+    }
 
 #control-panel {
     height: 50px;

@@ -11,8 +11,13 @@
     <script src="~/scripts/playr.index.js"></script>
 }
 
-
 <div data-bind="widget: { name: 'fanart', options: { urls: currentTrack.fanart } }"></div>
+
+<section  id="currentTrack">
+    <h1 data-bind="text: currentTrack.name"></h1>
+    <h2 data-bind="text: currentTrack.artistName"></h2>
+    <h2 data-bind="text: currentTrack.albumDisplay"></h2>
+</section>
 
 <div class="navbar navbar-fixed-bottom">
     <div id="control-panel" class="navbar-inner">
@@ -30,10 +35,7 @@
                 <i class="playr-icon-skip"></i>
             </a>
         </section>
-         <section id="right-controls">
-            
-        </section>
+        <section id="right-controls"></section>
         <section id="center-controls" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTrack.currentTime, total: currentTrack.totalTime } }"></section>
-
     </div>
 </div>
