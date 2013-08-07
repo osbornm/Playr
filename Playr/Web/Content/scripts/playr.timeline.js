@@ -27,6 +27,19 @@ models.widgets.timeline = function (currentPosition, total, showTime) {
         self.tick.call(this);
     }, self.tickInterval);
 
+    self.pause = function () {
+        clearInterval(self.timer);
+        console.log("Pausing timeline");
+    }
+    self.start = function (newTime) {
+        self.currentPosition(newTime);
+        self.timer = setInterval(function () {
+            self.tick.call(this);
+        }, self.tickInterval);
+
+        console.log("stating timeline");
+    }
+
     self.destory = function () {
         clearInterval(self.timer);
     }
@@ -62,6 +75,12 @@ models.widgets.timeline = function (currentPosition, total, showTime) {
         },
         _createModel: function (options) {
             return new models.widgets.timeline(options.currentPosition, options.total, options.showTime);
+        },
+        pause: function(){
+            this.model.pause();
+        },
+        start: function(currentTime){
+            this.model.start(currentTime);
         },
         destory: function () {
             var $element = $(this.element);

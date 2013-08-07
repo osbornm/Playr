@@ -16,9 +16,20 @@ models.fullscreen = {
         self.albumArtUrl = ko.observable("/images/albumArt.jpg");
         self.AlbumUrl = ko.observable("");
         self.download = ko.observable("");
+        self.state = ko.observable("Stopped");
         self.albumDisplay = ko.computed(function () {
             return self.albumName() + " ( " + self.year() + " )";
         });
+
+        self.stateChanged = function (state, track) {
+            self.state(state);
+            if (state === "Playing") {
+                $("#progressBottom").timeline("start", track.currentTime);
+            } else {
+                $("#progressBottom").timeline("pause");
+            }
+        };
+
         self.updateTrack = function (data) {
             self.albumName(data.track.albumName);
             self.artistName(data.track.artistName);
@@ -55,6 +66,9 @@ $(function () {
     $.extend(hub.client, {
         CurrentTrackChanged: function (track) {
             model.updateTrack(track);
+        },
+        StateChanged: function (state, currentTrack) {
+            model.stateChanged(state, currentTrack);
         }
     });
     $.connection.hub.start();

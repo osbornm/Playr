@@ -96,8 +96,19 @@ namespace Playr
                         var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
                         context.Clients.All.CurrentTrackChanged(current);
                     };
-                    control.Paused += () => Console.WriteLine("Paused Playing");
-                    control.Resumed += () => Console.WriteLine("Resumed Playing");
+                    control.Paused += () =>
+                    {
+                        Console.WriteLine("Paused Playing");
+                        var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                        context.Clients.All.StateChanged(audio.AudioState);
+                    };
+                    control.Resumed += () =>
+                    {
+                        Console.WriteLine("Resumed Playing");
+                        var current = new CurrentTrack(control.CurrentAlbum, control.CurrentTrack, control.CurrentTime.TotalMilliseconds, control.AudioState);
+                        var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                        context.Clients.All.StateChanged(audio.AudioState, current);
+                    };
 
                     Console.WriteLine("There are {0} tracks in your library", trackCount);
                     Console.WriteLine("Playr is running at {0}", baseUrl);

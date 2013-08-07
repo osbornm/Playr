@@ -67,6 +67,14 @@ models.index = {
             return "Skip Song";
         });
 
+        self.stateChanged = function (state, track) {
+            self.state(state);
+            if (state === "Playing") {
+                $("#center-controls").timeline("start", track.currentTime);
+            } else {
+                $("#center-controls").timeline("pause");
+            }
+        };
 
         self.updateCurrentTrack = function (data) {
             self.currentTrack.albumName(data.track.albumName);
@@ -102,8 +110,11 @@ $(function () {
       
     var hub = $.connection.notificationHub;
     $.extend(hub.client, {
-        CurrentTrackChanged: function (track) {
-            model.updateCurrentTrack(track);
+        CurrentTrackChanged: function (currentTrack) {
+            model.updateCurrentTrack(currentTrack);
+        },
+        StateChanged: function (state, currentTrack) {
+            model.stateChanged(state, currentTrack);
         }
     });
     $.connection.hub.start();
