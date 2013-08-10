@@ -21,6 +21,10 @@ models.fullscreen = {
             return self.albumName() + " ( " + self.year() + " )";
         });
 
+        self.showPauseGraphic = ko.computed(function () {
+            return self.state() !== "Playing"
+        });
+
         self.stateChanged = function (state, track) {
             self.state(state);
             if (state === "Playing") {
@@ -37,6 +41,7 @@ models.fullscreen = {
             self.totalTime(data.track.time);
             self.currentTime(data.currentTime);
             self.fanart(data.fanart);
+            self.state(data.state);
             // Get all the links figured out
             $.each(data.track.links, function () {
                 switch (this.rel) {

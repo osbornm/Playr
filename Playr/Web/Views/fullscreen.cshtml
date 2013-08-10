@@ -26,9 +26,15 @@
             </div>
         </div>
     </section>
+
+    <section id="paused" data-bind="fadeVisible: showPauseGraphic">
+        <img src="/images/bigPause.png" />
+    </section>
+
     <section id="progressBottom" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTime, total: totalTime } }"></section>
 <!-- /ko  -->
 
+    
     <script src="scripts/jquery-1.9.1.js"></script>
     <script src="scripts/jquery-ui-1.10.1.js"></script>
     <script src="scripts/jquery.signalR-1.0.0.js"></script>

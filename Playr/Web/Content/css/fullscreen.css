@@ -57,6 +57,23 @@ html, body {
             font-size: 4em;
         }
 
+#paused {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 10px;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(0,0,0,.75);
+}
+
+#paused img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -169px 0 0 -109px;
+}
+
 #progressBottom {
     position: absolute; 
     bottom: 0;
