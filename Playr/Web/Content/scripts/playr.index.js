@@ -18,8 +18,8 @@ models.index = {
             albumArtUrl: ko.observable("/images/albumArt.jpg"),
             albumUrl: ko.observable(""),
             download: ko.observable(""),
-            
         };
+
         self.currentTrack.albumDisplay = ko.computed(function () {
             return self.currentTrack.albumName() + " ( " + self.currentTrack.year() + " )";
         })
@@ -71,6 +71,44 @@ models.index = {
         self.skipTitle = ko.computed(function () {
             return "Skip Song";
         });
+
+        self.toogleQueue = function () {
+            $("#tray").stop(true, true).toggle("slide", { direction: "down" });
+        };
+
+        self.toogleMenu = function () {
+            $("#menu").stop(true, true).toggle("slide");
+        };
+
+        self.toogleAllTheThings = function () {
+            if ($("#menu").is(":visible")) {
+                // Hide Tray
+
+                $("#trayContainer").fadeOut();
+
+                $("#tray").stop(true, true).hide("slide",
+                    { duration: 400, direction: "down", easing: "easeInOutCubic" });
+
+                $("#menu").stop(true, true).hide("slide",
+                    { duration: 200, direction: "up", easing: "easeInOutCubic" });
+
+                $("#currentTrack").delay(200).fadeIn(400);
+            } else {
+                // Show Tray
+
+                $("#currentTrack").fadeOut(300);
+
+                $("#trayContainer").delay(300).fadeIn();
+
+                $("#tray").stop(true, true).show("slide",
+                    { duration: 300, direction: "down"});
+
+                $("#menu").stop(true, true).show("slide",
+                    { duration: 400, direction: "up", easing: "easeInOutCubic" }, function () {
+                        $("#trayContainer").scrollbar("refresh");
+                    });
+            }
+        };
 
         self.stateChanged = function (state, track) {
             self.state(state);

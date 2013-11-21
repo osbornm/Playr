@@ -5,6 +5,7 @@
 @section styles {
     <link rel="stylesheet" href="css/playr.fanart.css"/>
     <link rel="stylesheet" href="css/playr.timeline.css"/>
+    <link rel="stylesheet" href="css/playr.scrollbar.css"/>
 }
 
 @section scripts {
@@ -17,6 +18,84 @@
     <h1 data-bind="text: currentTrack.name"></h1>
     <h2 data-bind="text: currentTrack.artistName"></h2>
     <h2 data-bind="text: currentTrack.albumDisplay"></h2>
+</section>
+
+
+<section id="tray">
+    <div id="trayContainer">
+        <section id="queue">
+            <h2>Current Queue</h2>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+            <div class="track">
+                <div class="name">Long Live A$AP</div>
+                <div class="artist">A$AP Rocky - Long Live A$AP</div>
+                <div class="time">4:50</div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<section id="menu">
+    <img src="images/horizontal-small-logo.png" alt="Playr"/>
 </section>
 
 <div class="navbar navbar-fixed-bottom">
@@ -35,7 +114,11 @@
                 <i class="playr-icon-skip"></i>
             </a>
         </section>
-        <section id="right-controls"></section>
+        <section id="right-controls">
+             <a href="#" data-bind="click: toogleAllTheThings">
+                <i class="playr-icon-skip"></i>
+            </a>
+        </section>
         <section id="center-controls" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTrack.currentTime, total: currentTrack.totalTime } }"></section>
     </div>
 </div>
