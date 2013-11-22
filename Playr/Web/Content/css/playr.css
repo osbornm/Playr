@@ -171,11 +171,11 @@ img.micro-album  {
 
 @font-face {
   font-family: 'Playr';
-  src: url('../fonts/playr-regular-webfont.eot?v=1.0.0');
-  src: url('../fonts/playr-regular-webfont.eot?#iefix&v=1.0.0') format('embedded-opentype'), 
-       url('../fonts/playr-regular-webfont.woff?v=1.0.0') format('woff'), 
-       url('../fonts/playr-regular-webfont.ttf?v=1.0.0') format('truetype'), 
-       url('../fonts/playr-regular-webfont.svg?v=1.0.0#fontawesomeregular') format('svg');
+  src: url('../fonts/playr-regular-webfont.eot?v=1.0.0001');
+  src: url('../fonts/playr-regular-webfont.eot?#iefix&v=1.0.0001') format('embedded-opentype'), 
+       url('../fonts/playr-regular-webfont.woff?v=1.0.0001') format('woff'), 
+       url('../fonts/playr-regular-webfont.ttf?v=1.0.0001') format('truetype'), 
+       url('../fonts/playr-regular-webfont.svg?v=1.0.0001#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
