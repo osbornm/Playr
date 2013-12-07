@@ -104,19 +104,14 @@
             <a data-bind="attr: { href: currentTrack.download }">
                 <img class="micro-album" data-bind="attr: { src: currentTrack.albumArtUrl, title: currentTrack.albumName }" />
             </a>
-            <a href="#" data-bind="attr: {title: previousTitle}, click: previous">
-                <i class="playr-icon-previous"></i>
-            </a>
-            <a href="#" data-bind="attr: {title: playPauseTitle}, click: playPause">
-                <i class="playr-icon-play" data-bind="attr: {class: playPauseClass}"></i>
-            </a>
-            <a href="#" data-bind="attr: {title: skipTitle}, click: skip">
-                <i class="playr-icon-skip"></i>
-            </a>
+            <i class="playr-icon-star"></i>
+            <i class="playr-icon-previous" data-bind="attr: {title: previousTitle}, click: previous"></i>
+            <i class="playr-icon-play" data-bind="attr: { title: playPauseTitle, class: playPauseClass}, click: playPause"></i>
+            <i class="playr-icon-skip" data-bind="attr: {title: skipTitle}, click: skip"></i>
         </section>
         <section id="right-controls">
              <a href="#" data-bind="click: toogleAllTheThings">
-                <i class="playr-icon-skip"></i>
+                <i class="playr-icon-menu"></i>
             </a>
         </section>
         <section id="center-controls" data-bind="widget: { name: 'timeline', options: { currentPosition: currentTrack.currentTime, total: currentTrack.totalTime } }"></section>

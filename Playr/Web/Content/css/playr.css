@@ -56,7 +56,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 #left-controls {
-    width: 150px;
+    width: 140px;
     float: left;
     padding: 10px;
 }
@@ -64,6 +64,7 @@ h1,h2,h3,h4,h5,h6 {
     #left-controls a:hover, 
     #left-controls a:active,
     #left-controls a:visited {
+        line-height: 25px;
         outline: none;
         border: none;
         text-decoration: none;
@@ -73,27 +74,52 @@ h1,h2,h3,h4,h5,h6 {
         margin-right: 10px;
     }
 
-    #left-controls .playr-icon-play,
-    #left-controls .playr-icon-pause {
-        margin: 0 5px;
+    #left-controls i {
+        color: #37527e;
+        cursor: pointer;
+        vertical-align: middle;
     }
 
-    #left-controls i {
-        font-size: 30px;
+    #left-controls i:hover {
+        color: #3c485c;
+    }
+
+    #left-controls .playr-icon-star,
+    #left-controls .playr-icon-star:hover{
+        color: #ffde47;
+        margin-right: 10px;
+    }
+
+    #left-controls .playr-icon-play,
+    #left-controls .playr-icon-pause {
+        margin: 0 2px;
     }
 
 #center-controls {
-    margin: 0 100px 0 170px;
+    margin: 0 125px 0 160px;
 }
 
     #center-controls .playr-timeline {
-        margin-top: 20px;
+        margin-top: 21px;
     }
 
 #right-controls {
     width: 100px;
-    float: right
+    height: 30px;
+    line-height: 30px;
+    float: right;
+    padding: 10px;
 }
+
+    #right-controls i {
+        color: #37527e;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+
+    #right-controls i:hover {
+        color: #3c485c;
+    }
 
 img.micro-album  {
     height: 30px;
@@ -187,6 +213,7 @@ img.micro-album  {
   font-family: Playr;
   font-weight: normal;
   font-style: normal;
+  font-size: 20px;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
