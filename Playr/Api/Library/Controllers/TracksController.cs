@@ -9,13 +9,23 @@ namespace Playr.Api.Library.Controllers
 {
     public class TracksController : MusicLibraryControllerBase
     {
-        public IEnumerable<Track> GetTracks(int id)
+        public Track GetTrack(int id)
         {
-            var tracks = MusicLibraryService.GetTracks(id);
-            if (tracks == null || tracks.Count == 0)
+            var track = MusicLibraryService.GetTrackById(id);
+            if (track == null)
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
 
-            return tracks.Select(dbTrack => new Track(dbTrack));
+            return new Track(track);
+        }
+
+        [HttpPost]
+        public Track PostQueueOnly(int id)
+        {
+            var updatedTrack = MusicLibraryService.QueueOnly(id);
+            if (updatedTrack == null)
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+
+            return new Track(updatedTrack);
         }
     }
 }

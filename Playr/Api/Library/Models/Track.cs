@@ -31,6 +31,7 @@ namespace Playr.Api.Library.Models
             Time = track.Time.TotalMilliseconds;
             TrackNumber = track.TrackNumber;
             Year = track.Year;
+            QueueOnly = track.QueueOnly;
         }
 
         // TODO: Expose Rating as a function of favorite count vs. user count
@@ -51,5 +52,6 @@ namespace Playr.Api.Library.Models
         public double Time { get; set; }
         public uint TrackNumber { get; set; }
         public uint Year { get; set; }
+        public bool QueueOnly { get; set; } 
     }
 }

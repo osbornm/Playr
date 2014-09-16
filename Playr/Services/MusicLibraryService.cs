@@ -168,6 +168,24 @@ namespace Playr.Services
             catch { }
         }
 
+        public DbTrack QueueOnly(int id)
+        {
+            DbTrack track;
+            using (var session = Database.OpenSession())
+            {
+                track = session.Load<DbTrack>(id);
+                track.QueueOnly = true;
+                session.SaveChanges();
+            }
+
+            DbTrack bar;
+            using (var session = Database.OpenSession())
+            {
+                bar = session.Load<DbTrack>(id);
+            }
+            return bar;
+        }
+
         public virtual DbAlbum GetAlbumById(int id)
         {
             DbAlbum album = null;
@@ -260,7 +278,7 @@ namespace Playr.Services
         public virtual DbTrack GetRandomTrack()
         {
             using (var session = Database.OpenSession())
-                return session.Query<DbTrack>().Customize(x => x.RandomOrdering()).FirstOrDefault();
+                return session.Query<DbTrack>().Where(t => !t.QueueOnly).Customize(x => x.RandomOrdering()).FirstOrDefault();
         }
 
         public virtual int TotalTrackCount()

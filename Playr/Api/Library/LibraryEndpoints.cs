@@ -19,6 +19,8 @@ public static class LibraryEndpoints
     public const string GenresUrl = "api/library/genres/{genreName}";
     public const string RootUrl = "api/library";
     public const string TracksUrl = "api/library/albums/{id}/tracks";
+    public const string TrackUrl = "api/library/tracks/{id}";
+    public const string TrackQueryOnlyUrl = "api/library/tracks/{id}/queryOnly";
     public const string TrackDownloadUrl = "api/library/tracks/{id}/download";
 
     public static void Configure(HttpConfiguration config)
@@ -93,6 +95,18 @@ public static class LibraryEndpoints
             name: "Tracks",
             routeTemplate: TracksUrl,
             defaults: new { controller = "Tracks" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: "Track",
+            routeTemplate: TrackUrl,
+            defaults: new { controller = "Tracks", action = "GetTrack" }
+        );
+
+        config.Routes.MapHttpRoute(
+            name: "TrackQueryOnly",
+            routeTemplate: TrackQueryOnlyUrl,
+            defaults: new { controller = "Tracks", action = "PostQueueOnly" }
         );
 
         config.Routes.MapHttpRoute(

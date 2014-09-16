@@ -23,5 +23,6 @@ namespace Playr.DataModels
         public TimeSpan Time { get; set; }
         public uint TrackNumber { get; set; }
         public uint Year { get; set; }
+        public bool QueueOnly { get; set; }
     }
 }
