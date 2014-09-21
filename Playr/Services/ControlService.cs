@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Playr.DataModels;
 using Playr.Helpers;
 using Playr.Models;
@@ -44,7 +42,8 @@ namespace Playr.Services
 
         public DbTrack CurrentTrack { get; private set; }
 
-        public TimeSpan CurrentTime {
+        public TimeSpan CurrentTime
+        {
             get
             {
                 return audio.CurrentTime;
@@ -103,7 +102,7 @@ namespace Playr.Services
             {
                 return;
             }
-            
+
             CurrentTrack = playlist.PopFirst();
             CurrentAlbum = library.GetAlbumById(CurrentTrack.AlbumId);
 

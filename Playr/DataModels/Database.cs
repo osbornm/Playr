@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Reflection;
 using Raven.Client;
 using Raven.Client.Embedded;

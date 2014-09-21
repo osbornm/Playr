@@ -101,7 +101,7 @@ models.index = {
                 $("#trayContainer").delay(300).fadeIn();
 
                 $("#tray").stop(true, true).show("slide",
-                    { duration: 300, direction: "down"});
+                    { duration: 300, direction: "down" });
 
                 $("#menu").stop(true, true).show("slide",
                     { duration: 400, direction: "up", easing: "easeInOutCubic" }, function () {
@@ -131,10 +131,10 @@ models.index = {
             // Get all the links figured out
             $.each(data.track.links, function () {
                 switch (this.rel) {
-                    case "artwork" :
+                    case "artwork":
                         self.currentTrack.albumArtUrl(this.href);
                         break;
-                    case "album" :
+                    case "album":
                         self.currentTrack.albumUrl(this.href);
                         break;
                     case "download":
@@ -149,9 +149,9 @@ models.index = {
 $(function () {
     var model = new models.index.ViewModel(),
         jqhxr;
-    
+
     ko.applyBindings(model);
-      
+
     var hub = $.connection.notificationHub;
     $.extend(hub.client, {
         CurrentTrackChanged: function (currentTrack) {

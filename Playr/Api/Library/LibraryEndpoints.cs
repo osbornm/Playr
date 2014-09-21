@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web.Http;
-using System.Web.Http.Routing;
 using Playr.DataModels;
 
 public static class LibraryEndpoints

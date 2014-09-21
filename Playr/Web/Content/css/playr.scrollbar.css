@@ -12,28 +12,28 @@
     position: absolute;
     transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
-    -webkit-transition: all 0.1s ease-in-out;å
+    -webkit-transition: all 0.1s ease-in-out;
     -o-transition: all 0.1s ease-in-out;
 }
 
-.playr-scrollbar .scrollbar-track.active,
-.playr-scrollbar .scrollbar-track:hover {
-    background-color: rgba(0,0,0,.1);
-}
+    .playr-scrollbar .scrollbar-track.active,
+    .playr-scrollbar .scrollbar-track:hover {
+        background-color: rgba(0,0,0,.1);
+    }
 
-.playr-scrollbar .scrollbar-track.axis-x {
-    height: 10px;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
+    .playr-scrollbar .scrollbar-track.axis-x {
+        height: 10px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
 
-.playr-scrollbar .scrollbar-track.axis-y {
-    width: 10px;
-    top: 0;
-    right: 0;
-    bottom: 0;
-}
+    .playr-scrollbar .scrollbar-track.axis-y {
+        width: 10px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
 
 .playr-scrollbar .scrollbar-handle {
     position: absolute;

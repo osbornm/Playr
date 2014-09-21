@@ -15,7 +15,7 @@ html, body {
     color: #fff;
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     font-weight: 200;
 }
 
@@ -47,6 +47,7 @@ h1,h2,h3,h4,h5,h6 {
         font-size: 5em;
         margin-bottom: -10px;
     }
+
     #currentTrack h2 {
         font-size: 3em;
     }
@@ -61,7 +62,7 @@ h1,h2,h3,h4,h5,h6 {
     padding: 10px;
 }
 
-    #left-controls a:hover, 
+    #left-controls a:hover,
     #left-controls a:active,
     #left-controls a:visited {
         line-height: 25px;
@@ -80,12 +81,12 @@ h1,h2,h3,h4,h5,h6 {
         vertical-align: middle;
     }
 
-    #left-controls i:hover {
-        color: #3c485c;
-    }
+        #left-controls i:hover {
+            color: #3c485c;
+        }
 
     #left-controls .playr-icon-star,
-    #left-controls .playr-icon-star:hover{
+    #left-controls .playr-icon-star:hover {
         color: #ffde47;
         margin-right: 10px;
     }
@@ -117,11 +118,11 @@ h1,h2,h3,h4,h5,h6 {
         vertical-align: middle;
     }
 
-    #right-controls i:hover {
-        color: #3c485c;
-    }
+        #right-controls i:hover {
+            color: #3c485c;
+        }
 
-img.micro-album  {
+img.micro-album {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -139,7 +140,6 @@ img.micro-album  {
     left: 0;
     z-index: 100;
     overflow: hidden;
- 
     background-color: rgba(0,0,0,0.6);
 }
 
@@ -153,7 +153,7 @@ img.micro-album  {
         left: 0;
     }
 
-    #menu {
+#menu {
     display: none;
     height: 30px;
     background-color: #1d1f23;
@@ -165,30 +165,29 @@ img.micro-album  {
     padding: 10px;
 }
 
-    #queue .track {
-        padding: 0 0 0 100px
+#queue .track {
+    padding: 0 0 0 100px;
+}
+
+    #queue .track .name,
+    #queue .track .artist,
+    #queue .track .time {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-        #queue .track .name,
-        #queue .track .artist,
-        #queue .track .time {
-            display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    #queue .track .name {
+        width: 40%;
+    }
 
-        #queue .track .name {
-            width: 40%;
-        }
+    #queue .track .artist {
+        width: 50%;
+    }
 
-        #queue .track .artist {
-            width: 50%;
-        }
-
-        #queue .track .time {
-            
-        }
+    #queue .track .time {
+    }
 
 
 /********************
@@ -196,54 +195,84 @@ img.micro-album  {
 ********************/
 
 @font-face {
-  font-family: 'Playr';
-  src: url('../fonts/playr-regular-webfont.eot?v=1.0.0001');
-  src: url('../fonts/playr-regular-webfont.eot?#iefix&v=1.0.0001') format('embedded-opentype'), 
-       url('../fonts/playr-regular-webfont.woff?v=1.0.0001') format('woff'), 
-       url('../fonts/playr-regular-webfont.ttf?v=1.0.0001') format('truetype'), 
-       url('../fonts/playr-regular-webfont.svg?v=1.0.0001#fontawesomeregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'Playr';
+    src: url('../fonts/playr-regular-webfont.eot?v=1.0.0001');
+    src: url('../fonts/playr-regular-webfont.eot?#iefix&v=1.0.0001') format('embedded-opentype'), url('../fonts/playr-regular-webfont.woff?v=1.0.0001') format('woff'), url('../fonts/playr-regular-webfont.ttf?v=1.0.0001') format('truetype'), url('../fonts/playr-regular-webfont.svg?v=1.0.0001#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
 [class^="playr-icon-"],
 [class*=" playr-icon-"] {
-  display: inline-block;
-  font-family: Playr;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    font-family: Playr;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .playr-icon-lg {
-  font-size: 1.3333333333333333em;
-  line-height: 0.75em;
-  vertical-align: -15%;
-}
-.playr-icon-2x {
-  font-size: 2em;
-}
-.playr-icon-3x {
-  font-size: 3em;
-}
-.playr-icon-4x {
-  font-size: 4em;
-}
-.playr-icon-5x {
-  font-size: 5em;
+    font-size: 1.3333333333333333em;
+    line-height: 0.75em;
+    vertical-align: -15%;
 }
 
-.playr-icon-play:before         { content: "\25b6"; }
-.playr-icon-pause:before        { content: "\1d101"; }
-.playr-icon-skip:before         { content: "\2192"; }
-.playr-icon-previous:before     { content: "\2190"; }
-.playr-icon-menu:before         { content: "\2254"; }
-.playr-icon-star:before         { content: "\2605"; }
-.playr-icon-vol-none:before     { content: "\1f507"; }
-.playr-icon-vol-one:before      { content: "\1f508"; }
-.playr-icon-vol-two:before      { content: "\1f509"; }
-.playr-icon-vol-three:before    { content: "\1f50a"; }
+.playr-icon-2x {
+    font-size: 2em;
+}
+
+.playr-icon-3x {
+    font-size: 3em;
+}
+
+.playr-icon-4x {
+    font-size: 4em;
+}
+
+.playr-icon-5x {
+    font-size: 5em;
+}
+
+.playr-icon-play:before {
+    content: "\25b6";
+}
+
+.playr-icon-pause:before {
+    content: "\1d101";
+}
+
+.playr-icon-skip:before {
+    content: "\2192";
+}
+
+.playr-icon-previous:before {
+    content: "\2190";
+}
+
+.playr-icon-menu:before {
+    content: "\2254";
+}
+
+.playr-icon-star:before {
+    content: "\2605";
+}
+
+.playr-icon-vol-none:before {
+    content: "\1f507";
+}
+
+.playr-icon-vol-one:before {
+    content: "\1f508";
+}
+
+.playr-icon-vol-two:before {
+    content: "\1f509";
+}
+
+.playr-icon-vol-three:before {
+    content: "\1f50a";
+}

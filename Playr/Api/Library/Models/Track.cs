@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Http.Routing;
 using Playr.Api.Shared.Models;
 using Playr.DataModels;
 
@@ -52,6 +51,6 @@ namespace Playr.Api.Library.Models
         public double Time { get; set; }
         public uint TrackNumber { get; set; }
         public uint Year { get; set; }
-        public bool QueueOnly { get; set; } 
+        public bool QueueOnly { get; set; }
     }
 }

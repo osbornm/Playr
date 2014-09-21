@@ -1,5 +1,4 @@
-﻿using Nancy.Bootstrapper;
-using Owin;
+﻿using Owin;
 using Playr.Owin;
 
 public static class AppBuilderExtensions

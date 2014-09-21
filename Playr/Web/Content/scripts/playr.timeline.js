@@ -76,10 +76,10 @@ models.widgets.timeline = function (currentPosition, total, showTime) {
         _createModel: function (options) {
             return new models.widgets.timeline(options.currentPosition, options.total, options.showTime);
         },
-        pause: function(){
+        pause: function () {
             this.model.pause();
         },
-        start: function(currentTime){
+        start: function (currentTime) {
             this.model.start(currentTime);
         },
         destory: function () {

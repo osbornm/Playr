@@ -28,17 +28,17 @@ models.widgets.fanart = function (urls, element) {
                     current.css("zIndex", -1).slideUp({ duration: 700, queue: false }).fadeOut({ duration: 1000, queue: false });
                     next.css("zIndex", -2).fadeIn(1000);
                     break;
-                // Slide Right
+                    // Slide Right
                 case 1:
                     current.css("zIndex", -2).fadeOut(2000);
                     next.css("zIndex", -1).fadeIn({ duration: 1000, queue: false }).effect("slide", { duration: 1000, queue: false });
                     break;
-                // Clip
+                    // Clip
                 case 2:
                     current.css("zIndex", -1).fadeOut({ duration: 1500, queue: false }).effect("clip", { duration: 1000, queue: false });
                     next.css("zIndex", -2).fadeIn({ duration: 1500, queue: false })
                     break;
-                // Cross Fade
+                    // Cross Fade
                 default:
                     current.css("zIndex", -1).fadeOut({ duration: 2000, queue: false });
                     next.css("zIndex", -2).fadeIn({ duration: 2000, queue: false });

@@ -45,10 +45,10 @@ models.fullscreen = {
             // Get all the links figured out
             $.each(data.track.links, function () {
                 switch (this.rel) {
-                    case "artwork" :
+                    case "artwork":
                         self.albumArtUrl(this.href);
                         break;
-                    case "album" :
+                    case "album":
                         self.AlbumUrl(this.href);
                         break;
                     case "download":
@@ -63,9 +63,9 @@ models.fullscreen = {
 $(function () {
     var model = new models.fullscreen.ViewModel(),
         jqhxr;
-    
+
     ko.applyBindings(model);
-      
+
     var hub = $.connection.notificationHub;
     $.extend(hub.client, {
         CurrentTrackChanged: function (track) {

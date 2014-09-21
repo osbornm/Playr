@@ -56,7 +56,7 @@ namespace Playr
                 settings.ContractResolver = new SignalRContractResolver();
                 settings.Converters.Add(new StringEnumConverter());
                 var serializer = new JsonNetSerializer(settings);
-                
+
                 GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer);
 
                 // First Run stuff...
@@ -90,7 +90,8 @@ namespace Playr
                 using (var audio = new Playr.Services.AudioService())
                 using (control = new ControlService(audio))
                 {
-                    control.CurrentTrackChanged += track => { 
+                    control.CurrentTrackChanged += track =>
+                    {
                         Console.WriteLine(track.Name);
                         var current = new CurrentTrack(control.CurrentAlbum, control.CurrentTrack, control.CurrentTime.TotalMilliseconds, control.AudioState);
                         var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
