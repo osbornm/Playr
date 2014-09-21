@@ -5,12 +5,14 @@
 models.widgets.fanart = function (urls, element) {
     var self = this;
     self.artwork = ko.isObservable(urls) ? urls : ko.observableArray(urls);
-    if (self.artwork().length < 1) {
-        self.artwork().push("/images/defaultFanart.jpg");
-    }
     self.element = $(element);
     self.currentIndex = 0;
     self.tickIterval = 5000;
+    self._artworkUpdate = ko.computed(function () {
+        if (self.artwork().length < 1)
+            self.artwork().push("/images/defaultFanart.jpg");
+    });
+
     self.tick = function () {
         if (self.artwork().length > 1) {
             var current = self.element.find("div:visible"),
@@ -23,29 +25,25 @@ models.widgets.fanart = function (urls, element) {
             // for now we like crossfade only
             animation = 3;
             switch (animation) {
-                // Slide Up
-                case 0:
+                case 0:    // Slide Up
                     current.css("zIndex", -1).slideUp({ duration: 700, queue: false }).fadeOut({ duration: 1000, queue: false });
                     next.css("zIndex", -2).fadeIn(1000);
                     break;
-                    // Slide Right
-                case 1:
+                case 1:    // Slide Right
                     current.css("zIndex", -2).fadeOut(2000);
                     next.css("zIndex", -1).fadeIn({ duration: 1000, queue: false }).effect("slide", { duration: 1000, queue: false });
                     break;
-                    // Clip
-                case 2:
+                case 2:    // Clip
                     current.css("zIndex", -1).fadeOut({ duration: 1500, queue: false }).effect("clip", { duration: 1000, queue: false });
                     next.css("zIndex", -2).fadeIn({ duration: 1500, queue: false })
                     break;
-                    // Cross Fade
-                default:
+                default:    // Cross Fade
                     current.css("zIndex", -1).fadeOut({ duration: 2000, queue: false });
                     next.css("zIndex", -2).fadeIn({ duration: 2000, queue: false });
             }
         }
     }
-    self.destory = function () {
+    self.destroy = function () {
         clearInterval(self.timer);
     };
 
@@ -70,9 +68,9 @@ models.widgets.fanart = function (urls, element) {
             $element.html($html);
             ko.applyBindings(this.model, $html[0]);
         },
-        destory: function () {
+        destroy: function () {
             var $element = $(this.element);
-            this.model.destory();
+            this.model.destroy();
             ko.cleanNode($element);
             base.destroy.call(this);
         }

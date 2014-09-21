@@ -40,7 +40,7 @@ models.widgets.timeline = function (currentPosition, total, showTime) {
         console.log("stating timeline");
     }
 
-    self.destory = function () {
+    self.destroy = function () {
         clearInterval(self.timer);
     }
 };
@@ -82,9 +82,9 @@ models.widgets.timeline = function (currentPosition, total, showTime) {
         start: function (currentTime) {
             this.model.start(currentTime);
         },
-        destory: function () {
+        destroy: function () {
             var $element = $(this.element);
-            this.model.destory();
+            this.model.destroy();
             ko.cleanNode($element);
             $element.empty();
             base.destroy.call(this);

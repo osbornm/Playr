@@ -29,7 +29,7 @@ models.index = {
         self.controlRequest = null;
         self._abortControlRequest = function () {
             if (self.controlRequest) {
-                console.log("Canceling exisitnf request");
+                console.log("Canceling existing request");
                 self.controlRequest.abort();
             }
         };

@@ -65,7 +65,7 @@ namespace Playr.Services
             catch
             {
                 // If playback failed because of an incompatible file, log it and move on.
-                Console.WriteLine("Could not play file: {0}", filePath);
+                Log.Warning("Could not play file: {0}", filePath);
                 OnPlaybackStopped(null, null);
                 AudioState = TrackState.Stopped;
             }

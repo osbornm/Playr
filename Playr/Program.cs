@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -29,7 +28,7 @@ namespace Playr
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
-                Console.WriteLine(args.ExceptionObject);
+                Log.Error((Exception)args.ExceptionObject);
                 Environment.Exit(-1);
             };
 
@@ -51,13 +50,13 @@ namespace Playr
                 PathHelpers.EnsurePathExists(AlbumArtworkPath);
                 PathHelpers.EnsurePathExists(FanArtworkPath);
 
-                // setup signalr json serialization to use lowercase
+                // Setup SignalR JSON serialization to use lowercase
                 var settings = new JsonSerializerSettings();
                 settings.ContractResolver = new SignalRContractResolver();
                 settings.Converters.Add(new StringEnumConverter());
-                var serializer = new JsonNetSerializer(settings);
+                var serializer = JsonSerializer.Create(settings);
 
-                GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer);
+                GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => serializer);
 
                 // First Run stuff...
                 var library = new MusicLibraryService();
@@ -86,8 +85,8 @@ namespace Playr
                     }
                 }
 
-                using (WebApplication.Start<Startup>(baseUrl))
-                using (var audio = new Playr.Services.AudioService())
+                using (WebApp.Start<Startup>(baseUrl))
+                using (var audio = new AudioService())
                 using (control = new ControlService(audio))
                 {
                     control.CurrentTrackChanged += track =>
@@ -122,7 +121,7 @@ namespace Playr
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.Error(ex);
             }
         }
     }

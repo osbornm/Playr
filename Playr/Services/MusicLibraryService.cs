@@ -20,6 +20,9 @@ namespace Playr.Services
 {
     public class MusicLibraryService
     {
+        private const string UNKNOWN_ALBUM = "Unknown Album";
+        private const string UNKNOWN_ARTIST = "Unknown Artist";
+
         public virtual DbTrack AddFile(string fileName)
         {
             var file = FileMetadata.Create(fileName);
@@ -27,8 +30,8 @@ namespace Playr.Services
             var track = new DbTrack
             {
                 AlbumId = album.Id,
-                AlbumName = file.Tag.Album,
-                ArtistName = file.Tag.FirstPerformer,
+                AlbumName = file.Tag.Album ?? UNKNOWN_ALBUM,
+                ArtistName = file.Tag.FirstPerformer ?? file.Tag.FirstAlbumArtist ?? UNKNOWN_ARTIST,
                 AudioBitrate = file.Properties.AudioBitrate,
                 AudioChannels = file.Properties.AudioChannels,
                 AudioSampleRate = file.Properties.AudioSampleRate,
@@ -59,6 +62,7 @@ namespace Playr.Services
             {
                 if (track.Location != fileName && File.Exists(track.Location))
                 {
+                    Log.Debug("Replacing existing track {0}", track.Location);
                     File.Delete(fileName);
                     track = session.Query<DbTrack>().Where(t => t.Location == track.Location).Single();
                 }
@@ -66,6 +70,7 @@ namespace Playr.Services
                 {
                     if (track.Location != fileName)
                     {
+                        Log.Debug("Moving {0} to {1}", fileName, track.Location);
                         PathHelpers.EnsurePathExists(Path.GetDirectoryName(track.Location));
                         File.Move(fileName, track.Location);
                     }
@@ -80,7 +85,7 @@ namespace Playr.Services
 
         public void ProcessFile(string fileName)
         {
-            Console.WriteLine("> Processing: {0}", fileName);
+            Log.Info("Processing: {0}", fileName);
 
             var extension = Path.GetExtension(fileName).ToLowerInvariant();
 
@@ -96,7 +101,7 @@ namespace Playr.Services
                     break;
 
                 default:
-                    Console.WriteLine("Unsupported file type: {0}", Path.GetFileName(fileName));
+                    Log.Warning("Unsupported file type: {0}", Path.GetFileName(fileName));
                     File.Delete(fileName);
                     break;
             }
@@ -124,7 +129,7 @@ namespace Playr.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR: {0}", ex.Message);
+                Log.Error(ex);
             }
         }
 
@@ -144,13 +149,13 @@ namespace Playr.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR: {0}", ex.Message);
+                Log.Error(ex);
             }
         }
 
         public void ProcessFolder(string folder)
         {
-            Console.WriteLine("> Searching: {0}", folder);
+            Log.Info("Searching: {0}", folder);
 
             foreach (var file in Directory.GetFiles(folder))
                 ThreadPool.QueueUserWorkItem(_ => ProcessFile(file));
@@ -289,14 +294,14 @@ namespace Playr.Services
 
         // Private helpers
 
-        private static object databaseLock = new object();
-        private static object albumartLock = new object();
-        private static object fanartLock = new object();
+        private static readonly object databaseLock = new object();
+        private static readonly object albumartLock = new object();
+        private static readonly object fanartLock = new object();
 
         private DbAlbum GetOrCreateAlbum(FileMetadata file)
         {
-            var artistName = file.Tag.FirstAlbumArtist;
-            var albumName = file.Tag.Album;
+            var artistName = file.Tag.FirstAlbumArtist ?? UNKNOWN_ARTIST;
+            var albumName = file.Tag.Album ?? UNKNOWN_ALBUM;
             var genre = file.Tag.FirstGenre;
             DbAlbum album;
 
@@ -360,7 +365,7 @@ namespace Playr.Services
         {
             var tasks = new List<Task>();
 
-            foreach (string url in urls)
+            foreach (var url in urls)
             {
                 tasks.Add(DownloadUrl(url, Path.Combine(outputFolder, Guid.NewGuid().ToString("n") + ".jpg")));
             }
@@ -375,7 +380,7 @@ namespace Playr.Services
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Downloading {0} to {1}", url, outputPath);
+                Log.Message("Downloading {0} to {1}", url, outputPath);
                 await response.Content.ReadAsFileAsync(outputPath);
             }
         }
@@ -384,38 +389,40 @@ namespace Playr.Services
         {
             var fanartUrls = new List<string>();
 
-            // Search for the MID first
-            var httpClient = new HttpClient();
-            var musicbrainzUrl = String.Format("http://search.musicbrainz.org/ws/2/artist/?query={0}&fmt=json", HttpUtility.UrlEncode(artist));
-            var musicbrainzResponse = await httpClient.GetAsync(musicbrainzUrl);
-            var searchResult = await musicbrainzResponse.Content.ReadAsAsync<SearchResult>();
-
-            if (searchResult.artist_list != null && searchResult.artist_list.artist != null && searchResult.artist_list.artist.Count > 0)
+            if (artist != UNKNOWN_ARTIST)
             {
-                var mid = searchResult.artist_list.artist.OrderByDescending(a => a.score).First().id;
-                if (mid != null)
-                {
-                    // Once there is an ID get the FanArt
-                    var url = String.Format("http://fanart.tv/webservice/artist/{1}/{0}/JSON", HttpUtility.UrlEncode(mid), HttpUtility.UrlEncode(Program.FanartApiKey));
-                    var response = await httpClient.GetStringAsync(url);
-                    var artistsJson = JObject.Parse(response);
+                // Search for the MID first
+                var httpClient = new HttpClient();
+                var musicbrainzUrl = String.Format("http://search.musicbrainz.org/ws/2/artist/?query={0}&fmt=json", HttpUtility.UrlEncode(artist));
+                var musicbrainzResponse = await httpClient.GetAsync(musicbrainzUrl);
+                var searchResult = await musicbrainzResponse.Content.ReadAsAsync<SearchResult>();
 
-                    try
+                if (searchResult.artist_list != null && searchResult.artist_list.artist != null && searchResult.artist_list.artist.Count > 0)
+                {
+                    var mid = searchResult.artist_list.artist.OrderByDescending(a => a.score).First().id;
+                    if (mid != null)
                     {
-                        if (artistsJson != null && artistsJson.HasValues)
+                        // Once there is an ID get the FanArt
+                        var url = String.Format("http://webservice.fanart.tv/v3/music/{0}?api_key={1}", HttpUtility.UrlEncode(mid), HttpUtility.UrlEncode(Program.FanartApiKey));
+                        try
                         {
-                            var artistJson = (JProperty)artistsJson.First;
-                            if (artistJson.HasValues)
+                            var response = await httpClient.GetStringAsync(url);
+                            if (response != "null")
                             {
-                                var bgs = artistJson.Value["artistbackground"];
-                                foreach (var background in bgs)
+                                var artistJson = JObject.Parse(response);
+
+                                if (artistJson != null && artistJson.HasValues)
                                 {
-                                    fanartUrls.Add(background["url"].ToString());
+                                    var bgs = artistJson["artistbackground"];
+                                    foreach (var background in bgs)
+                                    {
+                                        fanartUrls.Add(background["url"].ToString());
+                                    }
                                 }
                             }
                         }
+                        catch { } // the fan art service sometimes has malformed JSON and can cause errors.
                     }
-                    catch { } // the fan art service sometimes has malformed JSON and can cause errors.
                 }
             }
 
