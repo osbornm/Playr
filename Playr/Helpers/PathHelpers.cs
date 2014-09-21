@@ -44,6 +44,6 @@ public static class PathHelpers
 
     public static string ToFolderName(string folderName, int maxLength = 40)
     {
-        return ConvertAndTrim(folderName, maxLength, Path.GetInvalidPathChars());
+        return ConvertAndTrim(folderName, maxLength, Path.GetInvalidFileNameChars());
     }
 }
