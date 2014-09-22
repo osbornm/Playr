@@ -109,6 +109,11 @@ namespace Playr
                         var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
                         context.Clients.All.StateChanged(audio.AudioState, current);
                     };
+                    control.Disposed += () =>
+                    {
+                        var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                        context.Clients.All.Shutdown();
+                    };
 
                     Console.WriteLine("There are {0} tracks in your library", trackCount);
                     Console.WriteLine("Playr is running at {0}", baseUrl);

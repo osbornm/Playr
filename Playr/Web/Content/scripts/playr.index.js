@@ -71,6 +71,10 @@ models.index = {
         self.skipTitle = ko.computed(function () {
             return "Skip Song";
         });
+        self.showShutdownGraphic = ko.observable(false);
+        self.shutdown = function () {
+            self.showShutdownGraphic(true);
+        };
 
         self.toogleQueue = function () {
             $("#tray").stop(true, true).toggle("slide", { direction: "down" });
@@ -159,6 +163,10 @@ $(function () {
         },
         StateChanged: function (state, currentTrack) {
             model.stateChanged(state, currentTrack);
+        },
+        Shutdown: function () {
+            model.shutdown();
+            $.connection.hub.stop();
         }
     });
     $.connection.hub.start();

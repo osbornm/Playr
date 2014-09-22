@@ -189,6 +189,23 @@ img.micro-album {
     #queue .track .time {
     }
 
+#shutdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 10px;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(0,0,0,.75);
+}
+
+    #shutdown h1 {
+        font-size: 96px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -20px 0 0 -492px;
+    }
 
 /********************
        Icons

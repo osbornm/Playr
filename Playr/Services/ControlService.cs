@@ -78,6 +78,7 @@ namespace Playr.Services
         public event Action QueueChanged;
         public event Action Paused;
         public event Action Resumed;
+        public event Action Disposed;
 
         public void Pause()
         {
@@ -172,6 +173,8 @@ namespace Playr.Services
         public void Dispose()
         {
             //TODO: Save Queue to RavenDB for Resume when Playr starts up
+            if (Disposed != null)
+                Disposed();
         }
     }
 }
